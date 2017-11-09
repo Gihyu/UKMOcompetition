@@ -13,11 +13,12 @@ class BFS
 private:
 	Block * _sourceBlock;
 	vector<OperBlock *> _vistedOperBlocks;
-	queue<OperBlock *> _ingBlocks;
+	queue<OperBlock *> _ingOperBlocks;
 
 public:
 	BFS(Block * sourceBlock);
 	bool isInOperVector(Block * test, vector<OperBlock *> testVector);
+	bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue);
 
 	vector<OperBlock *> solve_all_valid(Block * target);
 };
