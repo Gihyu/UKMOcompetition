@@ -29,5 +29,9 @@ public:
 	static double Epsilon;//0.0001
 
 	static int flyTime;
+
+	//print
+	static string getTimeStr(time_t t);
+	static void printCurTime();
 };
 

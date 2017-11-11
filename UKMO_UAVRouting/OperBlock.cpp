@@ -2,8 +2,8 @@
 int OperBlock::_count = 0;
 
 
-OperBlock::OperBlock(Block* block, int date, int hour, BLOCKTYPE type, double wind)
-	:_block(block),_date(date),_hour(hour),_type(type),_wind(wind)
+OperBlock::OperBlock(Block * block, int hour, int min) :
+	_block(block), _hour(hour), _min(min)
 {
 	_id = _count;
 	_count++;

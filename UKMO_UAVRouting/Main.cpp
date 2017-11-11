@@ -4,10 +4,10 @@
 
 int main()
 {
-	Schedule* schedule = new Schedule();
+	Schedule* sche = new Schedule();
 	IO* io = new IO();
-	io->preProcess();
-	//io->input(schedule);
+	bool isTraining = true;
+	io->input(sche, isTraining);
 	
 	return 0;
 }

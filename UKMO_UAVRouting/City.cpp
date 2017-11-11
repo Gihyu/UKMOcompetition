@@ -1,11 +1,16 @@
 #include "City.h"
+int City::_count = 0;
 
-City::City(int id, int no, int x, int y)
-	:_id(id),_no(no),_x(x),_y(y)
+
+
+City::City(int no, Block * block):_no(no),_block(block)
 {
+	_id = _count;
+	_count++;
 }
 
 void City::print()
 {
-	cout << "City_" << _id << "\tNo:" << _no << "\tx:" << _x << "\ty:" << _y << endl;
+	cout << "City_" << _id << "\tNo:" << _no << "\t";
+	_block->print();
 }

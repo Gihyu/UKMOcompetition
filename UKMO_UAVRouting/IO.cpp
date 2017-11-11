@@ -1,21 +1,91 @@
 #include "IO.h"
 
-
-IO::IO()
+void IO::input(Schedule* sche, bool isTraining)
 {
+	readForecast(sche, isTraining);
+	Util::printCurTime();
+
+	readCity(sche);
+	Util::printCurTime();
+
+	if (isTraining)
+	{
+		readMeasure(sche);
+		Util::printCurTime();
+	}
 }
 
-void IO::input(Schedule * schedule)
+
+void IO::readForecast(Schedule* sche, bool isTraining)
 {
-	schedule->setCityList(readCity());
-	tmpAnalyse();
-	//schedule->setBlockList(readForecast(true));
-	//readMeasure(schedule->getBlockList(),true);
+	vector<Block*> blocks;
+
+	string fileName;
+	if (isTraining)
+	{
+		fileName = Util::InputPath + string("input_ForecastDataforTraining.csv");
+	}
+	else
+	{
+		fileName = Util::InputPath + string("input_ForecastDataforTesting.csv");
+	}
+	
+	cout << "* Read forecast data for from txt file:" << fileName << endl;
+	ifstream file(fileName.c_str());
+
+	string buf;
+	char * token;
+	char * tmp;
+
+	//getline(file, buf);//headline
+
+	int x = 0;
+	int y = 0;
+	int date = 0;
+	array<double, 12> windArr;
+
+	int testFlag = 0;
+
+	while (getline(file, buf))
+	{
+		testFlag++;
+		if (testFlag % 10000 == 0)
+		{
+			cout << "cout:" << testFlag << endl;
+		}
+
+		token = strtok_s((char *)buf.c_str(), ",", &tmp);
+		x = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		y = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		date = atoi(token);
+
+		for (int i = 0; i < 12; ++i)
+		{
+			token = strtok_s(NULL, ",", &tmp);
+			windArr[i] = atof(token);
+		}
+
+		Block* newBlock = new Block(x, y, date, windArr);
+		blocks.push_back(newBlock);
+	}
+	file.close();
+
+	sche->setBlockList(blocks);
+
+	cout << "# Blocks:" << sche->getBlockList().size() << endl;
+	blocks.front()->print();
+	blocks.back()->print();
+
 }
 
-vector<City*> IO::readCity()
+void IO::readCity(Schedule* sche)
 {
 	vector<City*> cities;
+	vector<Block*> blocks = sche->getBlockList();
 
 	string fileName = Util::InputPath + string("CityData.csv");
 	cout << "* Read cities from txt file:" << fileName << endl;
@@ -26,7 +96,6 @@ vector<City*> IO::readCity()
 	char * tmp;
 
 	getline(file, buf);//headline
-
 
 	int cityNo = 0;
 	int x = 0;
@@ -42,8 +111,16 @@ vector<City*> IO::readCity()
 		token = strtok_s(NULL, ",", &tmp);
 		y = atoi(token);
 
-		City* city = new City(cities.size(), cityNo, x, y);
-		cities.push_back(city);
+		for (auto&tmpBlock : blocks)
+		{
+			if (tmpBlock->equal(x, y))
+			{
+				City* city = new City(cityNo,tmpBlock);
+				cities.push_back(city);
+				break;
+			}
+		}
+
 	}
 	file.close();
 
@@ -54,141 +131,14 @@ vector<City*> IO::readCity()
 	}
 	cout << endl;
 
-	return cities;
+	sche->setCityList(cities);
 }
 
-vector<Block*> IO::readForecast(bool isTraining)
+void IO::readMeasure(Schedule* sche)
 {
-	vector<Block*> blocks;
+	vector<Block*> blocks = sche->getBlockList();
 
-	string fileName;
-	if (isTraining)
-	{
-		fileName = Util::InputPath + string("ForecastDataforTraining_test.csv");//!!
-	}
-	else
-	{
-		fileName = Util::InputPath + string("ForecastDataforTesting.csv");
-	}
-	
-	cout << "* Read Forecast Data for Training from txt file:" << fileName << endl;
-	ifstream file(fileName.c_str());
-
-	string buf;
-	char * token;
-	char * tmp;
-
-	getline(file, buf);//headline
-
-
-	int x = 0;
-	int y = 0;
-	int date = 0;
-	int hour = 0;
-	int realization = 0;
-	double wind = 0.0;
-
-	while (getline(file, buf))
-	{
-		token = strtok_s((char *)buf.c_str(), ",", &tmp);
-		x = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		y = atoi(token);
-
-		Block* tmpBlock = NULL;
-		bool found = false;
-		for (auto&b : blocks)
-		{
-			if (b->getX() == x && b->getY()== y)
-			{
-				tmpBlock = b;
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-		{
-			tmpBlock = new Block(blocks.size(), x, y);
-			blocks.push_back(tmpBlock);
-		}
-
-		token = strtok_s(NULL, ",", &tmp);
-		date = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		hour = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		realization = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		wind = atof(token);
-
-		BLOCKTYPE type = (BLOCKTYPE)realization;
-
-		//BLOCKTYPE type = B_MODE1;
-		//switch (realization)
-		//{
-		//case 1:
-		//	type = B_MODE1;
-		//	break;
-		//case 2:
-		//	type = B_MODE2;
-		//	break;
-		//case 3:
-		//	type = B_MODE3;
-		//	break;
-		//case 4:
-		//	type = B_MODE4;
-		//	break;
-		//case 5:
-		//	type = B_MODE5;
-		//	break;
-		//case 6:
-		//	type = B_MODE6;
-		//	break;
-		//case 7:
-		//	type = B_MODE7;
-		//	break;
-		//case 8:
-		//	type = B_MODE8;
-		//	break;
-		//case 9:
-		//	type = B_MODE9;
-		//	break;
-		//case 10:
-		//	type = B_MODE10;
-		//	break;
-		//default:
-		//	cout << "error:realization not exist!" << endl;
-		//	break;
-		//}
-
-		OperBlock* tmpOperBlock = new OperBlock(tmpBlock, date, hour, type, wind);
-		tmpBlock->pushForecastOperBlock(tmpOperBlock);
-
-	}
-	file.close();
-
-	cout << "# Blocks:" << blocks.size() << endl;
-
-	return blocks;
-}
-
-void IO::readMeasure(vector<Block*> blocks,bool isTraining)
-{
-	string fileName;
-
-	if (isTraining)
-	{
-		fileName = Util::InputPath + string("In-situMeasurementforTraining.csv");
-	}
-	else
-	{
-		cout << "error:measure file for test not exist!" << endl;
-	}
-	
+	string fileName = Util::InputPath + string("input_In-situMeasurementforTraining.csv");
 	cout << "* Read Measurement for Training from txt file:" << fileName << endl;
 	ifstream file(fileName.c_str());
 
@@ -196,30 +146,44 @@ void IO::readMeasure(vector<Block*> blocks,bool isTraining)
 	char * token;
 	char * tmp;
 
-	getline(file, buf);//headline
+	//getline(file, buf);//headline
 
 	int x = 0;
 	int y = 0;
 	int date = 0;
-	int hour = 0;
-	BLOCKTYPE type = B_MEASURE;
-	double wind = 0.0;
+	array<double, 12> windArr;
+
+	int testFlag = 0;
 
 	while (getline(file, buf))
 	{
+		testFlag++;
+		if (testFlag % 10000 == 0)
+		{
+			cout << "cout:" << testFlag << endl;
+		}
+
 		token = strtok_s((char *)buf.c_str(), ",", &tmp);
 		x = atoi(token);
 
 		token = strtok_s(NULL, ",", &tmp);
 		y = atoi(token);
 
-		Block* tmpBlock = NULL;
-		bool found = false;
-		for (auto&b : blocks)
+		token = strtok_s(NULL, ",", &tmp);
+		date = atoi(token);
+
+		for (int i = 0; i < 12; ++i)
 		{
-			if (b->getX() == x&& b->getY() == y)
+			token = strtok_s(NULL, ",", &tmp);
+			windArr[i] = atof(token);
+		}
+
+		bool found = false;
+		for (auto&tmpBlock : blocks)
+		{
+			if (tmpBlock->equal(x, y))
 			{
-				tmpBlock = b;
+				tmpBlock->setMeasureWindArr(windArr);
 				found = true;
 				break;
 			}
@@ -227,179 +191,12 @@ void IO::readMeasure(vector<Block*> blocks,bool isTraining)
 		if (!found)
 		{
 			cout << "error:block not found!" << endl;
+			cout << "\tx:" << x << "\ty:" << y << endl;
+			exit(0);
 		}
-		else
-		{
-			token = strtok_s(NULL, ",", &tmp);
-			date = atoi(token);
-			
-			token = strtok_s(NULL, ",", &tmp);
-			hour = atoi(token);
-
-			token = strtok_s(NULL, ",", &tmp);
-			wind = atof(token);
-
-			OperBlock* tmpOperBlock = new OperBlock(tmpBlock, date, hour, type, wind);
-			tmpBlock->pushMeasureOperBlock(tmpOperBlock);
-		}
-
 	}
 	file.close();
 
 	cout << ">>> finish readMeasure" << endl;
 }
 
-void IO::tmpAnalyse()
-{
-	vector<Block*> blocks;
-
-	//string fileName = Util::InputPath + string("ForecastDataforTraining.csv");
-	string fileName = Util::InputPath + string("In-situMeasurementforTraining.csv");
-
-	cout << "* Read Data for Training from txt file:" << fileName << endl;
-	ifstream file(fileName.c_str());
-
-	string buf;
-	char * token;
-	char * tmp;
-
-	getline(file, buf);//headline
-
-
-	int x = 0;
-	int y = 0;
-	int date = 0;
-	int hour = 0;
-	int realization = 0;
-	double wind = 0.0;
-
-	while (getline(file, buf))
-	{
-		token = strtok_s((char *)buf.c_str(), ",", &tmp);
-		x = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		y = atoi(token);
-
-		Block* tmpBlock = NULL;
-		bool found = false;
-		for (auto&b : blocks)
-		{
-			if (b->getX() == x && b->getY() == y)
-			{
-				tmpBlock = b;
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-		{
-			tmpBlock = new Block(blocks.size(), x, y);
-			blocks.push_back(tmpBlock);
-		}
-		if (blocks.size() % 1000 == 0)
-		{
-			cout << "cout:" << blocks.size() / 1000 << endl;
-		}
-	}
-	file.close();
-
-	cout << "# Blocks:" << blocks.size() << endl;
-}
-
-void IO::preProcess()
-//数据预处理
-{
-	bool isForecastFile = false;
-	devideFileByDay(isForecastFile);
-
-	isForecastFile = true;
-	devideFileByDay(isForecastFile);
-}
-
-void IO::devideFileByDay(bool isForecast)
-{
-	string fileType = ".csv";
-	
-	string in = string("ForecastDataforTraining_test");
-	if (!isForecast)
-	{
-		in = string("In-situMeasurementforTraining_test");
-	}
-	
-	//input
-	string inFileName = Util::InputPath + in + fileType;
-	cout << "* Read data to be devided from csv file:" << inFileName << endl;
-	ifstream file(inFileName.c_str());
-
-	//output
-	string outFileDay1 = Util::OutputPath + in + "_day1" + fileType;
-	ofstream outDay1(outFileDay1.c_str());
-
-	string outFileDay2 = Util::OutputPath + in + "_day2" + fileType;
-	ofstream outDay2(outFileDay2.c_str());
-
-	string outFileDay3 = Util::OutputPath + in + "_day3" + fileType;
-	ofstream outDay3(outFileDay3.c_str());
-
-	string outFileDay4 = Util::OutputPath + in + "_day4" + fileType;
-	ofstream outDay4(outFileDay4.c_str());
-
-	string outFileDay5 = Util::OutputPath + in + "_day5" + fileType;
-	ofstream outDay5(outFileDay5.c_str());
-
-	string buf;
-	char * token;
-	char * tmp;
-
-	getline(file, buf);//headline
-
-
-	int x = 0;
-	int y = 0;
-	int date = 0;
-	int hour = 0;
-	double wind = 0.0;
-
-	while (getline(file, buf))
-	{
-		string bufCopy = buf;
-		token = strtok_s((char *)bufCopy.c_str(), ",", &tmp);
-		//x = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		//y = atoi(token);
-
-		token = strtok_s(NULL, ",", &tmp);
-		date = atoi(token);
-
-		switch (date)
-		{
-		case 1:
-			outDay1 << buf << "\n";
-			break;
-		case 2:
-			outDay2 << buf << "\n";
-			break;
-		case 3:
-			outDay3 << buf << "\n";
-			break;
-		case 4:
-			outDay4 << buf << "\n";
-			break;
-		case 5:
-			outDay5 << buf << "\n";
-			break;
-		default:
-			cout << "error: date cannot be "<< date << endl;
-			break;
-		}
-	}
-	
-	file.close();
-	outDay1.close();
-	outDay2.close();
-	outDay3.close();
-	outDay4.close();
-	outDay5.close();
-}

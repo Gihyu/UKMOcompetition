@@ -7,20 +7,11 @@
 class IO
 {
 public:
-	IO();
+	void input(Schedule* sche, bool isTraining);
 
-	//‘§¥¶¿Ì
-	void preProcess();
-	void devideFileByDay(bool isForecast);
-
-
-	void input(Schedule* schedule);
-
-	vector<City*> readCity();
-	vector<Block*> readForecast(bool isTraining);
-	void readMeasure(vector<Block*> blocks,bool isTraining);
-
-	void tmpAnalyse();
+	void readForecast(Schedule* sche,bool isTraining);
+	void readCity(Schedule* sche);
+	void readMeasure(Schedule* sche);
 
 };
 

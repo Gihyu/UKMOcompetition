@@ -1,10 +1,11 @@
 #include "Block.h"
+int Block::_count = 0;
 
-
-
-Block::Block(int id, int x, int y):
-	_id(id),_x(x),_y(y)
+Block::Block(int x, int y, int date, array<double, 12> windArr):
+	_x(x),_y(y),_date(date),_windArr(windArr)
 {
+	_id = _count;
+	_count++;
 }
 
 pair<int, int> Block::getCoordinate()
@@ -15,9 +16,42 @@ pair<int, int> Block::getCoordinate()
 	return p;
 }
 
-double Block::getWind(int thisTime)
+bool Block::equal(Block * block)
 {
-	//need to add something here
+	if (block->getX() != _x)
+	{
+		return false;
+	}
 
-	return _wind;
+	if (block->getY() != _y)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool Block::equal(int x, int y)
+{
+	if ( x != _x)
+	{
+		return false;
+	}
+
+	if ( y != _y)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Block::print()
+{
+	cout << "Block_" << _id << "\tx:" << _x << "\ty:" << _y << "\tdate:" << _date;
+	for (auto&wind : _windArr)
+	{
+		cout << "\t" << wind;
+	}
+	cout << endl;
 }

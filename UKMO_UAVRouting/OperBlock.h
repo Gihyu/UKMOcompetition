@@ -1,21 +1,6 @@
 #pragma once
 #include"Util.h"
 #include"Block.h"
-enum BLOCKTYPE
-{
-	B_MEASURE = 0,
-
-	B_MODE1 = 1,
-	B_MODE2 = 2,
-	B_MODE3 = 3,
-	B_MODE4 = 4,
-	B_MODE5 = 5,
-	B_MODE6 = 6,
-	B_MODE7 = 7,
-	B_MODE8 = 8,
-	B_MODE9 = 9,
-	B_MODE10 = 10
-};
 class OperBlock
 {
 private:
@@ -24,16 +9,16 @@ private:
 
 	Block* _block;
 
-	int _date;
+	//time
+	//int _date;//date由block得
 	int _hour;
-	double _wind;
+	int _min;
 
+	double _wind;//oper 不应该有wind！！！！
 	OperBlock * _frontOperBlock;
 
-	BLOCKTYPE _type;
-
 public:
-	OperBlock(Block* block,int date,int hour,BLOCKTYPE type,double wind);
+	OperBlock(Block* block,int hour,int min);
 
 	//add by sjy 2017-11-7
 	void setFront(OperBlock * frontOperBlock) { _frontOperBlock = frontOperBlock; }
