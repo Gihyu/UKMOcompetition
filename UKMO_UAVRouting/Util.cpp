@@ -6,3 +6,6 @@ string Util::InputPath = "C:/Users/zhoulei/Documents/VisualStudio2015/Projects/U
 double Util::Epsilon = 0.0001;//0.0001
 
 int Util::flyTime = 2;
+
+//ACO
+int Util::maxIterationACO = 100;

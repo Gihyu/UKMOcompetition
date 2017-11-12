@@ -18,7 +18,13 @@
 #include<process.h>
 #include<random>
 
+
 using namespace std;
+
+//ACO
+#define ANTAMOUNT 100
+
+#define MAXSTEP 360
 
 class Util
 {
@@ -29,5 +35,7 @@ public:
 	static double Epsilon;//0.0001
 
 	static int flyTime;
+	static int maxIterationACO;
+
 };
 

@@ -4,9 +4,6 @@
 #include"OperBlock.h"
 #include<queue>
 
-//class OperBlock
-//class Block;
-class OperBlock;
 
 class BFS
 {
