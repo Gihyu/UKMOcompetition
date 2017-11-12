@@ -1,6 +1,6 @@
 #pragma once
 
-#include<ilcplex/ilocplex.h>
+//#include<ilcplex/ilocplex.h>
 
 
 class Model

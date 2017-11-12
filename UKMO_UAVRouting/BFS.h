@@ -21,5 +21,11 @@ public:
 	bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue);
 
 	vector<OperBlock *> solve_all_valid(Block * target);
+
+	void clearQueue(queue<OperBlock *>& q);
+
+	//a test
+	void run_the_case();
+	vector<OperBlock *> test_BFS(Block * target);
 };
 

@@ -19,6 +19,11 @@ private:
 	double _wind;
 	vector<Block* >_cangotoBlocks;
 
+
+	//add by sjy to use a case test ;17-11-11
+	vector<pair<int, double>> _time_wind;
+
+
 public:
 	Block(int id,int x,int y);
 
@@ -31,8 +36,14 @@ public:
 
 	//add by sjy 2017-11-7
 	double getWind(int hour);
-
 	vector<Block*> getCangoToBlocks() { return _cangotoBlocks; }
+	void pushCangoToBlocks(Block * cangoto) { _cangotoBlocks.push_back(cangoto); }
 
+
+
+	//add by sjy to use a case test ;17-11-11
+	int getId() { return _id; }
+	double testgetWind(int thisTime);
+	void testPushTimeWind(pair<int, double> time_wind) { _time_wind.push_back(time_wind); }
 };
 

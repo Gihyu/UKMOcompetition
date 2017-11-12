@@ -32,6 +32,8 @@ private:
 
 	BLOCKTYPE _type;
 
+	int _ingTime;
+
 public:
 	OperBlock(Block* block,int date,int hour,BLOCKTYPE type,double wind);
 
@@ -39,16 +41,22 @@ public:
 	void setFront(OperBlock * frontOperBlock) { _frontOperBlock = frontOperBlock; }
 	OperBlock * getFront() { return _frontOperBlock; }
 
-	OperBlock(Block * block, int hour);
+	OperBlock(Block * block, int hour,int ingTime);
 
 	int getTime() { return _hour; }
 	void setTime(int hour) { _hour = hour; }
+
+	int getIngTime() { return _ingTime; }
+	void setIngTime(int ingTime) { _ingTime = ingTime; }
 
 	Block * getBlock() { return _block; }
 	int getX() { return _block->getX(); }
 	int getY() { return _block->getY(); }
 	double getWind(int hour);
 	bool cangotoThisBlock(Block * target, int thisTime);
+
+	//test case
+	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);
 
 };
 

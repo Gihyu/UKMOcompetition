@@ -21,3 +21,22 @@ double Block::getWind(int thisTime)
 
 	return _wind;
 }
+
+double Block::testgetWind(int thisTime)
+{
+	if(_time_wind.empty())
+	{
+		return 0.0;
+	}
+	else
+	{	
+		for (auto & time_wind : _time_wind)
+		{
+			if (thisTime == time_wind.first)
+			{
+				return time_wind.second;
+			}
+		}
+		return 0.0;
+	}
+}
