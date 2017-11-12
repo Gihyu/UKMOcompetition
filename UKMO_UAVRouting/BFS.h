@@ -20,11 +20,12 @@ public:
 	bool isInOperVector(Block * test, vector<OperBlock *> testVector);
 	bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue);
 
-	vector<OperBlock *> solve_all_valid(Block * target);
+	vector<OperBlock *> solve_by_anyCases(Block * target);
+	vector<OperBlock *> solve_by_connectedNetwork(Block * target);
 
 	void clearQueue(queue<OperBlock *>& q);
 
-	//a test
+	//test
 	void run_the_case();
 	vector<OperBlock *> test_BFS(Block * target);
 };

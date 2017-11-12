@@ -51,8 +51,11 @@ bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue)
 	return whetherIn;
 }
 
-vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
-{
+vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
+{	
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
 	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0,0);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
@@ -87,7 +90,7 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 					}
 					else
 					{
-						if (!isInOperVector(cangoto, _vistedOperBlocks))
+						if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
 						{
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
@@ -97,7 +100,7 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 					}
 				}
 				//in order to assure the function for the whole system , the " break " should write after all the cangotoOperBlocls.
-				// version 2017-11-9
+				// version 2017-11-12
 			}
 
 			for (auto & cangoto : cangoToBlocks)
@@ -113,7 +116,7 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 				_ingOperBlocks.pop();
 			}
 			else
-				// stay for next 2 minutess
+				// stay for next 2 minutes
 			{
 				ingOperBlock->setIngTime(thisTime + Util::flyTime);
 				_ingOperBlocks.push(ingOperBlock);
@@ -148,27 +151,129 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 		cout << " shortest path failed ! Can't find the targetBlock !" << endl;
 	}
 	else
-	{	
-		cout << "The shortestPath from ("<<_sourceBlock->getX()<<","<< _sourceBlock->getY()<<") to ("<<targetBlock->getX()<<","<<targetBlock->getY()<<") is :"<< endl;
+	{
+		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{
-			cout << "("<<OperRoute[i]->getX()<<","<<OperRoute[i]->getY()<< ")->";
+
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getTime() << "->";
 		}
+		cout << endl;
 		cout << endl;
 	}
 
-	//delete sourceOperBlock;
-	//sourceOperBlock = NULL;
+	delete sourceOperBlock;
+	sourceOperBlock = NULL;
 
-	//delete targetOperBlock;
-	//targetOperBlock = NULL;
-
-	//I don't do memory management for vistedOperBlocks and ingBlocks because this function maybe used for other destinations.
+	if (targetOperBlock != NULL)
+	{
+		delete targetOperBlock;
+		targetOperBlock = NULL;
+	}
 
 	return OperRoute;
 }
 
-//test
+vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
+{
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0, 0);
+	sourceOperBlock->setFront(NULL);
+	_ingOperBlocks.push(sourceOperBlock);
+
+	int targetX = targetBlock->getX();
+	int targetY = targetBlock->getY();
+	bool findTheTarget = false;
+	OperBlock * targetOperBlock;
+
+	// if we don't need the analysis for the actual steops even > 360 , use this "while" sentence
+	//while(!ingBlocks.empty() && !findTheTarget && ingBlock->getTime()<360)
+
+	while (!_ingOperBlocks.empty() && !findTheTarget)
+	{
+		OperBlock * ingOperBlock = _ingOperBlocks.front();
+		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+
+		if (!cangoToBlocks.empty())
+		{
+			int thisTime = ingOperBlock->getIngTime();		
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (cangoto->getX() == targetX && cangoto->getY() == targetY)
+				{
+					targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+					targetOperBlock->setFront(ingOperBlock);
+					findTheTarget = true;
+					break;
+				}
+				else
+				{
+					if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+					{
+						OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+						cangotoOperBlock->setFront(ingOperBlock);
+						_ingOperBlocks.push(cangotoOperBlock);
+					}
+
+				}
+				//in order to assure the function for the whole system , the " break " should write after all the cangotoOperBlocls.
+				// version 2017-11-12
+			}
+			_vistedOperBlocks.push_back(ingOperBlock);
+			_ingOperBlocks.pop();
+		}
+		else
+		{
+			_vistedOperBlocks.push_back(ingOperBlock);
+			_ingOperBlocks.pop();
+		}
+	}
+
+	vector<OperBlock *> OperRoute;
+	if (findTheTarget)
+	{
+		// when print don't forget to inverted order		
+		OperRoute.push_back(targetOperBlock);
+		OperBlock * front = targetOperBlock->getFront();
+		while (front != NULL)
+		{
+			OperRoute.push_back(front);
+			front = front->getFront();
+		}
+	}
+
+	//print function
+	if (OperRoute.empty())
+	{
+		cout << " shortest path failed ! Can't find the targetBlock !" << endl;
+	}
+	else
+	{
+		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
+		for (int i = OperRoute.size() - 1; i >= 0; i--)
+		{
+
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getTime() << "->";
+		}
+		cout << endl;
+		cout << endl;
+	}
+
+	delete sourceOperBlock;
+	sourceOperBlock = NULL;
+
+	if (targetOperBlock != NULL)
+	{
+		delete targetOperBlock;
+		targetOperBlock = NULL;
+	}
+
+	return OperRoute;
+}
+
+//test 2017-11-12
 void BFS::run_the_case()
 {
 	Block * b1 = new Block(1,99,164);
@@ -316,8 +421,6 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 
 					}
 				}
-				//in order to assure the function for the whole system , the " break " should write after all the cangotoOperBlocls.
-				// version 2017-11-9
 			}
 
 			for (auto & cangoto : cangoToBlocks)
@@ -333,7 +436,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 				_ingOperBlocks.pop();
 			}
 			else
-				// stay for next 2 minutess
+				// stay for next 2 minutes
 			{
 				ingOperBlock->setIngTime(thisTime + Util::flyTime);
 				_ingOperBlocks.push(ingOperBlock);
@@ -367,7 +470,6 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 	}
 	else
 	{
-		//cout << OperRoute.size() << endl;
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{	
@@ -376,11 +478,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 		}
 		cout << endl;
 		cout << endl;
-	}
-
-	//memory control
-
-	
+	}	
 	return OperRoute;
 }
 
