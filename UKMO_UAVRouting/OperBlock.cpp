@@ -1,25 +1,11 @@
 #include "OperBlock.h"
 int OperBlock::_count = 0;
 
-
-OperBlock::OperBlock(Block* block, int date, int hour, BLOCKTYPE type, double wind)
-	:_block(block),_date(date),_hour(hour),_type(type),_wind(wind)
+OperBlock::OperBlock(Block* block,int hour,int ingTime):
+	_block(block), _ingTime(ingTime)
 {
 	_id = _count;
 	_count++;
-}
-
-OperBlock::OperBlock(Block* block,int hour,int ingTime):
-	_block(block), _hour(hour),_ingTime(ingTime)
-{
-
-}
-
-double OperBlock::getWind(int hour)
-{
-	//need to add something here
-
-	return _wind;
 }
 
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
@@ -43,5 +29,8 @@ bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime)
 		return false;
 }
 
-
-
+void OperBlock::print()
+{
+	cout << "Oper_" << _id << "\t"<<Util::getTimeStr(Util::getTime(_solnTime));
+	_block->print();
+}
