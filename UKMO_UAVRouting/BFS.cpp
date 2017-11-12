@@ -33,7 +33,7 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 	int targetX = targetBlock->getX();
 	int targetY = targetBlock->getY();
 	bool findTheTarget = false;
-	OperBlock * targetOperBlock;
+	OperBlock * targetOperBlock = NULL;
 
 	// if we don't need the analysis for the actual steops even > 360 , use this "while" sentence
 	//while(!ingBlocks.empty() && !findTheTarget && ingBlock->getTime()<360)
@@ -97,11 +97,17 @@ vector<OperBlock *> BFS::solve_all_valid(Block * targetBlock)
 
 	}
 
-	delete sourceOperBlock;
-	sourceOperBlock = NULL;
+	if (sourceOperBlock != NULL)
+	{
+		delete sourceOperBlock;
+		sourceOperBlock = NULL;
+	}
 
-	delete targetOperBlock;
-	targetOperBlock = NULL;
+	if (targetOperBlock != NULL)
+	{
+		delete targetOperBlock;
+		targetOperBlock = NULL;
+	}
 
 	//I don't do memory management for vistedOperBlocks and ingBlocks because this function maybe used for other destinations.
 

@@ -10,6 +10,6 @@ double Validation::validate()
 
 
 
-	double obj;
+	return obj;
 
 }

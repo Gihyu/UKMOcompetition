@@ -9,17 +9,11 @@ OperBlock::OperBlock(Block * block, int hour, int min) :
 	_count++;
 }
 
-OperBlock::OperBlock(Block* block,int hour):
+OperBlock::OperBlock(Block * block, int hour):
 	_block(block), _hour(hour)
 {
-
-}
-
-double OperBlock::getWind(int hour)
-{
-	//need to add something here
-
-	return _wind;
+	_id = _count;
+	_count++;
 }
 
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
@@ -31,4 +25,10 @@ bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 	}
 	else
 		return false;
+}
+
+void OperBlock::print()
+{
+	cout << "Oper_" << _id << "\t"<<Util::getTimeStr(Util::getTime(_hour,_min));
+	_block->print();
 }

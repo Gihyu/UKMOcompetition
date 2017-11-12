@@ -14,6 +14,8 @@ private:
 public:
 	City(int no,Block* block);
 
+	Block* getBlock() { return _block; }
+
 	void print();
 };
 

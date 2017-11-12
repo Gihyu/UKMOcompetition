@@ -27,14 +27,18 @@ public:
 	Block(int x,int y,int date, array<double, 12> windArr);
 
 	pair<int, int> getCoordinate();
+
 	int getX() { return _x; }
 	int getY() { return _y; }
+
+	int getDate() { return _date; }
 
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }
 
 	void setMeasureWindArr(array<double, 12> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}
 
+	void pushCanGoToBlock(Block* block) { _cangotoBlocks.push_back(block); }
 	vector<Block*> getCangoToBlocks() { return _cangotoBlocks; }
 
 

@@ -1,34 +1,41 @@
 #include "IO.h"
 
-void IO::input(Schedule* sche, bool isTraining)
+IO::IO()
 {
-	readForecast(sche, isTraining);
+	struct tm timeinfo;
+	timeinfo.tm_year = 2017 - 1900;
+	timeinfo.tm_mon = 11 - 1;
+	timeinfo.tm_mday = 13;
+	timeinfo.tm_hour = 0;
+	timeinfo.tm_min = 0;
+	timeinfo.tm_sec = 0;
+	Util::startTime = mktime(&timeinfo);
+	cout << "* Basic start time:" << Util::getTimeStr(Util::startTime) << endl;
+}
+
+void IO::input(Schedule* sche,int date)
+{
+	string inFile = "Train_MergeLinreg_D_" + to_string(date);
+	readForecast(sche, inFile);
 	Util::printCurTime();
 
 	readCity(sche);
 	Util::printCurTime();
 
-	if (isTraining)
+	if (date <= 5)
 	{
-		readMeasure(sche);
+		inFile = "compress_reProcess_day"+ to_string(date);
+		readMeasure(sche,inFile);
 		Util::printCurTime();
 	}
 }
 
 
-void IO::readForecast(Schedule* sche, bool isTraining)
+void IO::readForecast(Schedule* sche,string inFile)
 {
 	vector<Block*> blocks;
 
-	string fileName;
-	if (isTraining)
-	{
-		fileName = Util::InputPath + string("input_ForecastDataforTraining.csv");
-	}
-	else
-	{
-		fileName = Util::InputPath + string("input_ForecastDataforTesting.csv");
-	}
+	string fileName = Util::InputPath + inFile + ".csv";
 	
 	cout << "* Read forecast data for from txt file:" << fileName << endl;
 	ifstream file(fileName.c_str());
@@ -37,7 +44,7 @@ void IO::readForecast(Schedule* sche, bool isTraining)
 	char * token;
 	char * tmp;
 
-	//getline(file, buf);//headline
+	getline(file, buf);//headline
 
 	int x = 0;
 	int y = 0;
@@ -48,11 +55,11 @@ void IO::readForecast(Schedule* sche, bool isTraining)
 
 	while (getline(file, buf))
 	{
-		testFlag++;
-		if (testFlag % 10000 == 0)
-		{
-			cout << "cout:" << testFlag << endl;
-		}
+		//testFlag++;
+		//if (testFlag % 10000 == 0)
+		//{
+		//	cout << "cout:" << testFlag << endl;
+		//}
 
 		token = strtok_s((char *)buf.c_str(), ",", &tmp);
 		x = atoi(token);
@@ -77,9 +84,10 @@ void IO::readForecast(Schedule* sche, bool isTraining)
 	sche->setBlockList(blocks);
 
 	cout << "# Blocks:" << sche->getBlockList().size() << endl;
+	cout << ">>> test print" << endl;
 	blocks.front()->print();
 	blocks.back()->print();
-
+	cout << endl;
 }
 
 void IO::readCity(Schedule* sche)
@@ -134,11 +142,11 @@ void IO::readCity(Schedule* sche)
 	sche->setCityList(cities);
 }
 
-void IO::readMeasure(Schedule* sche)
+void IO::readMeasure(Schedule* sche,string inFile)
 {
 	vector<Block*> blocks = sche->getBlockList();
 
-	string fileName = Util::InputPath + string("input_In-situMeasurementforTraining.csv");
+	string fileName = Util::InputPath + inFile + ".csv"; 
 	cout << "* Read Measurement for Training from txt file:" << fileName << endl;
 	ifstream file(fileName.c_str());
 
@@ -157,11 +165,11 @@ void IO::readMeasure(Schedule* sche)
 
 	while (getline(file, buf))
 	{
-		testFlag++;
-		if (testFlag % 10000 == 0)
-		{
-			cout << "cout:" << testFlag << endl;
-		}
+		//testFlag++;
+		//if (testFlag % 10000 == 0)
+		//{
+		//	cout << "cout:" << testFlag << endl;
+		//}
 
 		token = strtok_s((char *)buf.c_str(), ",", &tmp);
 		x = atoi(token);
@@ -178,25 +186,72 @@ void IO::readMeasure(Schedule* sche)
 			windArr[i] = atof(token);
 		}
 
-		bool found = false;
-		for (auto&tmpBlock : blocks)
+		int index = Schedule::getBlockIndex(x, y);
+		if (index > -1 && index < blocks.size())
 		{
+			Block* tmpBlock = blocks[index];
 			if (tmpBlock->equal(x, y))
 			{
 				tmpBlock->setMeasureWindArr(windArr);
-				found = true;
-				break;
+			}
+			else
+			{
+				cout << "error:mismatch"<< endl;
+				cout << "\tx:" << x << "\ty:" << y << endl;
+				exit(0);
 			}
 		}
-		if (!found)
+		else
 		{
-			cout << "error:block not found!" << endl;
-			cout << "\tx:" << x << "\ty:" << y << endl;
+			cout << "error:wrong!:" << index << endl;
 			exit(0);
 		}
 	}
 	file.close();
 
 	cout << ">>> finish readMeasure" << endl;
+}
+
+void IO::printSoln(int destinationCityNo, Block * origin, vector<OperBlock*> soln)
+{
+	cout << ">>> PRINT SOLN" << endl;
+	for (auto&tmp : soln)
+	{
+		tmp->print();
+	}
+}
+
+void IO::outputSoln(int destinationCityNo, Block* origin, vector<OperBlock*> soln)
+{	
+	printSoln(destinationCityNo, origin, soln);
+	
+	int date = soln.front()->getBlock()->getDate();
+
+	string outFileName = Util::OutputPath + "Soln_city"+to_string(destinationCityNo)+"_day"+to_string(date) + ".csv";
+	cout << "* Soln output:" << outFileName << endl;
+	ofstream out(outFileName.c_str());
+
+	time_t curTime = Util::getTime(9, 0);//9:00
+	time_t step = 2 * 60;//2mins
+	Block* last = origin;
+	int lastX = last->getX();
+	int lastY = last->getY();
+	for (auto&tmp : soln)
+	{
+		time_t tmpT = Util::getTime(tmp->getHour(), tmp->getMin());
+		while (curTime < tmpT)
+		{
+			out << destinationCityNo << "," << date << ","
+				<< Util::getTimeStr(curTime) << ","
+				<< lastX << "," << lastY << endl;
+			curTime += step;
+		}
+		last = tmp->getBlock();
+		lastX = last->getX();
+		lastY = last->getY();
+		out << destinationCityNo << "," << date << ","
+			<< Util::getTimeStr(curTime) << ","
+			<< lastX << "," << lastY << endl;
+	}
 }
 

@@ -7,11 +7,16 @@
 class IO
 {
 public:
-	void input(Schedule* sche, bool isTraining);
+	IO();
 
-	void readForecast(Schedule* sche,bool isTraining);
+	void input(Schedule* sche,int date);
+
+	void readForecast(Schedule* sche,string inFile);
 	void readCity(Schedule* sche);
-	void readMeasure(Schedule* sche);
+	void readMeasure(Schedule* sche,string inFile);
+
+	void printSoln(int destinationCityNo, Block* origin, vector<OperBlock*> soln);
+	void outputSoln(int destinationCityNo,Block* origin,vector<OperBlock*> soln);
 
 };
 

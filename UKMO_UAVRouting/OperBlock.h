@@ -10,11 +10,9 @@ private:
 	Block* _block;
 
 	//time
-	//int _date;//date由block得
 	int _hour;
 	int _min;
 
-	double _wind;//oper 不应该有wind！！！！
 	OperBlock * _frontOperBlock;
 
 public:
@@ -24,16 +22,22 @@ public:
 	void setFront(OperBlock * frontOperBlock) { _frontOperBlock = frontOperBlock; }
 	OperBlock * getFront() { return _frontOperBlock; }
 
-	OperBlock(Block * block, int hour);
+	OperBlock(Block* block, int hour);//不应该存在这样的构造函数！！！
 
-	int getTime() { return _hour; }
-	void setTime(int hour) { _hour = hour; }
+	int getTime() { return _hour; }//!!
+	void setTime(int hour) { _hour = hour; }//!!
 
 	Block * getBlock() { return _block; }
+	int getHour() { return _hour; }
+	int getMin() { return _min; }
+
 	int getX() { return _block->getX(); }
 	int getY() { return _block->getY(); }
-	double getWind(int hour);
+	double getWind(int hour){ return _block->getWind(_hour); }
+
 	bool cangotoThisBlock(Block * target, int thisTime);
+
+	void print();
 
 };
 
