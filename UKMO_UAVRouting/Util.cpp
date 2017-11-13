@@ -9,6 +9,7 @@ string Util::InputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHu
 double Util::Epsilon = 0.0001;//0.0001
 
 int Util::flyTime = 2;
+int Util::maxTime = 1260;
 
 
 //ACO

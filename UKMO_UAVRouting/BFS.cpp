@@ -67,9 +67,9 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	bool findTheTarget = false;
 	OperBlock * targetOperBlock = NULL;
 
-	// if we don't need the analysis for the actual steops even >1200, use this "while" sentence
+	// if we don't need the analysis for the actual steops even >1260, use this "while" sentence
 
-	while (!_ingOperBlocks.empty() && !findTheTarget &&_ingOperBlocks.front()->getSolnTime()<1200)
+	while (!_ingOperBlocks.empty() && !findTheTarget &&_ingOperBlocks.front()->getSolnTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -78,7 +78,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		{
 			int thisTime = ingOperBlock->getIngTime();
 
-			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime << endl;
+			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime <<" and wind here is "<< ingOperBlock->getBlock()->getWind(thisTime/60)<< endl;
 
 			bool allCangoToOper = true;
 			for (auto & cangoto : cangoToBlocks)

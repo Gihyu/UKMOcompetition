@@ -35,6 +35,7 @@ public:
 	static double Epsilon;//0.0001
 
 	static int flyTime;
+	static int maxTime;
 
 	static int maxIterationACO;
 
