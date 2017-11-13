@@ -9,6 +9,7 @@ Schedule::Schedule()
 void Schedule::init()
 {
 	initAdjBlock();
+
 }
 
 void Schedule::initAdjBlock()
@@ -45,30 +46,51 @@ void Schedule::initAdjBlock()
 
 	cout << ">>> finish initAdjBlock" << endl;
 	cout << ">>> test print" << endl;
-	vector<Block*> tmps = _blockList.front()->getCangoToBlocks();
-	_blockList.front()->print();
+	Block* tmpBlock = _blockList[getBlockIndex(296,421)];
+	vector<Block*> tmps = tmpBlock->getCangoToBlocks();
+	tmpBlock->print();
 	for (auto&tmp : tmps)
 	{
 		cout << "\t";
 		tmp->print();
 	}
-	tmps = _blockList[2]->getCangoToBlocks();
-	_blockList[2]->print();
+	tmpBlock = _blockList[getBlockIndex(297,1)];
+	tmps = tmpBlock->getCangoToBlocks();
+	tmpBlock->print();
 	for (auto&tmp : tmps)
 	{
 		cout << "\t";
 		tmp->print();
 	}
+
+	tmpBlock = _blockList[getBlockIndex(297,47)];
+	tmps = tmpBlock->getCangoToBlocks();
+	tmpBlock->print();
+	for (auto&tmp : tmps)
+	{
+		cout << "\t";
+		tmp->print();
+	}
+
+	tmpBlock = _blockList[getBlockIndex(1,421)];
+	tmps = tmpBlock->getCangoToBlocks();
+	tmpBlock->print();
+	for (auto&tmp : tmps)
+	{
+		cout << "\t";
+		tmp->print();
+	}
+
 	cout << endl;
 }
 
 int Schedule::getBlockIndex(int x, int y)
 {
-	if (x <= 0)//x:1-548
+	if (x <= 0 || x > Util::maxX)//x:1-548
 	{
 		return -1;
 	}
-	if (y <= 0)//y:1-421
+	if (y <= 0 || y > Util::maxY)//y:1-421
 	{
 		return -1;
 	}
