@@ -56,7 +56,8 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
 
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0,0);
+	// 540 means start from 9:00
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,540);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
@@ -65,10 +66,10 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	bool findTheTarget = false;
 	OperBlock * targetOperBlock = NULL;
 
-	// if we don't need the analysis for the actual steops even > 360 , use this "while" sentence
-	//while(!ingBlocks.empty() && !findTheTarget && ingBlock->getTime()<360)
+	// if we don't need the analysis for the actual steops even >1200, use this "while" sentence
+	//while(!ingBlocks.empty() && !findTheTarget && ingOperBlock->getSolnTime()<1200)
 
-	while (!_ingOperBlocks.empty() && !findTheTarget)
+	while (!_ingOperBlocks.empty() && !findTheTarget &&_ingOperBlocks.front()->getSolnTime()<1200)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -76,6 +77,9 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		if (!cangoToBlocks.empty())
 		{
 			int thisTime = ingOperBlock->getIngTime();
+
+			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime << endl;
+
 			bool allCangoToOper = true;
 			for (auto & cangoto : cangoToBlocks)
 			{
@@ -83,7 +87,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 				{
 					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
 					{
-						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 						targetOperBlock->setFront(ingOperBlock);
 						findTheTarget = true;
 						break;
@@ -92,7 +96,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 					{
 						if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
 						{
-							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
 							_ingOperBlocks.push(cangotoOperBlock);
 						}
@@ -182,7 +186,7 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
 
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0, 0);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
@@ -206,7 +210,7 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 			{
 				if (cangoto->getX() == targetX && cangoto->getY() == targetY)
 				{
-					targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+					targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 					targetOperBlock->setFront(ingOperBlock);
 					findTheTarget = true;
 					break;
@@ -215,7 +219,7 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 				{
 					if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
 					{
-						OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+						OperBlock * cangotoOperBlock = new OperBlock(cangoto,  thisTime + Util::flyTime);
 						cangotoOperBlock->setFront(ingOperBlock);
 						_ingOperBlocks.push(cangotoOperBlock);
 					}
@@ -382,7 +386,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 	clearQueue(_ingOperBlocks);
 
 
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 0,0);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,0);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
@@ -409,7 +413,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 				{
 					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
 					{
-						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 						targetOperBlock->setFront(ingOperBlock);
 						findTheTarget = true;
 						break;
@@ -418,7 +422,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 					{
 						if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
 						{
-							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime, thisTime + Util::flyTime);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto,  thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
 							_ingOperBlocks.push(cangotoOperBlock);
 						}

@@ -1,8 +1,9 @@
 #include "OperBlock.h"
+#include "math.h"
 int OperBlock::_count = 0;
 
-OperBlock::OperBlock(Block* block,int hour,int ingTime):
-	_block(block), _ingTime(ingTime)
+OperBlock::OperBlock(Block* block,int firstReachTime):
+	_block(block), _solnTime(firstReachTime),_ingTime(firstReachTime)
 {
 	_id = _count;
 	_count++;
@@ -11,7 +12,9 @@ OperBlock::OperBlock(Block* block,int hour,int ingTime):
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 {
 	// I need to update this rule after my question online is confirmed.
-	if (getWind(thisTime) < 20.0 && target->getWind(thisTime)<20.0)
+	//cout << "bug!!!!!!!minute" << thisTime << endl;
+	//cout<< "bug!!!!!!!hour" << thisTime/60 << endl;
+	if (getWind(thisTime/60) < 20.0 && target->getWind(thisTime/60)<20.0)
 	{
 		return true;
 	}

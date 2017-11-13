@@ -35,10 +35,10 @@ public:
 	static double Epsilon;//0.0001
 
 	static int flyTime;
-<<<<<<< HEAD
+
 	static int maxIterationACO;
 
-=======
+
 
 	static int maxX;
 	static int maxY;
@@ -50,6 +50,6 @@ public:
 	static time_t getTime(int hour, int min);
 	static time_t getTime(int min);
 	static void printCurTime();
->>>>>>> origin/master
+
 };
 

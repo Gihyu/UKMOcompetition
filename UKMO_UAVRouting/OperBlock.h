@@ -17,7 +17,7 @@ private:
 	int _ingTime;
 
 public:
-	OperBlock(Block* block,int hour,int ingTime);
+	OperBlock(Block* block,int firstReachTime);
 
 	//add by sjy 2017-11-7
 	void setFront(OperBlock * frontOperBlock) { _frontOperBlock = frontOperBlock; }

@@ -1,16 +1,16 @@
 #include "Util.h"
 
-string Util::OutputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/output/";
-string Util::InputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/input/";
+string Util::OutputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/output/";
+string Util::InputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/input/";
 
 double Util::Epsilon = 0.0001;//0.0001
 
 int Util::flyTime = 2;
 
-<<<<<<< HEAD
+
 //ACO
 int Util::maxIterationACO = 100;
-=======
+
 int Util::maxX = 548;
 int Util::maxY = 421;
 int Util::maxIndex = 548*421-1;
@@ -45,4 +45,4 @@ void Util::printCurTime()
 	time_t t = time(NULL);
 	cout << ">>> PRINT TIME: " << Util::getTimeStr(t) << endl;
 }
->>>>>>> origin/master
+
