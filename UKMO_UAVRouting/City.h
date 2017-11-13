@@ -1,18 +1,20 @@
 #pragma once
 #include"Util.h"
+#include"Block.h"
 class City
 {
 private:
 	int _id;
+	static int _count;
 
 	int _no;
 
-	//coordinate
-	int _x;
-	int _y;
+	Block* _block;
 
 public:
-	City(int id,int no,int x,int y);
+	City(int no,Block* block);
+
+	Block* getBlock() { return _block; }
 
 	void print();
 };

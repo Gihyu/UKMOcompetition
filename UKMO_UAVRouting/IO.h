@@ -9,18 +9,14 @@ class IO
 public:
 	IO();
 
-	//‘§¥¶¿Ì
-	void preProcess();
-	void devideFileByDay(bool isForecast);
+	void input(Schedule* sche,int date);
 
+	void readForecast(Schedule* sche,string inFile);
+	void readCity(Schedule* sche);
+	void readMeasure(Schedule* sche,string inFile);
 
-	void input(Schedule* schedule);
-
-	vector<City*> readCity();
-	vector<Block*> readForecast(bool isTraining);
-	void readMeasure(vector<Block*> blocks,bool isTraining);
-
-	void tmpAnalyse();
+	void printSoln(int destinationCityNo, Block* origin, vector<OperBlock*> soln);
+	void outputSoln(int destinationCityNo,Block* origin,vector<OperBlock*> soln);
 
 };
 

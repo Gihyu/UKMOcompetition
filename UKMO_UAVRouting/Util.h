@@ -35,7 +35,21 @@ public:
 	static double Epsilon;//0.0001
 
 	static int flyTime;
+<<<<<<< HEAD
 	static int maxIterationACO;
 
+=======
+
+	static int maxX;
+	static int maxY;
+	static int maxIndex;
+
+	//print
+	static time_t startTime;//2017.11.13 00:00
+	static string getTimeStr(time_t t);
+	static time_t getTime(int hour, int min);
+	static time_t getTime(int min);
+	static void printCurTime();
+>>>>>>> origin/master
 };
 

@@ -1,21 +1,6 @@
 #pragma once
 #include"Util.h"
 #include"Block.h"
-enum BLOCKTYPE
-{
-	B_MEASURE = 0,
-
-	B_MODE1 = 1,
-	B_MODE2 = 2,
-	B_MODE3 = 3,
-	B_MODE4 = 4,
-	B_MODE5 = 5,
-	B_MODE6 = 6,
-	B_MODE7 = 7,
-	B_MODE8 = 8,
-	B_MODE9 = 9,
-	B_MODE10 = 10
-};
 class OperBlock
 {
 private:
@@ -24,39 +9,40 @@ private:
 
 	Block* _block;
 
-	int _date;
-	int _hour;
-	double _wind;
+	//time
+	int _solnTime;//mins from 00:00
 
 	OperBlock * _frontOperBlock;
-
-	BLOCKTYPE _type;
 
 	int _ingTime;
 
 public:
-	OperBlock(Block* block,int date,int hour,BLOCKTYPE type,double wind);
+	OperBlock(Block* block,int hour,int ingTime);
 
 	//add by sjy 2017-11-7
 	void setFront(OperBlock * frontOperBlock) { _frontOperBlock = frontOperBlock; }
 	OperBlock * getFront() { return _frontOperBlock; }
 
-	OperBlock(Block * block, int hour,int ingTime);
-
-	int getTime() { return _hour; }
-	void setTime(int hour) { _hour = hour; }
+	int getSolnTime() { return _solnTime; }
+	void setSolnTime(int time) { _solnTime = time; }
 
 	int getIngTime() { return _ingTime; }
 	void setIngTime(int ingTime) { _ingTime = ingTime; }
 
 	Block * getBlock() { return _block; }
+
 	int getX() { return _block->getX(); }
 	int getY() { return _block->getY(); }
-	double getWind(int hour);
+
+	double getWind(int hour){ return _block->getWind(hour); }
+
+	void print();
+
 	bool cangotoThisBlock(Block * target, int thisTime);
 
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);
+	
 
 };
 

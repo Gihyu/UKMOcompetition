@@ -63,7 +63,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	int targetX = targetBlock->getX();
 	int targetY = targetBlock->getY();
 	bool findTheTarget = false;
-	OperBlock * targetOperBlock;
+	OperBlock * targetOperBlock = NULL;
 
 	// if we don't need the analysis for the actual steops even > 360 , use this "while" sentence
 	//while(!ingBlocks.empty() && !findTheTarget && ingBlock->getTime()<360)
@@ -156,14 +156,17 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{
 
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getTime() << "->";
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << "->";
 		}
 		cout << endl;
 		cout << endl;
 	}
 
-	delete sourceOperBlock;
-	sourceOperBlock = NULL;
+	if (sourceOperBlock != NULL)
+	{
+		delete sourceOperBlock;
+		sourceOperBlock = NULL;
+	}
 
 	if (targetOperBlock != NULL)
 	{
@@ -186,7 +189,7 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 	int targetX = targetBlock->getX();
 	int targetY = targetBlock->getY();
 	bool findTheTarget = false;
-	OperBlock * targetOperBlock;
+	OperBlock * targetOperBlock = NULL;
 
 	// if we don't need the analysis for the actual steops even > 360 , use this "while" sentence
 	//while(!ingBlocks.empty() && !findTheTarget && ingBlock->getTime()<360)
@@ -255,7 +258,7 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{
 
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getTime() << "->";
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << "->";
 		}
 		cout << endl;
 		cout << endl;
@@ -276,18 +279,19 @@ vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 //test 2017-11-12
 void BFS::run_the_case()
 {
-	Block * b1 = new Block(1,99,164);
-	Block * b2 = new Block(2, 100, 164);
-	Block * b3 = new Block(3, 101, 164);
-	Block * b4 = new Block(4, 102, 164);
-	Block * b5 = new Block(5, 99, 163);
-	Block * b6 = new Block(6, 100, 163);
-	Block * b7 = new Block(7, 101, 163);
-	Block * b8 = new Block(8, 102, 163);
-	Block * b9 = new Block(9, 99, 162);
-	Block * b10 = new Block(10, 100, 162);
-	Block * b11 = new Block(11, 101, 162);
-	Block * b12 = new Block(12, 102, 162);
+	array<double, 12> windArr = { 10,10,10,10,10,10,10,10,10,10,10,10 };
+	Block * b1 = new Block(1,99,164, windArr);
+	Block * b2 = new Block(2, 100, 164, windArr);
+	Block * b3 = new Block(3, 101, 164, windArr);
+	Block * b4 = new Block(4, 102, 164, windArr);
+	Block * b5 = new Block(5, 99, 163, windArr);
+	Block * b6 = new Block(6, 100, 163, windArr);
+	Block * b7 = new Block(7, 101, 163, windArr);
+	Block * b8 = new Block(8, 102, 163, windArr);
+	Block * b9 = new Block(9, 99, 162, windArr);
+	Block * b10 = new Block(10, 100, 162, windArr);
+	Block * b11 = new Block(11, 101, 162, windArr);
+	Block * b12 = new Block(12, 102, 162, windArr);
 	
 	b1->pushCangoToBlocks(b2);
 	b1->pushCangoToBlocks(b5);
@@ -474,7 +478,7 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{	
 
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is"<<OperRoute[i]->getTime()<<"->";
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is"<< OperRoute[i]->getSolnTime() <<"->";
 		}
 		cout << endl;
 		cout << endl;
