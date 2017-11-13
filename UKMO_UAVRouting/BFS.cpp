@@ -172,17 +172,17 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		cout << endl;
 	}
 
-	if (sourceOperBlock != NULL)
-	{
-		delete sourceOperBlock;
-		sourceOperBlock = NULL;
-	}
+	//if (sourceOperBlock != NULL)
+	//{
+	//	delete sourceOperBlock;
+	//	sourceOperBlock = NULL;
+	//}
 
-	if (targetOperBlock != NULL)
-	{
-		delete targetOperBlock;
-		targetOperBlock = NULL;
-	}
+	//if (targetOperBlock != NULL)
+	//{
+	//	delete targetOperBlock;
+	//	targetOperBlock = NULL;
+	//}
 
 	return OperRoute;
 }

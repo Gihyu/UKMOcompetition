@@ -21,6 +21,8 @@ void PathSolver::solve()
 	BFS* bfs = new BFS(_origin);//should be origin and destination!!
 	_soln = bfs->solve_by_anyCases(_destination);
 
+	sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
+
 	//OperBlock* opb1 = new OperBlock(_blockList[0], 9, 30);
 	//opb1->setSolnTime(9*60+30);//9:30
 	//OperBlock* opb2 = new OperBlock(_blockList[1], 10, 4);

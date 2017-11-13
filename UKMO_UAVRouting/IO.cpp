@@ -252,6 +252,7 @@ void IO::outputSoln(int destinationCityNo, Block* origin, vector<OperBlock*> sol
 		out << destinationCityNo << "," << date << ","
 			<< Util::getTimeStr(curTime) << ","
 			<< lastX << "," << lastY << endl;
+		curTime += step;
 	}
 }
 

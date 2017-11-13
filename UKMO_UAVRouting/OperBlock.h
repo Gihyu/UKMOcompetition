@@ -37,6 +37,7 @@ public:
 	double getWind(int hour){ return _block->getWind(hour); }
 
 	void print();
+	static bool cmpBySolnTime(OperBlock* a, OperBlock* b);
 
 	bool cangotoThisBlock(Block * target, int thisTime);
 
