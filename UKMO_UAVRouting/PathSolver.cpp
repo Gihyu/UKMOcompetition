@@ -12,7 +12,12 @@ PathSolver::PathSolver(Block * origin, Block* destination, vector<Block*> blocks
 }
 
 void PathSolver::solve()
-{
+{	
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+	}
+
 	BFS* bfs = new BFS(_origin);//should be origin and destination!!
 	_soln = bfs->solve_by_anyCases(_destination);
 

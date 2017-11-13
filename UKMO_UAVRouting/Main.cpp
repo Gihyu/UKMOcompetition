@@ -22,7 +22,7 @@ int main()
 	sche->init();
 
 	Block* origin = sche->getCity(0);//the blcok corresponding to origin
-	int cityNo = 9;
+	int cityNo = 1;
 	Block* destination = sche->getCity(cityNo);//the blcok corresponding to the destination
 	vector<Block*> blocks = sche->getBlockList();//all blocks
 	PathSolver* solver = new PathSolver(origin, destination,blocks);//from origin to destination

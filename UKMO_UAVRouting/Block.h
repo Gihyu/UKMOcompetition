@@ -19,7 +19,11 @@ private:
 	array<double, 12> _measureWindArr;//9:00-20:00
 	static const int _basicHour = 9;
 
-	// maybe it's not necessary
+	// mark the situation of the Block ( BFS ) in order to run faster
+	// 0 means notFound ; 1 means Searching ; 2 means visted
+	// initial is 0
+	int _situation;
+
 	vector<Block* >_cangotoBlocks;
 
 	//add by sjy to use a case test ;17-11-11
@@ -43,6 +47,10 @@ public:
 	void pushCanGoToBlock(Block* block) { _cangotoBlocks.push_back(block); }
 	vector<Block*> getCangoToBlocks() { return _cangotoBlocks; }
 	void pushCangoToBlocks(Block * cangoto) { _cangotoBlocks.push_back(cangoto); }
+
+	void setSituation(int a) { _situation = a; }
+	int getSituation() { return _situation; }
+
 
 	//add by sjy to use a case test ;17-11-11
 	int getId() { return _id; }

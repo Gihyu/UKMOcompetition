@@ -57,6 +57,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	clearQueue(_ingOperBlocks);
 
 	// 540 means start from 9:00
+	_sourceBlock->setSituation(1);
 	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,540);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
@@ -67,7 +68,6 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	OperBlock * targetOperBlock = NULL;
 
 	// if we don't need the analysis for the actual steops even >1200, use this "while" sentence
-	//while(!ingBlocks.empty() && !findTheTarget && ingOperBlock->getSolnTime()<1200)
 
 	while (!_ingOperBlocks.empty() && !findTheTarget &&_ingOperBlocks.front()->getSolnTime()<1200)
 	{
@@ -86,7 +86,8 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 				if (ingOperBlock->cangotoThisBlock(cangoto, thisTime))
 				{
 					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
-					{
+					{	
+						//maybe here need to set Situation
 						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 						targetOperBlock->setFront(ingOperBlock);
 						findTheTarget = true;
@@ -94,8 +95,10 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 					}
 					else
 					{
-						if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
-						{
+						//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+						if (cangoto->getSituation()==0 )
+						{	
+							cangoto->setSituation(1);
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
 							_ingOperBlocks.push(cangotoOperBlock);
@@ -109,7 +112,8 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 
 			for (auto & cangoto : cangoToBlocks)
 			{
-				if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+				//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+				if (cangoto->getSituation() == 0)
 				{
 					allCangoToOper = false;
 				}
@@ -117,6 +121,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 			if (allCangoToOper)
 			{
 				_vistedOperBlocks.push_back(ingOperBlock);
+				ingOperBlock->getBlock()->setSituation(2);
 				_ingOperBlocks.pop();
 			}
 			else
@@ -132,6 +137,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		else
 		{
 			_vistedOperBlocks.push_back(ingOperBlock);
+			ingOperBlock->getBlock()->setSituation(2);
 			_ingOperBlocks.pop();
 		}
 	}
