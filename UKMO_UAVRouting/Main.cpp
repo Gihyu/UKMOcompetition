@@ -24,7 +24,7 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 2;
+	int date = 1;
 
 	//int date = atoi(argv[1]);
 
@@ -40,9 +40,11 @@ int main()
 
 	Block* destination = sche->getCity(cityNo);//the blcok corresponding to the destination
 	vector<Block*> blocks = sche->getBlockList();//all blocks
-	PathSolver* solver = new PathSolver(origin, destination,blocks);//from origin to destination
+	//PathSolver* solver = new PathSolver(origin, destination,blocks);//from origin to destination
+	PathSolver* solver = new PathSolver(origin, sche->getCityList(), blocks);//from origin to all destinations
 	solver->solve();//find a path by some method;please call bfs in PathSolver::solve()!!
-	io->outputSoln(cityNo,origin,solver->getSoln());
+	//io->outputSoln(cityNo,origin,solver->getSoln());
+	io->outputMultiSoln(sche->getCityList(), origin, solver->getMultiSoln());//soln is not required exactly
 	//zhoulei end
 
 

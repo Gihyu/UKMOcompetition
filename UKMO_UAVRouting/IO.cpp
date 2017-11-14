@@ -214,7 +214,7 @@ void IO::readMeasure(Schedule* sche,string inFile)
 
 void IO::printSoln(int destinationCityNo, Block * origin, vector<OperBlock*> soln)
 {
-	cout << ">>> PRINT SOLN" << endl;
+	cout << ">>> PRINT SOLN: city_"<< destinationCityNo << endl;
 	for (auto&tmp : soln)
 	{
 		tmp->print();
@@ -253,6 +253,52 @@ void IO::outputSoln(int destinationCityNo, Block* origin, vector<OperBlock*> sol
 			<< Util::getTimeStr(curTime) << ","
 			<< lastX << "," << lastY << endl;
 		curTime += step;
+	}
+}
+
+void IO::outputMultiSoln(vector<City*> cities, Block * origin, vector<vector<OperBlock*>> multiSoln)
+{
+	int date = origin->getDate();
+
+	string outFileName = Util::OutputPath + "Soln_multi_day" + to_string(date) + ".csv";
+	cout << "* Soln output:" << outFileName << endl;
+	ofstream out(outFileName.c_str());
+
+	for (auto&city : cities)
+	{
+		if (city->getBlock() == origin)
+		{
+			continue;
+		}
+
+		vector<OperBlock*> soln = city->getSoln();
+		int destinationCityNo = city->getNo();
+		printSoln(destinationCityNo, origin, soln);
+
+
+		time_t curTime = Util::getTime(9, 0);//9:00
+		time_t step = 2 * 60;//2mins
+		Block* last = origin;
+		int lastX = last->getX();
+		int lastY = last->getY();
+		for (auto&tmp : soln)
+		{
+			time_t tmpT = Util::getTime(tmp->getSolnTime());
+			while (curTime < tmpT)
+			{
+				out << destinationCityNo << "," << date << ","
+					<< Util::getTimeStr(curTime) << ","
+					<< lastX << "," << lastY << endl;
+				curTime += step;
+			}
+			last = tmp->getBlock();
+			lastX = last->getX();
+			lastY = last->getY();
+			out << destinationCityNo << "," << date << ","
+				<< Util::getTimeStr(curTime) << ","
+				<< lastX << "," << lastY << endl;
+			curTime += step;
+		}
 	}
 }
 

@@ -17,6 +17,7 @@ public:
 
 	void printSoln(int destinationCityNo, Block* origin, vector<OperBlock*> soln);
 	void outputSoln(int destinationCityNo,Block* origin,vector<OperBlock*> soln);
+	void outputMultiSoln(vector<City*> cities, Block* origin, vector<vector<OperBlock*>> multiSoln);
 
 };
 
