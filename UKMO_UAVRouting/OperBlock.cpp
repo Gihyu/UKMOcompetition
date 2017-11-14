@@ -34,6 +34,11 @@ bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime)
 
 void OperBlock::print()
 {
-	cout << "Oper_" << _id << "\t"<<Util::getTimeStr(Util::getTime(_solnTime));
+	cout << "Oper_" << _id << "\t" << Util::getTimeStr(Util::getTime(_solnTime)) << "\t";
 	_block->print();
+}
+
+bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
+{
+	return a->getSolnTime() < b->getSolnTime();
 }
