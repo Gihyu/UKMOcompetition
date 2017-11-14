@@ -62,14 +62,18 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
-	int targetX = targetBlock->getX();
-	int targetY = targetBlock->getY();
+	//int targetX = targetBlock->getX();
+	//int targetY = targetBlock->getY();
+
+	int targetX = 297;
+	int targetY = 63;
+
 	bool findTheTarget = false;
 	OperBlock * targetOperBlock = NULL;
 
 	// if we don't need the analysis for the actual steops even >1260, use this "while" sentence
 
-	while (!_ingOperBlocks.empty() && !findTheTarget &&_ingOperBlocks.front()->getSolnTime()<Util::maxTime)
+	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -78,8 +82,8 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		{
 			int thisTime = ingOperBlock->getIngTime();
 
-			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime <<" and wind here is "<< ingOperBlock->getBlock()->getWind(thisTime/60)<< endl;
-
+			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime <<" and wind here is "<< ingOperBlock->getBlock()->getWind(thisTime/60)<< endl;
+			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and solnTime is " << ingOperBlock->getSolnTime() << endl;
 			bool allCangoToOper = true;
 			for (auto & cangoto : cangoToBlocks)
 			{
@@ -118,6 +122,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 					allCangoToOper = false;
 				}
 			}
+
 			if (allCangoToOper)
 			{
 				_vistedOperBlocks.push_back(ingOperBlock);
@@ -126,10 +131,20 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 			}
 			else
 				// stay for next 2 minutes
-			{
+			{	
+
+				//cout << endl;
+				//cout<< "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!now is waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+				//cout<< "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << thisTime << " and wind here is " << ingOperBlock->getBlock()->getWind(thisTime / 60) << endl;
 				ingOperBlock->setIngTime(thisTime + Util::flyTime);
-				_ingOperBlocks.push(ingOperBlock);
+				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!after reset waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+				//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << ingOperBlock->getIngTime() <<" and solnTime is "<< ingOperBlock->getSolnTime() <<endl;
 				_ingOperBlocks.pop();
+				_ingOperBlocks.push(ingOperBlock);
+				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!end waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+				//cout << endl;
+
+
 				// maybe here is a function to plus not 2 but the number which let the wind changed
 			}
 
@@ -164,9 +179,25 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 	{
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
-		{
-
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << "->";
+		{	
+			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
+			bool findBug = true;
+			while (findBug)
+			{
+				if (absPlus * 2 + 540 != OperRoute[i]->getSolnTime())
+				{
+					vector<Block * > BugCanGotos = OperRoute[i]->getBlock()->getCangoToBlocks();
+					for (auto & bug : BugCanGotos)
+					{
+						cout << bug->getX() << "," << bug->getY() << endl;
+					}
+					cout << "!!!!!!!!!!bug is here !!!!!!!!!" << endl;
+					findBug = false;
+				}
+			}
+			
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " IngTime is " << OperRoute[i]->getIngTime()<< "->"<<endl;
+			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << " and wind here is " << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->";
 		}
 		cout << endl;
 		cout << endl;

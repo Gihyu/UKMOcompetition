@@ -16,13 +16,13 @@ int main()
 	//zhoulei
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
-	int date = 1;
+	int date = 3;
 	io->input(sche, date);
 	
 	sche->init();
 
 	Block* origin = sche->getCity(0);//the blcok corresponding to origin
-	int cityNo = 1;
+	int cityNo = 8;
 	Block* destination = sche->getCity(cityNo);//the blcok corresponding to the destination
 	vector<Block*> blocks = sche->getBlockList();//all blocks
 	PathSolver* solver = new PathSolver(origin, destination,blocks);//from origin to destination
