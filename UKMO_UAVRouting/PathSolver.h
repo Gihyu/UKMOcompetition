@@ -11,6 +11,8 @@ private:
 	vector<Block*> _blockList;
 
 	vector<OperBlock*> _soln;
+
+	vector<vector<OperBlock*>> _multiSoln;
 public:
 	PathSolver(Block* origin, Block* destination,vector<Block*> blocks);
 

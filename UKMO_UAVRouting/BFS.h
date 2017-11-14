@@ -22,7 +22,9 @@ public:
 	bool isInOperVector(Block * test, vector<OperBlock *> testVector);
 	bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue);
 
-	vector<OperBlock *> solve_by_anyCases(Block * target);
+	vector<OperBlock *> solve_by_anyCases_singleTarget(Block * target);
+	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget(Block * target);
+
 	vector<OperBlock *> solve_by_connectedNetwork(Block * target);
 
 	void clearQueue(queue<OperBlock *>& q);

@@ -50,29 +50,193 @@ bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue)
 	}
 	return whetherIn;
 }
+// use for debug
+//vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
+//{	
+//	_vistedOperBlocks.clear();
+//	clearQueue(_ingOperBlocks);
+//
+//	// 540 means start from 9:00
+//	_sourceBlock->setSituation(1);
+//	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,540);
+//	sourceOperBlock->setFront(NULL);
+//	_ingOperBlocks.push(sourceOperBlock);
+//
+//	//int targetX = targetBlock->getX();
+//	//int targetY = targetBlock->getY();
+//
+//	int targetX = 297;
+//	int targetY = 63;
+//
+//	bool findTheTarget = false;
+//	OperBlock * targetOperBlock = NULL;
+//
+//	// if we don't need the analysis for the actual steops even >1260, use this "while" sentence
+//
+//	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
+//	{
+//		OperBlock * ingOperBlock = _ingOperBlocks.front();
+//		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+//
+//		if (!cangoToBlocks.empty())
+//		{
+//			int thisTime = ingOperBlock->getIngTime();
+//
+//			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime <<" and wind here is "<< ingOperBlock->getBlock()->getWind(thisTime/60)<< endl;
+//			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and solnTime is " << ingOperBlock->getSolnTime() << endl;
+//			bool allCangoToOper = true;
+//			for (auto & cangoto : cangoToBlocks)
+//			{
+//				if (ingOperBlock->cangotoThisBlock(cangoto, thisTime))
+//				{
+//					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
+//					{	
+//						//maybe here need to set Situation
+//						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+//						targetOperBlock->setFront(ingOperBlock);
+//						findTheTarget = true;
+//						break;
+//					}
+//					else
+//					{
+//						//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+//						if (cangoto->getSituation()==0 )
+//						{	
+//							cangoto->setSituation(1);
+//							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+//							cangotoOperBlock->setFront(ingOperBlock);
+//							_ingOperBlocks.push(cangotoOperBlock);
+//						}
+//
+//					}
+//				}
+//				//in order to assure the function for the whole system , the " break " should write after all the cangotoOperBlocls.
+//				// version 2017-11-12
+//			}
+//
+//			for (auto & cangoto : cangoToBlocks)
+//			{
+//				//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
+//				if (cangoto->getSituation() == 0)
+//				{
+//					allCangoToOper = false;
+//				}
+//			}
+//
+//			if (allCangoToOper)
+//			{
+//				_vistedOperBlocks.push_back(ingOperBlock);
+//				ingOperBlock->getBlock()->setSituation(2);
+//				_ingOperBlocks.pop();
+//			}
+//			else
+//				// stay for next 2 minutes
+//			{	
+//
+//				//cout << endl;
+//				//cout<< "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!now is waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+//				//cout<< "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << thisTime << " and wind here is " << ingOperBlock->getBlock()->getWind(thisTime / 60) << endl;
+//				ingOperBlock->setIngTime(thisTime + Util::flyTime);
+//				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!after reset waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+//				//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << ingOperBlock->getIngTime() <<" and solnTime is "<< ingOperBlock->getSolnTime() <<endl;
+//				_ingOperBlocks.pop();
+//				_ingOperBlocks.push(ingOperBlock);
+//				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!end waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+//				//cout << endl;
+//
+//
+//				// maybe here is a function to plus not 2 but the number which let the wind changed
+//			}
+//
+//		}
+//		else
+//		{
+//			_vistedOperBlocks.push_back(ingOperBlock);
+//			ingOperBlock->getBlock()->setSituation(2);
+//			_ingOperBlocks.pop();
+//		}
+//	}
+//
+//	vector<OperBlock *> OperRoute;
+//	if (findTheTarget)
+//	{
+//		// when print don't forget to inverted order		
+//		OperRoute.push_back(targetOperBlock);
+//		OperBlock * front = targetOperBlock->getFront();
+//		while (front != NULL)
+//		{
+//			OperRoute.push_back(front);
+//			front = front->getFront();
+//		}
+//	}
+//	
+//	//print function
+//	if (OperRoute.empty())
+//	{
+//		cout << " shortest path failed ! Can't find the targetBlock !" << endl;
+//	}
+//	else
+//	{
+//		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
+//		for (int i = OperRoute.size() - 1; i >= 0; i--)
+//		{	
+//			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
+//			bool findBug = true;
+//			while (findBug)
+//			{
+//				if (absPlus * 2 + 540 != OperRoute[i]->getSolnTime())
+//				{
+//					vector<Block * > BugCanGotos = OperRoute[i]->getBlock()->getCangoToBlocks();
+//					for (auto & bug : BugCanGotos)
+//					{
+//						cout << bug->getX() << "," << bug->getY() << endl;
+//					}
+//					cout << "!!!!!!!!!!bug is here !!!!!!!!!" << endl;
+//					findBug = false;
+//				}
+//			}
+//			
+//			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " IngTime is " << OperRoute[i]->getIngTime()<< "->"<<endl;
+//			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << " and wind here is " << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->";
+//		}
+//		cout << endl;
+//		cout << endl;
+//	}
+//
+//	//if (sourceOperBlock != NULL)
+//	//{
+//	//	delete sourceOperBlock;
+//	//	sourceOperBlock = NULL;
+//	//}
+//
+//	//if (targetOperBlock != NULL)
+//	//{
+//	//	delete targetOperBlock;
+//	//	targetOperBlock = NULL;
+//	//}
+//
+//	return OperRoute;
+//}
 
-vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
-{	
+
+vector<OperBlock *> BFS::solve_by_anyCases_singleTarget(Block * targetBlock)
+{
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
 
 	// 540 means start from 9:00
 	_sourceBlock->setSituation(1);
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,540);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 540);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
-	//int targetX = targetBlock->getX();
-	//int targetY = targetBlock->getY();
-
-	int targetX = 297;
-	int targetY = 63;
+	int targetX = targetBlock->getX();
+	int targetY = targetBlock->getY();
 
 	bool findTheTarget = false;
 	OperBlock * targetOperBlock = NULL;
 
-	// if we don't need the analysis for the actual steops even >1260, use this "while" sentence
-
+	
 	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
@@ -81,9 +245,7 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 		if (!cangoToBlocks.empty())
 		{
 			int thisTime = ingOperBlock->getIngTime();
-
-			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and time is " << thisTime <<" and wind here is "<< ingOperBlock->getBlock()->getWind(thisTime/60)<< endl;
-			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and solnTime is " << ingOperBlock->getSolnTime() << endl;
+			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime <<" and SolnTime is "<< ingOperBlock ->getSolnTime()<< endl;
 			bool allCangoToOper = true;
 			for (auto & cangoto : cangoToBlocks)
 			{
@@ -91,17 +253,17 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 				{
 					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
 					{	
-						//maybe here need to set Situation
+						cangoto->setSituation(2);
 						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 						targetOperBlock->setFront(ingOperBlock);
+						_vistedOperBlocks.push_back(targetOperBlock);
 						findTheTarget = true;
 						break;
 					}
 					else
 					{
-						//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
-						if (cangoto->getSituation()==0 )
-						{	
+						if (cangoto->getSituation() == 0)
+						{
 							cangoto->setSituation(1);
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
@@ -110,13 +272,10 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 
 					}
 				}
-				//in order to assure the function for the whole system , the " break " should write after all the cangotoOperBlocls.
-				// version 2017-11-12
 			}
 
 			for (auto & cangoto : cangoToBlocks)
 			{
-				//if (!isInOperVector(cangoto, _vistedOperBlocks) && !isInQueue(cangoto, _ingOperBlocks))
 				if (cangoto->getSituation() == 0)
 				{
 					allCangoToOper = false;
@@ -130,22 +289,10 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 				_ingOperBlocks.pop();
 			}
 			else
-				// stay for next 2 minutes
-			{	
-
-				//cout << endl;
-				//cout<< "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!now is waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-				//cout<< "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << thisTime << " and wind here is " << ingOperBlock->getBlock()->getWind(thisTime / 60) << endl;
+			{
 				ingOperBlock->setIngTime(thisTime + Util::flyTime);
-				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!after reset waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-				//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and IngTime is " << ingOperBlock->getIngTime() <<" and solnTime is "<< ingOperBlock->getSolnTime() <<endl;
 				_ingOperBlocks.pop();
 				_ingOperBlocks.push(ingOperBlock);
-				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!end waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-				//cout << endl;
-
-
-				// maybe here is a function to plus not 2 but the number which let the wind changed
 			}
 
 		}
@@ -169,54 +316,220 @@ vector<OperBlock *> BFS::solve_by_anyCases(Block * targetBlock)
 			front = front->getFront();
 		}
 	}
-	
+
 	//print function
 	if (OperRoute.empty())
 	{
 		cout << " shortest path failed ! Can't find the targetBlock !" << endl;
 	}
 	else
-	{
+	{	
+		cout << endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
+		
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{	
 			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
-			bool findBug = true;
-			while (findBug)
+			if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
 			{
-				if (absPlus * 2 + 540 != OperRoute[i]->getSolnTime())
-				{
-					vector<Block * > BugCanGotos = OperRoute[i]->getBlock()->getCangoToBlocks();
-					for (auto & bug : BugCanGotos)
-					{
-						cout << bug->getX() << "," << bug->getY() << endl;
-					}
-					cout << "!!!!!!!!!!bug is here !!!!!!!!!" << endl;
-					findBug = false;
-				}
+				cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
 			}
-			
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " IngTime is " << OperRoute[i]->getIngTime()<< "->"<<endl;
-			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << " and wind here is " << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->";
+			if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
+			{
+				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
+			}
+
+		cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() <<" and the wind that time is"<< OperRoute [i]->getBlock()->getWind(OperRoute[i]->getSolnTime()/60)<<  "->" << endl;
 		}
 		cout << endl;
 		cout << endl;
 	}
 
-	//if (sourceOperBlock != NULL)
-	//{
-	//	delete sourceOperBlock;
-	//	sourceOperBlock = NULL;
-	//}
-
-	//if (targetOperBlock != NULL)
-	//{
-	//	delete targetOperBlock;
-	//	targetOperBlock = NULL;
-	//}
+	//invalid memory control but it's helpful to stop the printFile in IO when we just want to analysis the route.
+	if (sourceOperBlock != NULL)
+	{
+		delete sourceOperBlock;
+		sourceOperBlock = NULL;
+	}
+	if (targetOperBlock != NULL)
+	{
+		delete targetOperBlock;
+		targetOperBlock = NULL;
+	}
 
 	return OperRoute;
 }
+
+vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTarget)
+{
+	vector<vector<OperBlock *>> multiSoln;
+
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
+	// 540 means start from 9:00
+	_sourceBlock->setSituation(1);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 540);
+	sourceOperBlock->setFront(NULL);
+	_ingOperBlocks.push(sourceOperBlock);
+
+	int farmostX = farmostTarget->getX();
+	int farmostY = farmostTarget->getY();
+
+	bool findTheFarmost = false;
+
+	while (!_ingOperBlocks.empty() && !findTheFarmost && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
+	{
+		OperBlock * ingOperBlock = _ingOperBlocks.front();
+		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+
+		if (!cangoToBlocks.empty())
+		{
+			int thisTime = ingOperBlock->getIngTime();
+			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and SolnTime is " << ingOperBlock->getSolnTime() << endl;
+			bool allCangoToOper = true;
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (ingOperBlock->cangotoThisBlock(cangoto, thisTime))
+				{
+					if (cangoto->getX() == farmostX && cangoto->getY() == farmostY)
+					{
+						cangoto->setSituation(2);
+						OperBlock * farmostOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+						farmostOperBlock->setFront(ingOperBlock);
+						_vistedOperBlocks.push_back( farmostOperBlock);
+						findTheFarmost = true;
+						break;
+					}
+					else
+					{
+						if (cangoto->getSituation() == 0)
+						{
+							cangoto->setSituation(1);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+							cangotoOperBlock->setFront(ingOperBlock);
+							_ingOperBlocks.push(cangotoOperBlock);
+						}
+
+					}
+				}
+			}
+
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (cangoto->getSituation() == 0)
+				{
+					allCangoToOper = false;
+				}
+			}
+
+			if (allCangoToOper)
+			{
+				_vistedOperBlocks.push_back(ingOperBlock);
+				ingOperBlock->getBlock()->setSituation(2);
+				_ingOperBlocks.pop();
+			}
+			else
+			{
+				ingOperBlock->setIngTime(thisTime + Util::flyTime);
+				_ingOperBlocks.pop();
+				_ingOperBlocks.push(ingOperBlock);
+			}
+
+		}
+		else
+		{
+			_vistedOperBlocks.push_back(ingOperBlock);
+			ingOperBlock->getBlock()->setSituation(2);
+			_ingOperBlocks.pop();
+		}
+	}
+
+	vector<pair<int, int>> destinations;
+	pair<int,int> d1(84, 203);
+	pair<int, int> d2(199, 371);
+	pair<int, int> d3(140, 234);
+	pair<int, int> d4(236, 241);
+	pair<int, int> d5(315, 281);
+	pair<int, int> d6(358, 207);
+	pair<int, int> d7(363, 237);
+	pair<int, int> d8(423, 266);
+	pair<int, int> d9(125, 375);
+	pair<int, int> d10(189, 274);
+
+	destinations.push_back(d1);
+	destinations.push_back(d2);
+	destinations.push_back(d3);
+	destinations.push_back(d4);
+	destinations.push_back(d5);
+	destinations.push_back(d6);
+	destinations.push_back(d7);
+	destinations.push_back(d8);
+	destinations.push_back(d9);
+	destinations.push_back(d10);
+
+	for (int k = 0; k < 10; k++)
+	{
+		int destinationX = destinations[k].first;
+		int destinationY = destinations[k].second;
+		vector<OperBlock * > OperRoute;
+		OperBlock * front = NULL;
+		for (auto & visted : _vistedOperBlocks)
+		{
+			if (visted->getBlock()->getX() == destinationX && visted->getBlock()->getY() == destinationY)
+			{
+				OperRoute.push_back(visted);
+				front = visted->getFront();
+				break;
+			}
+		}
+		while (front != NULL)
+		{
+			OperRoute.push_back(front);
+			front = front->getFront();
+		}
+		sort(OperRoute.begin(), OperRoute.end(), OperBlock::cmpBySolnTime);
+		multiSoln.push_back(OperRoute);
+	}
+
+	//print function
+	for (int k = 0;k<10;k++)
+	{
+		if (multiSoln[k].empty())
+		{
+			cout << endl;
+			cout << "can not reach city" << k << "(" << destinations[k].first << "," << destinations[k].second << endl;
+			cout << endl;
+		}
+		else
+		{
+			cout << endl;
+			cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+			cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << destinations[k].first << "," << destinations[k].second << ") is :" << endl;
+
+			for (int i =0; i<multiSoln[k].size(); i++)
+			{
+				//int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
+				//if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
+				//{
+				//	cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
+				//}
+				//if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
+				//{
+				//	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
+				//}
+
+				cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
+			}
+			cout << endl;
+			cout << endl;
+		}
+	}
+
+	return multiSoln;
+}
+
 
 vector<OperBlock *> BFS::solve_by_connectedNetwork(Block * targetBlock)
 {
