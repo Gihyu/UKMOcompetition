@@ -475,13 +475,33 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 		int destinationY = destinations[k].second;
 		vector<OperBlock * > OperRoute;
 		OperBlock * front = NULL;
+		// maybe some is soln but it's ingTime is 1258 so it will be in the ingBlock
+		bool findTheDes = false;
 		for (auto & visted : _vistedOperBlocks)
 		{
 			if (visted->getBlock()->getX() == destinationX && visted->getBlock()->getY() == destinationY)
 			{
 				OperRoute.push_back(visted);
 				front = visted->getFront();
+				findTheDes = true;
 				break;
+			}			
+		}
+		if (!findTheDes)
+		{
+			int size = _ingOperBlocks.size();
+			for (int i = 1; i <= size; i++)
+			{
+				OperBlock * testOperBlock = _ingOperBlocks.front();
+				if (destinationX == testOperBlock->getX() && destinationY == testOperBlock->getY())
+				{	
+					OperRoute.push_back(testOperBlock);
+					front = testOperBlock->getFront();
+					findTheDes = true;
+					break;
+				}
+				_ingOperBlocks.pop();
+				_ingOperBlocks.push(testOperBlock);
 			}
 		}
 		while (front != NULL)
@@ -499,7 +519,7 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 		if (multiSoln[k].empty())
 		{
 			cout << endl;
-			cout << "can not reach city" << k << "(" << destinations[k].first << "," << destinations[k].second << endl;
+			cout << "can not reach city" << k+1 << "(" << destinations[k].first << "," << destinations[k].second << endl;
 			cout << endl;
 		}
 		else
