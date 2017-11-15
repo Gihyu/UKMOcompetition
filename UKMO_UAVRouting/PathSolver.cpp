@@ -11,6 +11,21 @@ PathSolver::PathSolver(Block * origin, Block* destination, vector<Block*> blocks
 	cout << endl;
 }
 
+PathSolver::PathSolver(Block * origin, vector<City*> desCities, vector<Block*> blocks):
+	_origin(origin), _desCityList(desCities), _blockList(blocks)
+{
+	_destination = NULL;
+	cout << ">>> PathSolver create:" << endl;
+	cout << "\tfrom:\t";
+	_origin->print();
+	cout << "\tto:\t";
+	for (auto&city:_desCityList)
+	{
+		city->print();
+	}
+	cout << endl;
+}
+
 void PathSolver::solve()
 {	
 	for (auto & block : _blockList)
@@ -22,7 +37,12 @@ void PathSolver::solve()
 	//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
 	//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
 
-	bfs->solve_by_anyCases_multiTarget(_destination);
+	_multiSoln = bfs->solve_by_anyCases_multiTarget(_desCityList[8]->getBlock());
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		_desCityList[i]->setSoln(_multiSoln[i-1]);//#city = 11; #soln = 10
+	}
+
 
 	//OperBlock* opb1 = new OperBlock(_blockList[0], 9, 30);
 	//opb1->setSolnTime(9*60+30);//9:30
