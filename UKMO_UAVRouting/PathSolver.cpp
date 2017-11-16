@@ -43,7 +43,7 @@ void PathSolver::solve()
 		_desCityList[i]->setSoln(_multiSoln[i-1]);//#city = 11; #soln = 10
 	}
 
-
+	//zhoulei debug
 	//OperBlock* opb1 = new OperBlock(_blockList[0], 9, 30);
 	//opb1->setSolnTime(9*60+30);//9:30
 	//OperBlock* opb2 = new OperBlock(_blockList[1], 10, 4);

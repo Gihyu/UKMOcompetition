@@ -3,8 +3,13 @@
 //string Util::OutputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/output/";
 //string Util::InputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/input/";
 
-string Util::OutputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/output/";
-string Util::InputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/input/";
+//sjy hp
+//string Util::OutputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/output/";
+//string Util::InputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/input/";
+
+//sjy hasee
+string Util::OutputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/output/";
+string Util::InputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/input/";
 
 double Util::Epsilon = 0.0001;//0.0001
 
