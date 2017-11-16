@@ -237,7 +237,7 @@ vector<OperBlock *> BFS::solve_by_anyCases_singleTarget(Block * targetBlock)
 	OperBlock * targetOperBlock = NULL;
 
 	
-	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
+	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -361,6 +361,9 @@ vector<OperBlock *> BFS::solve_by_anyCases_singleTarget(Block * targetBlock)
 	return OperRoute;
 }
 
+
+// need to update : multi needn't the target cause 437 and 443 may not be reached in targetTime in bad weather case.
+//next version will update this.
 vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTarget)
 {
 	vector<vector<OperBlock *>> multiSoln;
@@ -379,7 +382,7 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 
 	bool findTheFarmost = false;
 
-	while (!_ingOperBlocks.empty() && !findTheFarmost && _ingOperBlocks.front()->getSolnTime()<Util::maxTime)
+	while (!_ingOperBlocks.empty() && !findTheFarmost && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -865,3 +868,139 @@ void BFS::clearQueue(queue<OperBlock *>& q) {
 	queue<OperBlock*> empty;
 	swap(empty, q);
 }
+
+
+vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio)
+{
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
+	// 540 means start from 9:00
+	_sourceBlock->setSituation(1);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 540);
+	sourceOperBlock->setFront(NULL);
+	_ingOperBlocks.push(sourceOperBlock);
+
+	int targetX = targetBlock->getX();
+	int targetY = targetBlock->getY();
+
+	bool findTheTarget = false;
+	OperBlock * targetOperBlock = NULL;
+
+
+	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
+	{
+		OperBlock * ingOperBlock = _ingOperBlocks.front();
+		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+
+		if (!cangoToBlocks.empty())
+		{
+			int thisTime = ingOperBlock->getIngTime();
+			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and SolnTime is " << ingOperBlock->getSolnTime() << endl;
+			bool allCangoToOper = true;
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (ingOperBlock->cangotoThisBlock_allow_ratio(cangoto, thisTime, windRatio))
+				{
+					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
+					{
+						cangoto->setSituation(2);
+						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+						targetOperBlock->setFront(ingOperBlock);
+						_vistedOperBlocks.push_back(targetOperBlock);
+						findTheTarget = true;
+						break;
+					}
+					else
+					{
+						if (cangoto->getSituation() == 0)
+						{
+							cangoto->setSituation(1);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+							cangotoOperBlock->setFront(ingOperBlock);
+							_ingOperBlocks.push(cangotoOperBlock);
+						}
+
+					}
+				}
+			}
+
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (cangoto->getSituation() == 0)
+				{
+					allCangoToOper = false;
+				}
+			}
+
+			if (allCangoToOper)
+			{
+				_vistedOperBlocks.push_back(ingOperBlock);
+				ingOperBlock->getBlock()->setSituation(2);
+				_ingOperBlocks.pop();
+			}
+			else
+			{
+				ingOperBlock->setIngTime(thisTime + Util::flyTime);
+				_ingOperBlocks.pop();
+				_ingOperBlocks.push(ingOperBlock);
+			}
+
+		}
+		else
+		{
+			_vistedOperBlocks.push_back(ingOperBlock);
+			ingOperBlock->getBlock()->setSituation(2);
+			_ingOperBlocks.pop();
+		}
+	}
+
+	vector<OperBlock *> OperRoute;
+	if (findTheTarget)
+	{
+		// when print don't forget to inverted order		
+		OperRoute.push_back(targetOperBlock);
+		OperBlock * front = targetOperBlock->getFront();
+		while (front != NULL)
+		{
+			OperRoute.push_back(front);
+			front = front->getFront();
+		}
+	}
+
+	sort(OperRoute.begin(), OperRoute.end(), OperBlock::cmpBySolnTime);
+
+	//print function
+	if (OperRoute.empty())
+	{
+		cout << " shortest path failed ! Can't find the targetBlock when allow "<<windRatio<<" !" << endl;
+	}
+	else
+	{
+		cout << endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
+
+		for (int i = 0; i <OperRoute.size(); i++)
+		{
+			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
+			if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
+			{
+				cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
+			}
+			if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
+			{
+				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
+			}
+
+			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " and the wind that time is" << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->" << endl;
+		}
+		cout << endl;
+		cout << endl;
+	}
+
+
+	return OperRoute;
+}
+
+

@@ -24,6 +24,7 @@ public:
 
 	vector<OperBlock *> solve_by_anyCases_singleTarget(Block * target);
 	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget(Block * target);
+	vector<OperBlock *> solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio);
 
 	vector<OperBlock *> solve_by_connectedNetwork(Block * target);
 

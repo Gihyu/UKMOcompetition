@@ -24,7 +24,7 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 1;
+	int date = 10;
 
 	//int date = atoi(argv[1]);
 

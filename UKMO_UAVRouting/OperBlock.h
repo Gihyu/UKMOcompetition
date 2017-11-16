@@ -40,6 +40,7 @@ public:
 	static bool cmpBySolnTime(OperBlock* a, OperBlock* b);
 
 	bool cangotoThisBlock(Block * target, int thisTime);
+	bool cangotoThisBlock_allow_ratio(Block * target, int thisTime, double windRatio);
 
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);

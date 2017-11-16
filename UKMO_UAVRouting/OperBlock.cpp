@@ -12,8 +12,6 @@ OperBlock::OperBlock(Block* block,int firstReachTime):
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 {
 	// I need to update this rule after my question online is confirmed.
-	//cout << "bug!!!!!!!minute" << thisTime << endl;
-	//cout<< "bug!!!!!!!hour" << thisTime/60 << endl;
 	if (getWind(thisTime/60) < 20.0 && target->getWind(thisTime/60)<20.0)
 	{
 		return true;
@@ -21,6 +19,18 @@ bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 	else
 		return false;
 }
+
+bool OperBlock::cangotoThisBlock_allow_ratio(Block * target, int thisTime,double windRatio)
+{
+	// I need to update this rule after my question online is confirmed.
+	if (getWind(thisTime / 60) < windRatio && target->getWind(thisTime / 60)<windRatio)
+	{
+		return true;
+	}
+	else
+		return false;
+}
+
 
 bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime)
 {

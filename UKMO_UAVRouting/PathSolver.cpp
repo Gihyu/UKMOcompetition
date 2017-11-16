@@ -39,8 +39,30 @@ void PathSolver::solve()
 
 	_multiSoln = bfs->solve_by_anyCases_multiTarget(_desCityList[8]->getBlock());
 	for (int i = 1; i < _desCityList.size(); ++i)
-	{
-		_desCityList[i]->setSoln(_multiSoln[i-1]);//#city = 11; #soln = 10
+	{	
+		if (_multiSoln[i - 1].empty())
+		{	
+			double windratio = 20.0;
+			vector<OperBlock *> ratioSoln;
+			while (ratioSoln.empty())
+			{	
+				windratio += 1.0;
+				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+				cout << "!!!!!!!!!Let's start to allow "<<windratio<<" fo city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+				for (auto & block : _blockList)
+				{
+					block->setSituation(0);
+				}
+				ratioSoln=bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
+			}
+			_desCityList[i]->setSoln(ratioSoln);
+		}
+		else
+		{
+			_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+		}
+		
 	}
 
 	//zhoulei debug
