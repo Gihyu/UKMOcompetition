@@ -42,7 +42,7 @@ void PathSolver::solve()
 	{	
 		if (_multiSoln[i - 1].empty())
 		{	
-			double windratio = 20.0;
+			double windratio = Util::initRatio;
 			vector<OperBlock *> ratioSoln;
 			while (ratioSoln.empty())
 			{	

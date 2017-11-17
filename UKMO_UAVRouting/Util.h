@@ -39,7 +39,8 @@ public:
 
 	static int maxIterationACO;
 
-
+	//BFS
+	static double initRatio;
 
 	static int maxX;
 	static int maxY;

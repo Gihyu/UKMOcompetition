@@ -12,7 +12,7 @@ OperBlock::OperBlock(Block* block,int firstReachTime):
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 {
 	// I need to update this rule after my question online is confirmed.
-	if (getWind(thisTime/60) < 20.0 && target->getWind(thisTime/60)<20.0)
+	if (getWind(thisTime/60) < Util::initRatio && target->getWind(thisTime/60)< Util::initRatio)
 	{
 		return true;
 	}

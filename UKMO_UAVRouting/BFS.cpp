@@ -543,7 +543,8 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 				//	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 				//}
 
-				cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
+				//cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
+				cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getWind(multiSoln[k][i]->getSolnTime() / 60) << endl;
 			}
 			cout << endl;
 			cout << endl;
@@ -854,8 +855,8 @@ vector<OperBlock *> BFS::test_BFS(Block * targetBlock)
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
 		for (int i = OperRoute.size() - 1; i >= 0; i--)
 		{	
-
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is"<< OperRoute[i]->getSolnTime() <<"->";
+			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")time is" << OperRoute[i]->getSolnTime() << "->";
+			cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t"<< OperRoute[i]->getSolnTime() <<endl;
 		}
 		cout << endl;
 		cout << endl;
