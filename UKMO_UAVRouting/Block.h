@@ -25,6 +25,8 @@ private:
 	int _situation;
 
 	vector<Block* >_cangotoBlocks;
+	
+	OperBlock * _myOperBlock;
 
 	//add by sjy to use a case test ;17-11-11
 	vector<pair<int, double>> _time_wind;
@@ -51,6 +53,8 @@ public:
 	void setSituation(int a) { _situation = a; }
 	int getSituation() { return _situation; }
 
+	void setMyOperBlock(OperBlock * ob) { _myOperBlock = ob; }
+	OperBlock * getMyOperBlock() { return _myOperBlock; }
 
 	//add by sjy to use a case test ;17-11-11
 	int getId() { return _id; }

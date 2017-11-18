@@ -37,7 +37,7 @@ void PathSolver::solve()
 	//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
 	//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
 
-	_multiSoln = bfs->solve_by_anyCases_multiTarget(_desCityList[8]->getBlock());
+	_multiSoln = bfs->solve_by_anyCases_multiTarget();
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{	
 		if (_multiSoln[i - 1].empty())
@@ -50,9 +50,11 @@ void PathSolver::solve()
 				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
 				cout << "!!!!!!!!!Let's start to allow "<<windratio<<" fo city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
 				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+				OperBlock * nullOper = NULL;
 				for (auto & block : _blockList)
-				{
+				{						
 					block->setSituation(0);
+					block->setMyOperBlock(nullOper);
 				}
 				ratioSoln=bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
 			}

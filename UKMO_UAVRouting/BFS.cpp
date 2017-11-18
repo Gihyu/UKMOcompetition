@@ -364,7 +364,7 @@ vector<OperBlock *> BFS::solve_by_anyCases_singleTarget(Block * targetBlock)
 
 // need to update : multi needn't the target cause 437 and 443 may not be reached in targetTime in bad weather case.
 //next version will update this.
-vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTarget)
+vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 {
 	vector<vector<OperBlock *>> multiSoln;
 
@@ -377,9 +377,6 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
-	int farmostX = farmostTarget->getX();
-	int farmostY = farmostTarget->getY();
-
 	bool findTheFarmost = false;
 
 	while (!_ingOperBlocks.empty() && !findTheFarmost && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
@@ -391,39 +388,34 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 		{
 			int thisTime = ingOperBlock->getIngTime();
 			cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and SolnTime is " << ingOperBlock->getSolnTime() << endl;
-			bool allCangoToOper = true;
+			int allCangoToOper = true;
 			for (auto & cangoto : cangoToBlocks)
 			{
 				if (ingOperBlock->cangotoThisBlock(cangoto, thisTime))
-				{
-					if (cangoto->getX() == farmostX && cangoto->getY() == farmostY)
+				{				     	
+				    //顺序不能乱
+					//回撞sourceBlock导致getFront为NULL
+					if (cangoto->getSituation() == 1 && cangoto!=_sourceBlock)
 					{
-						cangoto->setSituation(2);
-						OperBlock * farmostOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
-						farmostOperBlock->setFront(ingOperBlock);
-						_vistedOperBlocks.push_back( farmostOperBlock);
-						findTheFarmost = true;
-						break;
+						chooseLowestWind(ingOperBlock, cangoto, thisTime);
 					}
-					else
+					else if (cangoto->getSituation() == 0)
 					{
-						if (cangoto->getSituation() == 0)
-						{
-							cangoto->setSituation(1);
-							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
-							cangotoOperBlock->setFront(ingOperBlock);
-							_ingOperBlocks.push(cangotoOperBlock);
-						}
-
-					}
+						cangoto->setSituation(1);
+						OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+						cangotoOperBlock->setFront(ingOperBlock);
+						cangoto->setMyOperBlock(cangotoOperBlock);
+						_ingOperBlocks.push(cangotoOperBlock);
+					}											
 				}
 			}
 
 			for (auto & cangoto : cangoToBlocks)
-			{
-				if (cangoto->getSituation() == 0)
+			{	
+				if (cangoto->getSituation() == 0 )
 				{
 					allCangoToOper = false;
+					break;
 				}
 			}
 
@@ -533,15 +525,15 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget(Block * farmostTa
 
 			for (int i =0; i<multiSoln[k].size(); i++)
 			{
-				//int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
-				//if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
-				//{
-				//	cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
-				//}
-				//if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
-				//{
-				//	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
-				//}
+				int absPlus = abs(multiSoln[k][i]->getBlock()->getX() - 142) + abs(multiSoln[k][i]->getBlock()->getY() - 328);
+				/*if (absPlus * 2 + 540 < multiSoln[k][i]->getSolnTime())
+				{
+					cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
+				}*/
+				if (absPlus * 2 + 540 > multiSoln[k][i]->getSolnTime())
+				{
+					cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
+				}
 
 				//cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
 				cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getWind(multiSoln[k][i]->getSolnTime() / 60) << endl;
@@ -913,12 +905,17 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 						break;
 					}
 					else
-					{
-						if (cangoto->getSituation() == 0)
+					{	
+						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+						{
+							chooseLowestWind(ingOperBlock, cangoto, thisTime);
+						}
+						else if (cangoto->getSituation() == 0)
 						{
 							cangoto->setSituation(1);
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
+							cangoto->setMyOperBlock(cangotoOperBlock);
 							_ingOperBlocks.push(cangotoOperBlock);
 						}
 
@@ -928,9 +925,10 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 
 			for (auto & cangoto : cangoToBlocks)
 			{
-				if (cangoto->getSituation() == 0)
+				if (cangoto->getSituation() == 0 )
 				{
 					allCangoToOper = false;
+					break;
 				}
 			}
 
@@ -985,16 +983,17 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 		for (int i = 0; i <OperRoute.size(); i++)
 		{
 			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
-			if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
+			/*if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
 			{
 				cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
-			}
+			}*/
 			if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
 			{
 				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 			}
 
-			cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " and the wind that time is" << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->" << endl;
+			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " and the wind that time is" << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->" << endl;
+			cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << endl;
 		}
 		cout << endl;
 		cout << endl;
@@ -1004,4 +1003,18 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 	return OperRoute;
 }
 
+
+void BFS::chooseLowestWind(OperBlock * oper, Block * blo, int thistime)
+{	
+	if (oper->getWind(thistime / 60) < blo->getMyOperBlock()->getFront()->getWind(thistime / 60))
+	{	
+		//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!! this time " << thistime << " myOperSolnTime " << blo->getMyOperBlock()->getFront()->getSolnTime() << " !!!!!!!!!!!!!!!" << endl;
+		if (thistime== blo->getMyOperBlock()->getFront()->getSolnTime())
+		{
+			//cout << "--------------------------change------------------------" << endl;
+			blo->getMyOperBlock()->setFront(oper);
+		}
+
+	}
+}
 
