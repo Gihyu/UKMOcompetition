@@ -19,20 +19,12 @@ public:
 
 	vector<OperBlock*> getSoln() { return _soln; }//TODO
 
-	bool isInOperVector(Block * test, vector<OperBlock *> testVector);
-	bool BFS::isInQueue(Block * test, queue<OperBlock *> testQueue);
-
-	vector<OperBlock *> solve_by_anyCases_singleTarget(Block * target);
-	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget();
-	vector<OperBlock *> solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio);
-
-	vector<OperBlock *> solve_by_connectedNetwork(Block * target);
+	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget_LowestWind();
+	vector<OperBlock *> solve_allow_windRatio_singleTarget_LowestWind(Block * targetBlock,double windRatio);
 
 	void clearQueue(queue<OperBlock *>& q);
 
-	void chooseLowestWind(OperBlock * oper, Block * blo, int thistime);
-	//test
-	void run_the_case();
-	vector<OperBlock *> test_BFS(Block * target);
+	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime);
+
 };
 

@@ -14,17 +14,12 @@ int main()
 	cout << "Argv[1]: " << argv[1] << "\t";
 	cout << "Argv[2]: " << argv[2] << endl;*/
 
-	////sjy testCase for BFS
-	//Block * testBlock = new Block(100,100,100);
-	//BFS * testBFS = new BFS(testBlock);
-	//testBFS->run_the_case();
-	////sjy end
 
 	//zhoulei
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 7;
+	int date = 10;
 
 	//int date = atoi(argv[1]);
 

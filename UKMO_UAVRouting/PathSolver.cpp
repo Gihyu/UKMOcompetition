@@ -37,7 +37,7 @@ void PathSolver::solve()
 	//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
 	//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
 
-	_multiSoln = bfs->solve_by_anyCases_multiTarget();
+	_multiSoln = bfs->solve_by_anyCases_multiTarget_LowestWind();
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{	
 		if (_multiSoln[i - 1].empty())
@@ -56,7 +56,7 @@ void PathSolver::solve()
 					block->setSituation(0);
 					block->setMyOperBlock(nullOper);
 				}
-				ratioSoln=bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
+				ratioSoln=bfs->solve_allow_windRatio_singleTarget_LowestWind(_desCityList[i]->getBlock(), windratio);
 			}
 			_desCityList[i]->setSoln(ratioSoln);
 		}
