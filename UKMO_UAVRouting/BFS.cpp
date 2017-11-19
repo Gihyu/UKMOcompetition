@@ -44,13 +44,14 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 					//回撞sourceBlock导致getFront为NULL
 					//firstReach就是注释掉
 
-					/*if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+					if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 					{				
-						chooseLowestWind(ingOperBlock, cangoto, thisTime);
+						//chooseLowestWind(ingOperBlock, cangoto, thisTime);
+						chooseHighestWind(ingOperBlock, cangoto, thisTime);
 					}
-					else if (cangoto->getSituation() == 0)*/
+					else if (cangoto->getSituation() == 0)
 
-					if (cangoto->getSituation() == 0)
+					//if (cangoto->getSituation() == 0)
 					{
 						cangoto->setSituation(1);
 						OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
@@ -242,13 +243,14 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 					else
 					{	
 
-						/*if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 						{
-							chooseLowestWind(ingOperBlock, cangoto, thisTime);
+							//chooseLowestWind(ingOperBlock, cangoto, thisTime);
+							chooseHighestWind(ingOperBlock, cangoto, thisTime);
 						}
-						else if (cangoto->getSituation() == 0)*/
+						else if (cangoto->getSituation() == 0)
 						
-						if (cangoto->getSituation() == 0)
+						//if (cangoto->getSituation() == 0)
 						{
 							cangoto->setSituation(1);
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
@@ -346,6 +348,21 @@ void BFS::chooseLowestWind(OperBlock * oper, Block * blo, int thistime)
 {	
 	if (oper->getWind(thistime / 60) < blo->getMyOperBlock()->getFront()->getWind(thistime / 60))
 	{	
+		//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ing solntime " << oper->getSolnTime() << " myOperSolnTime " << blo->getMyOperBlock()->getFront()->getSolnTime() << " !!!!!!!!!!!!!!!" << endl;
+		if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime())
+		{
+			//cout << "--------------------------change------------------------" << endl;
+			blo->getMyOperBlock()->setFront(oper);
+		}
+
+	}
+}
+
+
+void BFS::chooseHighestWind(OperBlock * oper, Block * blo, int thistime)
+{
+	if (oper->getWind(thistime / 60) > blo->getMyOperBlock()->getFront()->getWind(thistime / 60))
+	{
 		//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ing solntime " << oper->getSolnTime() << " myOperSolnTime " << blo->getMyOperBlock()->getFront()->getSolnTime() << " !!!!!!!!!!!!!!!" << endl;
 		if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime())
 		{

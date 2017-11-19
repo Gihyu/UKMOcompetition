@@ -25,6 +25,6 @@ public:
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime);
-
+	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime);
 };
 
