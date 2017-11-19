@@ -11,7 +11,7 @@ void BFS::clearQueue(queue<OperBlock *>& q) {
 	swap(empty, q);
 }
 
-vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget_LowestWind()
+vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 {
 	vector<vector<OperBlock *>> multiSoln;
 
@@ -42,11 +42,15 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget_LowestWind()
 				{				     	
 				    //顺序不能乱
 					//回撞sourceBlock导致getFront为NULL
-					if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+					//firstReach就是注释掉
+
+					/*if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 					{				
 						chooseLowestWind(ingOperBlock, cangoto, thisTime);
 					}
-					else if (cangoto->getSituation() == 0)
+					else if (cangoto->getSituation() == 0)*/
+
+					if (cangoto->getSituation() == 0)
 					{
 						cangoto->setSituation(1);
 						OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
@@ -194,7 +198,7 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget_LowestWind()
 }
 
 
-vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget_LowestWind(Block * targetBlock,double windRatio)
+vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio)
 {
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
@@ -237,11 +241,14 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget_LowestWind(Block * t
 					}
 					else
 					{	
-						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+
+						/*if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 						{
 							chooseLowestWind(ingOperBlock, cangoto, thisTime);
 						}
-						else if (cangoto->getSituation() == 0)
+						else if (cangoto->getSituation() == 0)*/
+						
+						if (cangoto->getSituation() == 0)
 						{
 							cangoto->setSituation(1);
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);

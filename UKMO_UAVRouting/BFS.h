@@ -19,8 +19,8 @@ public:
 
 	vector<OperBlock*> getSoln() { return _soln; }//TODO
 
-	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget_LowestWind();
-	vector<OperBlock *> solve_allow_windRatio_singleTarget_LowestWind(Block * targetBlock,double windRatio);
+	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget();
+	vector<OperBlock *> solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio);
 
 	void clearQueue(queue<OperBlock *>& q);
 
