@@ -46,8 +46,8 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 
 					if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 					{				
-						chooseLowestWind(ingOperBlock, cangoto, thisTime);
-						//chooseHighestWind(ingOperBlock, cangoto, thisTime);
+						//chooseLowestWind(ingOperBlock, cangoto, thisTime);
+						chooseHighestWind(ingOperBlock, cangoto, thisTime);
 					}
 					else if (cangoto->getSituation() == 0)
 
@@ -245,8 +245,8 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 
 						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 						{
-							chooseLowestWind(ingOperBlock, cangoto, thisTime);
-							//chooseHighestWind(ingOperBlock, cangoto, thisTime);
+							//chooseLowestWind(ingOperBlock, cangoto, thisTime);
+							chooseHighestWind(ingOperBlock, cangoto, thisTime);
 						}
 						else if (cangoto->getSituation() == 0)
 						
