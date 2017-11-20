@@ -15,14 +15,22 @@ IO::IO()
 
 void IO::input(Schedule* sche,int date)
 {
-	string inFile = "Train_MergeLinreg_D_" + to_string(date);
+	string inFile;
+	if (date <= 5)//training
+	{
+		inFile= "Train_MergeLinreg_D_" + to_string(date);
+	}
+	else//testing
+	{
+		inFile = "TrainByLinregDate2&4_D_" + to_string(date);//MergeLinreg_D_
+	}
 	readForecast(sche, inFile);
 	Util::printCurTime();
 
 	readCity(sche);
 	Util::printCurTime();
 
-	if (date <= 5)
+	if (date <= 5)//training
 	{
 		inFile = "compress_reProcess_day"+ to_string(date);
 		readMeasure(sche,inFile);
