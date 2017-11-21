@@ -22,7 +22,7 @@ void IO::input(Schedule* sche,int date)
 	}
 	else//testing
 	{
-		inFile = "TrainByLinregDate2&4_D_" + to_string(date);//MergeLinreg_D_
+		inFile = "TrainByLinregDate2&4_D_" + to_string(date);//MergeLinreg_D_//TrainByLinregDate2&4_D_
 	}
 	readForecast(sche, inFile);
 	Util::printCurTime();
