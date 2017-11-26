@@ -17,7 +17,7 @@ private:
 	//wind
 	array<double, Util::hourCount> _windArr;//3:00-20:00
 	array<double, Util::hourCount> _measureWindArr;//3:00-20:00
-	static const int _basicHour = 9;
+	static const int _basicHour = 3;
 
 	// mark the situation of the Block ( BFS ) in order to run faster
 	// 0 means notFound ; 1 means Searching ; 2 means visted

@@ -22,7 +22,7 @@ void IO::input(Schedule* sche,int date)
 	}
 	else//testing
 	{
-		inFile = "TrainByLinregDate2&4_D_" + to_string(date);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		inFile = "compress_day" + to_string(date)+"R"+to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
 	}
 	readForecast(sche, inFile);
 	Util::printCurTime();
@@ -52,7 +52,7 @@ void IO::readForecast(Schedule* sche,string inFile)
 	char * token;
 	char * tmp;
 
-	getline(file, buf);//headline
+	//getline(file, buf);//headline
 
 	int x = 0;
 	int y = 0;

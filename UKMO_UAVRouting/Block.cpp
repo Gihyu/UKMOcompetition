@@ -1,7 +1,7 @@
 #include "Block.h"
 int Block::_count = 0;
 
-Block::Block(int x, int y, int date, array<double, 12> windArr):
+Block::Block(int x, int y, int date, array<double, Util::hourCount> windArr):
 	_x(x),_y(y),_date(date),_windArr(windArr)
 {
 	_id = _count;

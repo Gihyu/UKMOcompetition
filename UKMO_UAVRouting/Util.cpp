@@ -12,6 +12,7 @@ string Util::InputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/inpu
 //string Util::InputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/input/";
 
 double Util::Epsilon = 0.0001;//0.0001
+int Util::realization = 1;
 
 int Util::flyTime = 2;
 int Util::maxTime = 1260;
