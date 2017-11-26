@@ -20,7 +20,7 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 
 	// 540 means start from 9:00
 	_sourceBlock->setSituation(1);
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 540);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 180);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
@@ -39,7 +39,8 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 			for (auto & cangoto : cangoToBlocks)
 			{
 				if (ingOperBlock->cangotoThisBlock(cangoto, thisTime))
-				{				     	
+				{	
+
 				    //顺序不能乱
 					//回撞sourceBlock导致getFront为NULL
 					//firstReach就是注释掉
@@ -178,11 +179,11 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 			for (int i =0; i<multiSoln[k].size(); i++)
 			{
 				int absPlus = abs(multiSoln[k][i]->getBlock()->getX() - 142) + abs(multiSoln[k][i]->getBlock()->getY() - 328);
-				/*if (absPlus * 2 + 540 < multiSoln[k][i]->getSolnTime())
+				/*if (absPlus * 2 + 180 < multiSoln[k][i]->getSolnTime())
 				{
 					cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
 				}*/
-				if (absPlus * 2 + 540 > multiSoln[k][i]->getSolnTime())
+				if (absPlus * 2 + 180 > multiSoln[k][i]->getSolnTime())
 				{
 					cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 				}
@@ -206,7 +207,7 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 
 	// 540 means start from 9:00
 	_sourceBlock->setSituation(1);
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 540);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 180);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
@@ -323,11 +324,11 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 		for (int i = 0; i <OperRoute.size(); i++)
 		{
 			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
-			/*if (absPlus * 2 + 540 < OperRoute[i]->getSolnTime())
+			/*if (absPlus * 2 + 180 < OperRoute[i]->getSolnTime())
 			{
 				cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
 			}*/
-			if (absPlus * 2 + 540 > OperRoute[i]->getSolnTime())
+			if (absPlus * 2 + 180 > OperRoute[i]->getSolnTime())
 			{
 				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 			}
