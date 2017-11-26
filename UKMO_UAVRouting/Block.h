@@ -15,8 +15,8 @@ private:
 	int _date;
 
 	//wind
-	array<double, 12> _windArr;//9:00-20:00
-	array<double, 12> _measureWindArr;//9:00-20:00
+	array<double, Util::hourCount> _windArr;//3:00-20:00
+	array<double, Util::hourCount> _measureWindArr;//3:00-20:00
 	static const int _basicHour = 9;
 
 	// mark the situation of the Block ( BFS ) in order to run faster
@@ -30,7 +30,7 @@ private:
 	vector<pair<int, double>> _time_wind;
 
 public:
-	Block(int x,int y,int date, array<double, 12> windArr);
+	Block(int x,int y,int date, array<double, Util::hourCount> windArr);
 
 	pair<int, int> getCoordinate();
 
@@ -41,7 +41,7 @@ public:
 
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }
 
-	void setMeasureWindArr(array<double, 12> windArr) { _measureWindArr = windArr; }
+	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}
 
 	void pushCanGoToBlock(Block* block) { _cangotoBlocks.push_back(block); }

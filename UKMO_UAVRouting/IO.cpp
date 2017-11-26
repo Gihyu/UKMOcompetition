@@ -49,7 +49,7 @@ void IO::readForecast(Schedule* sche,string inFile)
 	int x = 0;
 	int y = 0;
 	int date = 0;
-	array<double, 12> windArr;
+	array<double, Util::hourCount> windArr;
 
 	int testFlag = 0;
 
@@ -70,7 +70,7 @@ void IO::readForecast(Schedule* sche,string inFile)
 		token = strtok_s(NULL, ",", &tmp);
 		date = atoi(token);
 
-		for (int i = 0; i < 12; ++i)
+		for (int i = 0; i < Util::hourCount; ++i)
 		{
 			token = strtok_s(NULL, ",", &tmp);
 			windArr[i] = atof(token);
@@ -159,7 +159,7 @@ void IO::readMeasure(Schedule* sche,string inFile)
 	int x = 0;
 	int y = 0;
 	int date = 0;
-	array<double, 12> windArr;
+	array<double, Util::hourCount> windArr;
 
 	int testFlag = 0;
 
@@ -180,7 +180,7 @@ void IO::readMeasure(Schedule* sche,string inFile)
 		token = strtok_s(NULL, ",", &tmp);
 		date = atoi(token);
 
-		for (int i = 0; i < 12; ++i)
+		for (int i = 0; i < Util::hourCount; ++i)
 		{
 			token = strtok_s(NULL, ",", &tmp);
 			windArr[i] = atof(token);
