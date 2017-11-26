@@ -4,6 +4,7 @@
 #include"PathSolver.h"
 
 #include"BFS.h"
+#include"Validation.h"
 
 int main()
 {
@@ -19,7 +20,7 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 10;
+	int date = 2;
 
 	//int date = atoi(argv[1]);
 
@@ -42,7 +43,11 @@ int main()
 	io->outputMultiSoln(sche->getCityList(), origin, solver->getMultiSoln());//soln is not required exactly
 	//zhoulei end
 
-
+	if (date <= 5)
+	{
+		Validation* val = new Validation(sche->getCityList());
+		val->validate();
+	}
 
 	return 0;
 }

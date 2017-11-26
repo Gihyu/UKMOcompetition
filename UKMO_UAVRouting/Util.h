@@ -33,6 +33,7 @@ public:
 	static string OutputPath;
 
 	static double Epsilon;//0.0001
+	const static int hourCount = 18;//3:00-21:00
 
 	static int flyTime;
 	static int maxTime;
