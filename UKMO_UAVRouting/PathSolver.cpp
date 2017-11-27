@@ -46,7 +46,7 @@ void PathSolver::solve()
 			vector<OperBlock *> ratioSoln;
 			while (ratioSoln.empty())
 			{	
-				windratio += 1.0;
+				windratio += 0.5;
 				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
 				cout << "!!!!!!!!!Let's start to allow "<<windratio<<" fo city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
 				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
