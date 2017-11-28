@@ -9,7 +9,7 @@ private:
 	vector<City*> _cityList;
 	const double _wind = 20.0;
 	const int _maxCost = 24*60;//delay 1 day
-	const int _beginTime = 9 * 60;//9:00
+	const int _beginTime = 3 * 60;//3:00
 
 public:
 	Validation(vector<OperBlock*> soln);
