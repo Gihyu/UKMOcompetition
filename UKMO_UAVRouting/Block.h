@@ -16,6 +16,7 @@ private:
 
 	//wind
 	array<double, Util::hourCount> _windArr;//3:00-20:00
+	array<array<double, 10>, Util::hourCount> _windMatrix;//3:00-20:00£»18h * 10realization
 	array<double, Util::hourCount> _measureWindArr;//3:00-20:00
 	static const int _basicHour = 3;
 
@@ -33,6 +34,7 @@ private:
 
 public:
 	Block(int x,int y,int date, array<double, Util::hourCount> windArr);
+	Block(int x, int y, int date, array<array<double, 10>, Util::hourCount> windMatrix);
 
 	pair<int, int> getCoordinate();
 
@@ -42,6 +44,7 @@ public:
 	int getDate() { return _date; }
 
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }
+	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}
@@ -65,5 +68,7 @@ public:
 	bool equal(int x, int y);
 
 	void print();
+	void printWindArr();
+	void printWindMatrix();
 };
 

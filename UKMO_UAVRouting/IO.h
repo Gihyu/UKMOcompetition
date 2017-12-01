@@ -9,9 +9,10 @@ class IO
 public:
 	IO();
 
-	void input(Schedule* sche,int date);
+	void input(Schedule* sche,int date,bool allRealization);
 
 	void readForecast(Schedule* sche,string inFile);
+	void readForecastMatrix(Schedule* sche, string inFile);
 	void readCity(Schedule* sche);
 	void readMeasure(Schedule* sche,string inFile);
 
