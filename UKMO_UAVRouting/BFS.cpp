@@ -78,14 +78,28 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 				ingOperBlock->getBlock()->setSituation(2);
 				_ingOperBlocks.pop();
 			}
+			//如果原地停留 那么仍需要判断停留的时候是否风速大于initial ratio
+			//若大于，则作为坠机处理(假visted处理）
+			//所以output的时候对于第一种群式搜索的时候也没关系（因为soln time 对应的风速肯定是小于initial ratio的）
 			else
-			{
-				ingOperBlock->setIngTime(thisTime + Util::flyTime);
-				_ingOperBlocks.pop();
-				_ingOperBlocks.push(ingOperBlock);
+			{	
+				if (ingOperBlock->getWind(thisTime / 60) < Util::initRatio)
+				{
+					ingOperBlock->setIngTime(thisTime + Util::flyTime);
+					_ingOperBlocks.pop();
+					_ingOperBlocks.push(ingOperBlock);
+				}
+				else
+				{
+					_vistedOperBlocks.push_back(ingOperBlock);
+					ingOperBlock->getBlock()->setSituation(2);
+					_ingOperBlocks.pop();
+				}
+				
 			}
 
 		}
+		//若cangoto为空 那么也是变为visted
 		else
 		{
 			_vistedOperBlocks.push_back(ingOperBlock);
@@ -279,11 +293,22 @@ vector<OperBlock *> BFS::solve_allow_windRatio_singleTarget(Block * targetBlock,
 				ingOperBlock->getBlock()->setSituation(2);
 				_ingOperBlocks.pop();
 			}
+			//判断停留的时候是否不坠机
 			else
 			{
-				ingOperBlock->setIngTime(thisTime + Util::flyTime);
-				_ingOperBlocks.pop();
-				_ingOperBlocks.push(ingOperBlock);
+				if (ingOperBlock->getWind(thisTime / 60) < windRatio)
+				{
+					ingOperBlock->setIngTime(thisTime + Util::flyTime);
+					_ingOperBlocks.pop();
+					_ingOperBlocks.push(ingOperBlock);
+				}
+				else
+				{
+					_vistedOperBlocks.push_back(ingOperBlock);
+					ingOperBlock->getBlock()->setSituation(2);
+					_ingOperBlocks.pop();
+				}
+				
 			}
 
 		}

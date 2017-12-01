@@ -18,7 +18,7 @@ int Util::flyTime = 2;
 int Util::maxTime = 1260;
 
 //BFS
-double Util::initRatio = 15.1;
+double Util::initRatio = 0.0;
 
 
 //ACO
