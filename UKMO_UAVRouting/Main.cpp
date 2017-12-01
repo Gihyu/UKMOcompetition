@@ -20,7 +20,7 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 10;//should not 
+	int date = 8;//should not 
 	Util::realization = 2;//model id
 
 	//int date = atoi(argv[1]);
