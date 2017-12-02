@@ -44,6 +44,8 @@ public:
 
 	//BFS
 	static double initRatio;
+	static double initRatio_forAllR;
+	static int NumOf_littleWindForAllR;
 
 	static int maxX;
 	static int maxY;

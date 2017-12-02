@@ -44,6 +44,8 @@ public:
 	int getDate() { return _date; }
 
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }
+	double getAvgWind(int hour);
+	int getNumOf_littleWind(int hour);
 	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }

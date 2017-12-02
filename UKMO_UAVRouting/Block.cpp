@@ -98,3 +98,42 @@ double Block::testgetWind(int thisTime)
 		return 0.0;
 	}
 }
+
+
+
+double Block::getAvgWind(int hour)
+{
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	double sum = 0.0;
+	double max = 0.0;
+	double min = 100.0;
+	for (int i = 0; i < 10; i++)
+	{
+		sum += thisTimeWindArr[i];
+		if (thisTimeWindArr[i] > max)
+		{
+			max = thisTimeWindArr[i];
+		}
+		else if (thisTimeWindArr[i] < min)
+		{
+			min = thisTimeWindArr[i];
+		}
+	}
+	double windAvg = (sum - max - min) / 8;
+	return windAvg;
+}
+
+
+int Block::getNumOf_littleWind(int hour)
+{
+	int countNumOf_littleWind = 0;
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeWindArr[i] <Util::initRatio_forAllR)
+		{
+			countNumOf_littleWind++;
+		}
+	}
+	return countNumOf_littleWind;
+}

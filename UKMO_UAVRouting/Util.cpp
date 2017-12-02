@@ -19,6 +19,8 @@ int Util::maxTime = 1260;
 
 //BFS
 double Util::initRatio = 0.0;
+double Util::initRatio_forAllR = 15.0;
+int Util::NumOf_littleWindForAllR = 8;
 
 
 //ACO

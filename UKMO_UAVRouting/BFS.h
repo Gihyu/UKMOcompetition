@@ -22,9 +22,13 @@ public:
 	vector<vector<OperBlock *>> solve_by_anyCases_multiTarget();
 	vector<OperBlock *> solve_allow_windRatio_singleTarget(Block * targetBlock,double windRatio);
 
+	vector<vector<OperBlock *>> solve_allR_multiTarget();
+	vector<OperBlock *>solve_allR_singleTarget(Block * targetBlock, int allowNumOf_littleWind);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime);
 	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime);
+	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime);
 };
 

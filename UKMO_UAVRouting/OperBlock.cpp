@@ -52,3 +52,13 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 {
 	return a->getSolnTime() < b->getSolnTime();
 }
+
+bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind)
+{
+	if (_block->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60)>=numOf_littleWind)
+	{
+		return true;
+	}
+	else
+		return false;
+}
