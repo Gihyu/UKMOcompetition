@@ -33,6 +33,7 @@ public:
 	static string OutputPath;
 
 	static double Epsilon;//0.0001
+	const static int realizationCount = 10;//10 realization
 	const static int hourCount = 18;//3:00-21:00
 	static int realization;//TODO
 

@@ -20,12 +20,18 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
+<<<<<<< HEAD
 	int date = 8;//should not 
 	Util::realization = 2;//model id
+=======
+	int date = 1;//should not 
+	Util::realization = 1;//model id
+>>>>>>> origin/zhoulei
 
 	//int date = atoi(argv[1]);
 
-	io->input(sche, date);
+	bool allRealization = true;
+	io->input(sche, date, allRealization);
 	
 	sche->init();
 

@@ -8,6 +8,13 @@ Block::Block(int x, int y, int date, array<double, Util::hourCount> windArr):
 	_count++;
 }
 
+Block::Block(int x, int y, int date, array<array<double, 10>, Util::hourCount> windMatrix):
+	_x(x), _y(y), _date(date), _windMatrix(windMatrix)
+{
+	_id = _count;
+	_count++;
+}
+
 pair<int, int> Block::getCoordinate()
 {
 	pair<int, int> p;
@@ -48,12 +55,29 @@ bool Block::equal(int x, int y)
 
 void Block::print()
 {
-	cout << "Block_" << _id << "\tx:" << _x << "\ty:" << _y << "\tdate:" << _date;
+	cout << "Block_" << _id << "\tx:" << _x << "\ty:" << _y << "\tdate:" << _date << endl;
+	printWindMatrix();
+}
+
+void Block::printWindArr()
+{
 	for (auto&wind : _windArr)
 	{
 		cout << "\t" << wind;
 	}
 	cout << endl;
+}
+
+void Block::printWindMatrix()
+{
+	for (auto&arr : _windMatrix)
+	{
+		for (auto&wind : arr)
+		{
+			cout << "\t" << wind;
+		}
+		cout << endl;
+	}
 }
 
 double Block::testgetWind(int thisTime)

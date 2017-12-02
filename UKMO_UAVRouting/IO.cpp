@@ -13,29 +13,39 @@ IO::IO()
 	cout << "* Basic start time:" << Util::getTimeStr(Util::startTime) << endl;
 }
 
-void IO::input(Schedule* sche,int date)
+void IO::input(Schedule* sche,int date,bool allRealization)
 {
+	Util::printCurTime();
+
 	string inFile;
-	if (date <= 5)//training
+	if (allRealization)
 	{
-		inFile= "Train_MergeLinreg_D_" + to_string(date);
+		inFile = "reProcess_day" + to_string(date) + "_R10";
+		readForecastMatrix(sche, inFile);
 	}
-	else//testing
+	else
 	{
-		inFile = "compress_day" + to_string(date)+"R"+to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		if (date <= 5)//training
+		{
+			inFile= "Train_MergeLinreg_D_" + to_string(date);
+		}
+		else//testing
+		{
+			inFile = "compress_day" + to_string(date)+"R"+to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		}
+		readForecast(sche, inFile);
 	}
-	readForecast(sche, inFile);
 	Util::printCurTime();
 
 	readCity(sche);
 	Util::printCurTime();
 
-	if (date <= 5)//training
-	{
-		inFile = "compress_reProcess_day"+ to_string(date);
-		readMeasure(sche,inFile);
-		Util::printCurTime();
-	}
+	//if (date <= 5)//training
+	//{
+	//	inFile = "compress_reProcess_day"+ to_string(date);
+	//	readMeasure(sche,inFile);
+	//	Util::printCurTime();
+	//}
 }
 
 
@@ -85,6 +95,97 @@ void IO::readForecast(Schedule* sche,string inFile)
 		}
 
 		Block* newBlock = new Block(x, y, date, windArr);
+		blocks.push_back(newBlock);
+	}
+	file.close();
+
+	sche->setBlockList(blocks);
+
+	cout << "# Blocks:" << sche->getBlockList().size() << endl;
+	cout << ">>> test print" << endl;
+	blocks.front()->print();
+	blocks.back()->print();
+	cout << endl;
+}
+
+void IO::readForecastMatrix(Schedule * sche, string inFile)
+{
+	vector<Block*> blocks;
+	int basicHour = 3;
+
+	string fileName = Util::InputPath + inFile + ".csv";
+
+	cout << "* Read forecast data for from txt file:" << fileName << endl;
+	ifstream file(fileName.c_str());
+
+	string buf;
+	char * token;
+	char * tmp;
+
+	int x = 0;
+	int y = 0;
+	int date = 0;
+	int hour = 0;
+	array<array<double, 10>, Util::hourCount> windMatrix;
+	int flag = 0;
+
+	while (getline(file, buf))
+	{
+		token = strtok_s((char *)buf.c_str(), ",", &tmp);
+		x = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		y = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		date = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		hour = atoi(token);
+
+		if (date < 5)//training
+		{
+			token = strtok_s(NULL, ",", &tmp);//measure
+		}
+
+		for (int i = 0; i < Util::realizationCount; ++i)
+		{
+			token = strtok_s(NULL, ",", &tmp);
+			windMatrix[hour - basicHour][i] = atof(token);
+		}
+
+		flag = 1;
+		while (flag < Util::hourCount)
+		{
+			getline(file, buf);
+			flag++;
+
+			token = strtok_s((char *)buf.c_str(), ",", &tmp);
+			//x = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			//y = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			//date = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			hour = atoi(token);
+
+			if (date < 5)//training
+			{
+				token = strtok_s(NULL, ",", &tmp);//measure
+			}
+
+			for (int i = 0; i < Util::realizationCount; ++i)
+			{
+				token = strtok_s(NULL, ",", &tmp);
+				windMatrix[hour - basicHour][i] = atof(token);
+			}
+
+		}
+
+		Block* newBlock = new Block(x, y, date, windMatrix);
 		blocks.push_back(newBlock);
 	}
 	file.close();
