@@ -417,7 +417,7 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime)
 		int nextNumof_littleWind = blo->getMyOperBlock()->getFront()->getBlock()->getNumOf_littleWind(thistime / 60);
 		if (thisNumof_littleWind > nextNumof_littleWind)
 		{
-			cout << "--------------------------change------------------------" << endl;
+			//cout << "--------------------------change level------------------------" << endl;
 			blo->getMyOperBlock()->setFront(oper);
 		}
 		else if (thisNumof_littleWind = nextNumof_littleWind)
@@ -426,7 +426,7 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime)
 			double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
 			if (thisAvgWind < nextAvgWind)
 			{
-				cout << "--------------------------change------------------------" << endl;
+				//cout << "--------------------------change wind------------------------" << endl;
 				blo->getMyOperBlock()->setFront(oper);
 			}
 		}
@@ -755,7 +755,7 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 	//print function
 	if (OperRoute.empty())
 	{
-		cout << " shortest path failed ! Can't find the targetBlock when allow " << windRatio << " !" << endl;
+		cout << " shortest path failed ! Can't find the targetBlock when allow " << allowNumOf_littleWind << " !" << endl;
 	}
 	else
 	{
