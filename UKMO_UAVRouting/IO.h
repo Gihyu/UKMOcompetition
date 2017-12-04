@@ -9,7 +9,7 @@ class IO
 public:
 	IO();
 
-	void input(Schedule* sche,int date,bool allRealization);
+	void input(Schedule* sche,int date);
 
 	void readForecast(Schedule* sche,string inFile);
 	void readForecastMatrix(Schedule* sche, string inFile);

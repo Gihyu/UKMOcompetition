@@ -56,7 +56,14 @@ bool Block::equal(int x, int y)
 void Block::print()
 {
 	cout << "Block_" << _id << "\tx:" << _x << "\ty:" << _y << "\tdate:" << _date << endl;
-	printWindMatrix();
+	if (Util::allRealization)
+	{
+		printWindMatrix();
+	}
+	else
+	{
+		printWindArr();
+	}
 }
 
 void Block::printWindArr()

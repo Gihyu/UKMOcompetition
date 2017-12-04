@@ -25,8 +25,8 @@ int main()
 
 	//int date = atoi(argv[1]);
 
-	bool allRealization = true;
-	io->input(sche, date, allRealization);
+	Util::allRealization = true;
+	io->input(sche, date);
 	
 	sche->init();
 

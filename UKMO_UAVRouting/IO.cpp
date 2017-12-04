@@ -13,12 +13,12 @@ IO::IO()
 	cout << "* Basic start time:" << Util::getTimeStr(Util::startTime) << endl;
 }
 
-void IO::input(Schedule* sche,int date,bool allRealization)
+void IO::input(Schedule* sche,int date)
 {
 	Util::printCurTime();
 
 	string inFile;
-	if (allRealization)
+	if (Util::allRealization)
 	{
 		inFile = "reProcess_day" + to_string(date) + "_R10";
 		readForecastMatrix(sche, inFile);
