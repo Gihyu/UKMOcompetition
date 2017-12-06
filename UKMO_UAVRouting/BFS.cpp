@@ -203,7 +203,14 @@ vector<vector<OperBlock *>> BFS::solve_by_anyCases_multiTarget()
 				}
 
 				//cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
-				cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getWind(multiSoln[k][i]->getSolnTime() / 60) << endl;
+				if (multiSoln[k][i]->getSolnTime()<1260)
+				{
+					cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getWind(multiSoln[k][i]->getSolnTime() / 60) << endl;
+				}
+				else
+				{
+					cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << endl;
+				}
 			}
 			cout << endl;
 			cout << endl;

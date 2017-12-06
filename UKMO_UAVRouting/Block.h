@@ -45,6 +45,7 @@ public:
 
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }
 	double getAvgWind(int hour);
+	double getWeightedAvgWind(int hour);
 	int getNumOf_littleWind(int hour);
 	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }
 

@@ -41,10 +41,11 @@ void PathSolver::solve()
 
 	//之前的从下往上的约束搜索
 	
-/*	for (int i = 1; i < _desCityList.size(); ++i)
+	for (int i = 1; i < _desCityList.size(); ++i)
 	{	
 		if (_multiSoln[i - 1].empty())
 		{	
+			//double windratio = 14.5;
 			double windratio = Util::initRatio;
 			vector<OperBlock *> ratioSoln;
 			while (ratioSoln.empty())
@@ -69,10 +70,10 @@ void PathSolver::solve()
 		}
 		
 	}
-*/
+
 
 	//现在的从15.0两分的形式搜索
-	for (int i = 1; i < _desCityList.size(); ++i)
+/*	for (int i = 1; i < _desCityList.size(); ++i)
 	{
 		if (_multiSoln[i - 1].empty())
 		{
@@ -202,7 +203,7 @@ void PathSolver::solve()
 
 	}
 	
-
+*/
 
 	//zhoulei debug
 	//OperBlock* opb1 = new OperBlock(_blockList[0], 9, 30);
