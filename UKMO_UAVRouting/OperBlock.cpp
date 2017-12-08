@@ -12,23 +12,49 @@ OperBlock::OperBlock(Block* block,int firstReachTime):
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
 {
 	// I need to update this rule after my question online is confirmed.
-	if (getWind(thisTime/60) < Util::initRatio && target->getWind(thisTime/60)< Util::initRatio)
+	if (_block->getX() == 142 && _block->getY() == 328)
 	{
-		return true;
+		if ( target->getWind(thisTime / 60)< Util::initRatio)
+		{
+			return true;
+		}
+		else
+			return false;
 	}
 	else
-		return false;
+	{
+		if (getWind(thisTime / 60) < Util::initRatio && target->getWind(thisTime / 60)< Util::initRatio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	
 }
 
 bool OperBlock::cangotoThisBlock_allow_ratio(Block * target, int thisTime,double windRatio)
 {
 	// I need to update this rule after my question online is confirmed.
-	if (getWind(thisTime / 60) < windRatio && target->getWind(thisTime / 60)<windRatio)
+	if (_block->getX() == 142 && _block->getY() == 328)
 	{
-		return true;
+		if (target->getWind(thisTime / 60)<windRatio)
+		{
+			return true;
+		}
+		else
+			return false;
 	}
 	else
-		return false;
+	{
+		if (getWind(thisTime / 60) < windRatio && target->getWind(thisTime / 60)<windRatio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+
 }
 
 
@@ -54,11 +80,24 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 }
 
 bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind)
-{
-	if (_block->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60)>=numOf_littleWind)
+{	
+	if (_block->getX() == 142 && _block->getY() == 328)
 	{
-		return true;
+		if ( target->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind)
+		{
+			return true;
+		}
+		else
+			return false;
 	}
 	else
-		return false;
+	{
+		if (_block->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	
 }
