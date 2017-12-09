@@ -12,6 +12,7 @@ string Util::OutputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetit
 string Util::InputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/input/";
 
 double Util::Epsilon = 0.0001;//0.0001
+bool Util::allRealization = true;
 int Util::realization = 1;
 
 int Util::flyTime = 2;
