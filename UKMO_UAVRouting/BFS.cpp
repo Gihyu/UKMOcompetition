@@ -415,29 +415,44 @@ void BFS::chooseHighestWind(OperBlock * oper, Block * blo, int thistime)
 	}
 }
 
-void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime)
+void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,int allowNum)
 {	
 	//先判断时间是否一致
-	if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime())
-	{
+	//if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime() )
+	if ( (thistime + 2) == blo->getMyOperBlock()->getSolnTime())
+	{	
 		int thisNumof_littleWind = oper->getBlock()->getNumOf_littleWind(thistime / 60);
 		int nextNumof_littleWind = blo->getMyOperBlock()->getFront()->getBlock()->getNumOf_littleWind(thistime / 60);
 		if (thisNumof_littleWind > nextNumof_littleWind)
 		{
 			//cout << "--------------------------change level------------------------" << endl;
 			blo->getMyOperBlock()->setFront(oper);
+			updateViolations_exchange(oper, blo, thistime, allowNum);
+			
 		}
-		else if (thisNumof_littleWind = nextNumof_littleWind)
+		else if (thisNumof_littleWind == nextNumof_littleWind)
 		{
-			double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
-			double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
-			if (thisAvgWind < nextAvgWind)
-			{
-				//cout << "--------------------------change wind------------------------" << endl;
+			if (getNum_Violations(oper, blo, thistime, allowNum) < blo->getViolations())
+			{	
+				//cout << "--------------------------change violations------------------------" << endl;
 				blo->getMyOperBlock()->setFront(oper);
+				updateViolations_exchange(oper, blo, thistime, allowNum);
 			}
+			else if (getNum_Violations(oper, blo, thistime, allowNum) == blo->getViolations())
+			{
+				double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
+				double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
+				if (thisAvgWind < nextAvgWind)
+				{
+					//cout << "--------------------------change wind------------------------" << endl;
+					blo->getMyOperBlock()->setFront(oper);
+					updateViolations_exchange(oper, blo, thistime, allowNum);
+				}
+			}
+		
 		}
-	}
+	} 
+
 }
 
 vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
@@ -447,15 +462,12 @@ vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
 
-	// 180 means start from 3:00
 	_sourceBlock->setSituation(1);
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 180);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock,Util::startTime_BFS);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
-	bool findTheFarmost = false;
-
-	while (!_ingOperBlocks.empty() && !findTheFarmost && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
+	while (!_ingOperBlocks.empty()  && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -475,8 +487,9 @@ vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
 					//firstReach就是注释掉
 
 					if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
-					{
-						chooseBestWind_forAllR(ingOperBlock, cangoto, thisTime);
+					{	
+						//写11为了在10的时候计数不乱加
+						chooseBestWind_forAllR(ingOperBlock, cangoto, thisTime,11);
 					}
 					else if (cangoto->getSituation() == 0)
 					//if (cangoto->getSituation() == 0)
@@ -616,7 +629,8 @@ vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
 			cout << endl;
 			cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 			cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << destinations[k].first << "," << destinations[k].second << ") is :" << endl;
-
+			cout << endl;
+			cout << "x" << "\t" << "y" << "\t" << "time" << "\t" << "AvgWind" << "\t" << "rank" << "\t" <<"violations" <<endl;
 			for (int i = 0; i<multiSoln[k].size(); i++)
 			{
 				int absPlus = abs(multiSoln[k][i]->getBlock()->getX() - 142) + abs(multiSoln[k][i]->getBlock()->getY() - 328);
@@ -629,8 +643,15 @@ vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
 					cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 				}
 
-				//cout << "(" << multiSoln[k][i]->getBlock()->getX() << "," << multiSoln[k][i]->getBlock()->getY() << ")Solntime is" << multiSoln[k][i]->getSolnTime() << "->" ;
-				cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getAvgWind(multiSoln[k][i]->getSolnTime() / 60) << endl;
+				if (multiSoln[k][i]->getSolnTime() != Util::startTime_BFS)
+				{
+					cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getAvgWind((multiSoln[k][i]->getSolnTime()- Util::flyTime) / 60) << "\t" << multiSoln[k][i]->getBlock()->getNumOf_littleWind((multiSoln[k][i]->getSolnTime()-Util::flyTime) / 60) << "\t" << multiSoln[k][i]->getBlock()->getViolations()<< endl;
+				}
+				else
+				{
+					cout << multiSoln[k][i]->getBlock()->getX() << "\t" << multiSoln[k][i]->getBlock()->getY() << "\t" << multiSoln[k][i]->getSolnTime() << "\t" << multiSoln[k][i]->getBlock()->getAvgWind(multiSoln[k][i]->getSolnTime() / 60) << "\t" << multiSoln[k][i]->getBlock()->getNumOf_littleWind(multiSoln[k][i]->getSolnTime()  / 60) << "\t" << multiSoln[k][i]->getBlock()->getViolations()<< endl;
+				}
+				
 			}
 			cout << endl;
 			cout << endl;
@@ -645,20 +666,19 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 	_vistedOperBlocks.clear();
 	clearQueue(_ingOperBlocks);
 
-	// 180 means start from 3:00
 	_sourceBlock->setSituation(1);
-	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, 180);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, Util::startTime_BFS);
 	sourceOperBlock->setFront(NULL);
 	_ingOperBlocks.push(sourceOperBlock);
 
 	int targetX = targetBlock->getX();
 	int targetY = targetBlock->getY();
 
+	int targetSolnTime = Util::maxTime;
 	bool findTheTarget = false;
-	OperBlock * targetOperBlock = NULL;
 
 
-	while (!_ingOperBlocks.empty() && !findTheTarget && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
+	while (!_ingOperBlocks.empty() && _ingOperBlocks.front()->getIngTime()<targetSolnTime && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
 	{
 		OperBlock * ingOperBlock = _ingOperBlocks.front();
 		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
@@ -672,26 +692,29 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 			{
 				if (ingOperBlock->cangotoThisBlock_allR(cangoto, thisTime, allowNumOf_littleWind))
 				{
-					if (cangoto->getX() == targetX && cangoto->getY() == targetY)
-					{
-						cangoto->setSituation(2);
-						targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+					if (cangoto->getX() == targetX && cangoto->getY() == targetY && cangoto->getSituation() == 0)
+					{							
+						cangoto->setSituation(1);
+						cangoto->setViolations(getNum_Violations(ingOperBlock, cangoto, thisTime, allowNumOf_littleWind));
+						OperBlock * targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 						targetOperBlock->setFront(ingOperBlock);
-						_vistedOperBlocks.push_back(targetOperBlock);
-						findTheTarget = true;
-						break;
+						cangoto->setMyOperBlock(targetOperBlock);
+						_ingOperBlocks.push(targetOperBlock);
+						targetSolnTime = thisTime + Util::flyTime;
+						findTheTarget = true;										
 					}
 					else
 					{
 
 						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
 						{
-							chooseBestWind_forAllR(ingOperBlock, cangoto, thisTime);
+							chooseBestWind_forAllR(ingOperBlock, cangoto, thisTime, allowNumOf_littleWind);
 						}
 						else if (cangoto->getSituation() == 0)
 							//if (cangoto->getSituation() == 0)
 						{
 							cangoto->setSituation(1);
+							cangoto->setViolations(getNum_Violations(ingOperBlock, cangoto, thisTime, allowNumOf_littleWind));
 							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
 							cangotoOperBlock->setFront(ingOperBlock);
 							cangoto->setMyOperBlock(cangotoOperBlock);
@@ -747,9 +770,10 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 	vector<OperBlock *> OperRoute;
 	if (findTheTarget)
 	{
-		// when print don't forget to inverted order		
-		OperRoute.push_back(targetOperBlock);
-		OperBlock * front = targetOperBlock->getFront();
+		// when print don't forget to inverted order
+		OperBlock * targetOB = targetBlock->getMyOperBlock();
+		OperRoute.push_back(targetOB);
+		OperBlock * front = targetOB->getFront();
 		while (front != NULL)
 		{
 			OperRoute.push_back(front);
@@ -769,7 +793,8 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 		cout << endl;
 		cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
-
+		cout << endl;
+		cout << "x" << "\t" << "y" << "\t" << "time" << "\t" << "AvgWind" << "\t" << "rank" << "\t" <<"violations"<< endl;
 		for (int i = 0; i <OperRoute.size(); i++)
 		{
 			int absPlus = abs(OperRoute[i]->getBlock()->getX() - 142) + abs(OperRoute[i]->getBlock()->getY() - 328);
@@ -784,13 +809,13 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 
 			//cout << "(" << OperRoute[i]->getBlock()->getX() << "," << OperRoute[i]->getBlock()->getY() << ")Solntime is" << OperRoute[i]->getSolnTime() << " and the wind that time is" << OperRoute[i]->getBlock()->getWind(OperRoute[i]->getSolnTime() / 60) << "->" << endl;
 
-			if (OperRoute[i]->getSolnTime()<1260)
+			if (OperRoute[i]->getSolnTime() != Util::startTime_BFS)
 			{
-				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getAvgWind(OperRoute[i]->getSolnTime() / 60) << endl;
+				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getAvgWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getNumOf_littleWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getViolations() << endl;
 			}
 			else
 			{
-				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << endl;
+				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getAvgWind(OperRoute[i]->getSolnTime() / 60) << "\t" << OperRoute[i]->getBlock()->getNumOf_littleWind(OperRoute[i]->getSolnTime() / 60) << "\t" << OperRoute[i]->getBlock()->getViolations() << endl;
 			}
 
 		}
@@ -800,4 +825,37 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 
 
 	return OperRoute;
+}
+
+
+void BFS::updateViolations_exchange(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum)
+{
+	if (ingOB->getBlock()->getNumOf_littleWind(thisTime / 60) ==allowNum || cgt->getNumOf_littleWind(thisTime / 60) ==allowNum)
+	{
+		if (ingOB->getBlock()->getViolations() == cgt->getViolations())
+		{	
+			//cout << "change type 1" << endl;
+			cgt->setViolations(ingOB->getBlock()->getViolations() + 1);
+		}
+	}
+	else
+	{
+		if (ingOB->getBlock()->getViolations() != cgt->getViolations())
+		{	
+			//cout << "change type 2" << endl;
+			cgt->setViolations(ingOB->getBlock()->getViolations());
+		}
+	}
+}
+
+int BFS::getNum_Violations(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum)
+{
+	if (ingOB->getBlock()->getNumOf_littleWind(thisTime / 60) == allowNum || cgt->getNumOf_littleWind(thisTime / 60) == allowNum)
+	{
+		return (ingOB->getBlock()->getViolations() + 1);
+	}
+	else
+	{
+		return ingOB->getBlock()->getViolations();
+	}
 }

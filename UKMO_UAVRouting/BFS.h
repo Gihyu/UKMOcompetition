@@ -29,6 +29,10 @@ public:
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime);
 	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime);
-	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime);
+	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime,int allowNum);
+
+	void updateViolations_exchange(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);
+
+	int getNum_Violations(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);
 };
 

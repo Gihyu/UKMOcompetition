@@ -40,6 +40,7 @@ public:
 
 	static int flyTime;
 	static int maxTime;
+	static int startTime_BFS;
 
 	static int maxIterationACO;
 

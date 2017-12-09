@@ -17,6 +17,8 @@ int Util::realization = 1;
 
 int Util::flyTime = 2;
 int Util::maxTime = 1260;
+//fix day10 is 240 ; others are 180.
+int Util::startTime_BFS = 240;
 
 //BFS
 double Util::initRatio = 15.0;

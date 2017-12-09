@@ -24,6 +24,7 @@ private:
 	// 0 means notFound ; 1 means Searching ; 2 means visted
 	// initial is 0
 	int _situation;
+	int _violations;
 
 	vector<Block* >_cangotoBlocks;
 	
@@ -58,6 +59,9 @@ public:
 
 	void setSituation(int a) { _situation = a; }
 	int getSituation() { return _situation; }
+
+	void setViolations(int vio) { _violations = vio; }
+	int getViolations() { return _violations; }
 
 	void setMyOperBlock(OperBlock * ob) { _myOperBlock = ob; }
 	OperBlock * getMyOperBlock() { return _myOperBlock; }

@@ -220,6 +220,7 @@ void PathSolver::solve_allR()
 	for (auto & block : _blockList)
 	{
 		block->setSituation(0);
+		block->setViolations(0);
 	}
 
 	BFS* bfs = new BFS(_origin);//should be origin and destination!!
@@ -245,6 +246,7 @@ void PathSolver::solve_allR()
 			for (auto & block : _blockList)
 			{
 				block->setSituation(0);
+				block->setViolations(0);
 				block->setMyOperBlock(nullOper);
 			}
 			ratioSoln=bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), NumOf_littleWind);
