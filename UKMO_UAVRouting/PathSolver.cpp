@@ -41,10 +41,11 @@ void PathSolver::solve()
 
 	//之前的从下往上的约束搜索
 	
-/*	for (int i = 1; i < _desCityList.size(); ++i)
+	for (int i = 1; i < _desCityList.size(); ++i)
 	{	
 		if (_multiSoln[i - 1].empty())
 		{	
+			//double windratio = 14.5;
 			double windratio = Util::initRatio;
 			vector<OperBlock *> ratioSoln;
 			while (ratioSoln.empty())
@@ -69,10 +70,10 @@ void PathSolver::solve()
 		}
 		
 	}
-*/
+
 
 	//现在的从15.0两分的形式搜索
-	for (int i = 1; i < _desCityList.size(); ++i)
+/*	for (int i = 1; i < _desCityList.size(); ++i)
 	{
 		if (_multiSoln[i - 1].empty())
 		{
@@ -202,7 +203,7 @@ void PathSolver::solve()
 
 	}
 	
-
+*/
 
 	//zhoulei debug
 	//OperBlock* opb1 = new OperBlock(_blockList[0], 9, 30);
@@ -211,5 +212,51 @@ void PathSolver::solve()
 	//opb2->setSolnTime(10*60+4);//10:04
 	//_soln.push_back(opb1);
 	//_soln.push_back(opb2);
+
+}
+
+void PathSolver::solve_allR()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+	}
+
+	BFS* bfs = new BFS(_origin);//should be origin and destination!!
+								//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
+								//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
+
+	_multiSoln = bfs->solve_allR_multiTarget();
+
+	//之前的从下往上的约束搜索
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+	if (_multiSoln[i - 1].empty())
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			NumOf_littleWind -= 1;
+			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
+			cout << "!!!!!!!!!Let's start to allow "<< NumOf_littleWind <<" for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln=bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), NumOf_littleWind);
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+	else
+	{
+		_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+	}
+
+	}
+
 
 }

@@ -105,3 +105,76 @@ double Block::testgetWind(int thisTime)
 		return 0.0;
 	}
 }
+
+
+
+double Block::getAvgWind(int hour)
+{
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	double sum = 0.0;
+	double max = 0.0;
+	double min = 100.0;
+	for (int i = 0; i < 10; i++)
+	{
+		sum += thisTimeWindArr[i];
+		if (thisTimeWindArr[i] > max)
+		{
+			max = thisTimeWindArr[i];
+		}
+		else if (thisTimeWindArr[i] < min)
+		{
+			min = thisTimeWindArr[i];
+		}
+	}
+	double windAvg = (sum - max - min) / 8;
+	return windAvg;
+}
+
+double Block::getWeightedAvgWind(int hour)
+{	
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+
+	double max = 0.0;
+	double min = 100.0;
+	int maxIndex;
+	int minIndex;
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeWindArr[i] > max)
+		{
+			max = thisTimeWindArr[i];
+			maxIndex = i;
+		}
+		else if (thisTimeWindArr[i] < min)
+		{
+			min = thisTimeWindArr[i];
+			minIndex = i;
+		}
+	}
+	double sum = 0.0;
+	double weightSum = 0.0;
+	for (int j = 0; j < 10; j++)
+	{
+		if (j != maxIndex && j != minIndex)
+		{
+			sum += thisTimeWindArr[j] * Util::WeightOfModels[j];
+			weightSum+= Util::WeightOfModels[j];
+		}
+	}
+	double weightedAvgWind = sum / weightSum;
+	return weightedAvgWind;
+}
+
+int Block::getNumOf_littleWind(int hour)
+{
+	int countNumOf_littleWind = 0;
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeWindArr[i] <Util::initRatio_forAllR)
+		{
+			countNumOf_littleWind++;
+		}
+	}
+	return countNumOf_littleWind;
+}

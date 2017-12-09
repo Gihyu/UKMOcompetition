@@ -23,6 +23,8 @@ public:
 
 	void solve();//TODO
 
+	void solve_allR();
+
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }
 
