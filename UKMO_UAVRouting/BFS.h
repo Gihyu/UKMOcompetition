@@ -27,12 +27,13 @@ public:
 
 	void clearQueue(queue<OperBlock *>& q);
 
-	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime);
+	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);
 	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime);
 	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime,int allowNum);
 
 	void updateViolations_exchange(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);
 
-	int getNum_Violations(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);
+	int getNum_Violations(OperBlock * ingOB, Block* cgt, int thisTime, double windRatio);
+	int getNum_Violations_allR(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);
 };
 

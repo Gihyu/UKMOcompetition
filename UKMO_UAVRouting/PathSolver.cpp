@@ -31,6 +31,7 @@ void PathSolver::solve()
 	for (auto & block : _blockList)
 	{
 		block->setSituation(0);
+		block->setViolations(0);
 	}
 
 	BFS* bfs = new BFS(_origin);//should be origin and destination!!
@@ -58,6 +59,7 @@ void PathSolver::solve()
 				for (auto & block : _blockList)
 				{						
 					block->setSituation(0);
+					block->setViolations(0);
 					block->setMyOperBlock(nullOper);
 				}
 				ratioSoln=bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);

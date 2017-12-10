@@ -20,12 +20,12 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 10;//should not 
-	Util::realization = 5;//model id
+	int date = 7;//should not 
+	Util::realization = 8;//model id
 
 	//int date = atoi(argv[1]);
 
-	Util::allRealization = true;
+	Util::allRealization = false;
 	io->input(sche, date);
 	
 	sche->init();
@@ -42,8 +42,8 @@ int main()
 	PathSolver* solver = new PathSolver(origin, sche->getCityList(), blocks);//from origin to all destinations
 
 
-	//solver->solve();//find a path by some method;please call bfs in PathSolver::solve()!!
-	solver->solve_allR();
+	solver->solve();//find a path by some method;please call bfs in PathSolver::solve()!!
+	//solver->solve_allR();
 
 	//io->outputSoln(cityNo,origin,solver->getSoln());
 	io->outputMultiSoln(sche->getCityList(), origin, solver->getMultiSoln());//soln is not required exactly

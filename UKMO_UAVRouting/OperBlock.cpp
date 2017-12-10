@@ -10,7 +10,8 @@ OperBlock::OperBlock(Block* block,int firstReachTime):
 }
 
 bool OperBlock::cangotoThisBlock(Block * target, int thisTime)
-{
+{	
+	//起点都让飞出去
 	// I need to update this rule after my question online is confirmed.
 	if (_block->getX() == 142 && _block->getY() == 328)
 	{
