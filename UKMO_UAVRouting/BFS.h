@@ -28,7 +28,7 @@ public:
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);
-	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime);
+	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime,double windRatio);
 	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime,int allowNum);
 
 	void updateViolations_exchange(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum);

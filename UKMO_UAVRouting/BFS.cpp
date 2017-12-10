@@ -394,7 +394,7 @@ void BFS::chooseLowestWind(OperBlock * oper, Block * blo, int thistime,double wi
 {	
 	if((thistime + Util::flyTime) == blo->getMyOperBlock()->getSolnTime())
 	{
-		if (getNum_Violations(oper, blo, thistime, windRatio) > blo->getViolations())
+		if (getNum_Violations(oper, blo, thistime, windRatio) < blo->getViolations())
 		{
 			blo->getMyOperBlock()->setFront(oper);
 			blo->setViolations(getNum_Violations(oper, blo, thistime, windRatio));
@@ -412,15 +412,22 @@ void BFS::chooseLowestWind(OperBlock * oper, Block * blo, int thistime,double wi
 }
 
 
-void BFS::chooseHighestWind(OperBlock * oper, Block * blo, int thistime)
+void BFS::chooseHighestWind(OperBlock * oper, Block * blo, int thistime,double windRatio)
 {
-	if (oper->getWind(thistime / 60) > blo->getMyOperBlock()->getFront()->getWind(thistime / 60))
+	if ((thistime + Util::flyTime) == blo->getMyOperBlock()->getSolnTime())
 	{
-		//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ing solntime " << oper->getSolnTime() << " myOperSolnTime " << blo->getMyOperBlock()->getFront()->getSolnTime() << " !!!!!!!!!!!!!!!" << endl;
-		if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime())
+		if (getNum_Violations(oper, blo, thistime, windRatio) < blo->getViolations())
 		{
-			//cout << "--------------------------change------------------------" << endl;
 			blo->getMyOperBlock()->setFront(oper);
+			blo->setViolations(getNum_Violations(oper, blo, thistime, windRatio));
+		}
+		else if (getNum_Violations(oper, blo, thistime, windRatio) == blo->getViolations())
+		{
+			if (oper->getWind(thistime / 60) > blo->getMyOperBlock()->getFront()->getWind(thistime / 60))
+			{
+				//cout << "--------------------------change type2------------------------" << endl;
+				blo->getMyOperBlock()->setFront(oper);
+			}
 		}
 
 	}
@@ -447,7 +454,7 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,in
 			{	
 				//cout << "--------------------------change violations------------------------" << endl;
 				blo->getMyOperBlock()->setFront(oper);
-				updateViolations_exchange(oper, blo, thistime, allowNum);
+				blo->setViolations(getNum_Violations_allR(oper, blo, thistime, allowNum));
 			}
 			else if (getNum_Violations_allR(oper, blo, thistime, allowNum) == blo->getViolations())
 			{
@@ -457,7 +464,6 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,in
 				{
 					//cout << "--------------------------change wind------------------------" << endl;
 					blo->getMyOperBlock()->setFront(oper);
-					updateViolations_exchange(oper, blo, thistime, allowNum);
 				}
 			}
 		
@@ -875,10 +881,10 @@ int BFS::getNum_Violations(OperBlock * ingOB, Block* cgt, int thisTime,double wi
 {
 	if (ingOB->getBlock()->getWind(thisTime / 60) <=(windRatio-0.5) && cgt->getWind(thisTime / 60) <= (windRatio - 0.5))
 	{
-		return (ingOB->getBlock()->getViolations() + 1);
+		return ingOB->getBlock()->getViolations();
 	}
 	else
-	{
-		return ingOB->getBlock()->getViolations();
+	{	
+		return (ingOB->getBlock()->getViolations() + 1);	
 	}
 }
