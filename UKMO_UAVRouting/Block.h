@@ -48,6 +48,9 @@ public:
 	double getAvgWind(int hour);
 	double getWeightedAvgWind(int hour);
 	int getNumOf_littleWind(int hour);
+
+	vector<int > getSayNoModelId(int hour);
+
 	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }

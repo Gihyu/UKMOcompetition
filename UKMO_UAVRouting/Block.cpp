@@ -178,3 +178,19 @@ int Block::getNumOf_littleWind(int hour)
 	}
 	return countNumOf_littleWind;
 }
+
+vector<int > Block::getSayNoModelId(int hour)
+{
+	vector<int > vioIndex;
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeWindArr[i] >=Util::initRatio_forAllR)
+		{	
+			//加1转换为真实的model号
+			int  index = i+1;
+			vioIndex.push_back(index);
+		}
+	}
+	return vioIndex;
+}

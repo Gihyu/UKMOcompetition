@@ -655,7 +655,7 @@ vector<vector<OperBlock *>> BFS::solve_allR_multiTarget()
 				{
 				cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
 				}*/
-				if (absPlus * 2 + 180 > multiSoln[k][i]->getSolnTime())
+				if (absPlus * 2 + Util::startTime_BFS > multiSoln[k][i]->getSolnTime())
 				{
 					cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 				}
@@ -819,7 +819,7 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 			{
 			cout << "!!!!!!!!!!loop is here !!!!!!!!!" << endl;
 			}*/
-			if (absPlus * 2 + 180 > OperRoute[i]->getSolnTime())
+			if (absPlus * 2 + Util::startTime_BFS > OperRoute[i]->getSolnTime())
 			{
 				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
 			}
@@ -828,7 +828,16 @@ vector<OperBlock *> BFS::solve_allR_singleTarget(Block * targetBlock, int allowN
 
 			if (OperRoute[i]->getSolnTime() != Util::startTime_BFS)
 			{
-				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getAvgWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getNumOf_littleWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getViolations() << endl;
+				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getAvgWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getNumOf_littleWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getViolations() ;
+				if (OperRoute[i]->getBlock()->getNumOf_littleWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) == 8 || OperRoute[i]->getBlock()->getNumOf_littleWind((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) == 9)
+				{
+					vector<int > sayNoIndex = OperRoute[i]->getBlock()->getSayNoModelId((OperRoute[i]->getSolnTime() - Util::flyTime) / 60);
+					for (int sni = 0;sni<sayNoIndex.size(); sni++)
+					{
+						cout << "\t" << sayNoIndex[sni];
+					}
+				}
+				cout << endl;
 			}
 			else
 			{
