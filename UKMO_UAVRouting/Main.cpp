@@ -21,7 +21,7 @@ int main()
 	IO* io = new IO();
 
 	int date = 10;//should not 
-	Util::realization = 1;//model id
+	Util::realization = 3;//model id
 
 	//int date = atoi(argv[1]);
 

@@ -460,7 +460,10 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,in
 			{
 				double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
 				double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
-				if (thisAvgWind < nextAvgWind)
+
+				//大风与小风的选择
+				if (thisAvgWind > nextAvgWind)
+				//if (thisAvgWind < nextAvgWind)
 				{
 					//cout << "--------------------------change wind------------------------" << endl;
 					blo->getMyOperBlock()->setFront(oper);
@@ -469,6 +472,21 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,in
 		
 		}
 	} 
+
+
+
+	//only AvgWind
+	//if ((thistime + 2) == blo->getMyOperBlock()->getSolnTime())
+	//{
+	//	double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
+	//	double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
+	//	if (thisAvgWind < nextAvgWind)
+	//	{
+	//		//cout << "--------------------------change wind------------------------" << endl;
+	//		blo->getMyOperBlock()->setFront(oper);
+	//	}
+	//}
+
 
 }
 
