@@ -73,7 +73,7 @@ void Block::print()
 
 void Block::printWindArr()
 {
-	cout << "\twindArr:";
+	cout << "windArr:";
 	for (auto&wind : _windArr)
 	{
 		cout << "\t" << wind;
@@ -83,7 +83,7 @@ void Block::printWindArr()
 
 void Block::printWindMatrix()
 {
-	cout << "\twindMatrix:";
+	cout << "windMatrix:";
 	for (auto&arr : _windMatrix)
 	{
 		for (auto&wind : arr)
