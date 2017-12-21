@@ -13,29 +13,26 @@ IO::IO()
 	cout << "* Basic start time:" << Util::getTimeStr(Util::startTime) << endl;
 }
 
-void IO::input(Schedule* sche,int date)
+void IO::input(Schedule * sche, int date)
 {
-	Util::printCurTime();
-
 	string inFile;
-	if (Util::allRealization)
+	switch (Util::inputMode)
 	{
+	case M_Single:
+		inFile = "compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		readForecast(sche, inFile);
+		break;
+	case M_Multi:
 		inFile = "reProcess_day" + to_string(date) + "_R10";
 		readForecastMatrix(sche, inFile);
-	}
-	else
-	{
-		if (date <= 5)//training
-		{
-			inFile= "Train_MergeLinreg_D_" + to_string(date);
-		}
-		else//testing
-		{
-			inFile = "compress_day" + to_string(date)+"R"+to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
-		}
+		break;
+	case M_SingleAndMulti:
+		inFile = "reProcess_day" + to_string(date) + "_R10";
+		readForecastMatrix(sche, inFile);
+		inFile = "compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
 		readForecast(sche, inFile);
+		break;
 	}
-	Util::printCurTime();
 
 	readCity(sche);
 	Util::printCurTime();
@@ -52,6 +49,10 @@ void IO::input(Schedule* sche,int date)
 void IO::readForecast(Schedule* sche,string inFile)
 {
 	vector<Block*> blocks;
+	if (Util::inputMode == M_SingleAndMulti)
+	{
+		blocks = sche->getBlockList();
+	}
 
 	string fileName = Util::InputPath + inFile + ".csv";
 	
@@ -70,7 +71,7 @@ void IO::readForecast(Schedule* sche,string inFile)
 	array<double, Util::hourCount> windArr;
 
 	int testFlag = 0;
-
+	int index = 0;
 	while (getline(file, buf))
 	{
 		//testFlag++;
@@ -94,12 +95,32 @@ void IO::readForecast(Schedule* sche,string inFile)
 			windArr[i] = atof(token);
 		}
 
-		Block* newBlock = new Block(x, y, date, windArr);
-		blocks.push_back(newBlock);
+		if (Util::inputMode == M_Single)
+		{
+			Block* newBlock = new Block(x, y, date, windArr);
+			blocks.push_back(newBlock);
+		}
+		else if (Util::inputMode == M_SingleAndMulti)
+		{
+			if (blocks[index]->getX()==x&&blocks[index]->getY()==y)
+			{
+				blocks[index]->setWindArr(windArr);
+				index++;
+			}
+			else
+			{
+				cout << "match error!!" << endl;
+				exit(0);
+			}
+		}
+
 	}
 	file.close();
 
-	sche->setBlockList(blocks);
+	if (Util::inputMode == M_Single)
+	{
+		sche->setBlockList(blocks);
+	}
 
 	cout << "# Blocks:" << sche->getBlockList().size() << endl;
 	cout << ">>> test print" << endl;

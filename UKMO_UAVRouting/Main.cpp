@@ -6,6 +6,8 @@
 #include"BFS.h"
 #include"Validation.h"
 
+void print();
+
 int main()
 {
 
@@ -20,13 +22,16 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 10;//should not 
-	Util::realization = 3;//model id
+	int date = 1;//should not 
+	Util::realization = 1;//model id
 
 	//int date = atoi(argv[1]);
 
-	Util::allRealization = false;
+	//Util::allRealization = false;
+	Util::inputMode = M_SingleAndMulti;//M_Single;M_Multi
 	io->input(sche, date);
+	print();
+	exit(0);
 	
 	sche->init();
 
@@ -56,4 +61,26 @@ int main()
 	}
 
 	return 0;
+}
+
+void print()
+{
+	cout << "Util::inputMode\t";
+	switch (Util::inputMode)
+	{
+	case M_Single:
+		cout << "M_Single";
+		break;
+	case M_Multi:
+		cout << "M_Multi";
+		break;
+	case M_SingleAndMulti:
+		cout << "M_SingleAndMulti";
+		break;
+	default:
+		cout << "NIL";
+		break;
+	}
+	cout << endl;
+
 }

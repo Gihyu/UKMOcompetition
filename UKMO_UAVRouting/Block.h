@@ -44,14 +44,15 @@ public:
 
 	int getDate() { return _date; }
 
-	double getWind(int hour) { return _windArr[hour - _basicHour]; }
+	void setWindArr(array<double, Util::hourCount> arr) { _windArr = arr; }
+	double getWind(int hour) { return _windArr[hour - _basicHour]; }//single input
 	double getAvgWind(int hour);
 	double getWeightedAvgWind(int hour);
 	int getNumOf_littleWind(int hour);
 
 	vector<int > getSayNoModelId(int hour);
 
-	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }
+	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }//multi input
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}

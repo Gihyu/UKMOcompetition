@@ -56,18 +56,24 @@ bool Block::equal(int x, int y)
 void Block::print()
 {
 	cout << "Block_" << _id << "\tx:" << _x << "\ty:" << _y << "\tdate:" << _date << endl;
-	if (Util::allRealization)
+	switch (Util::inputMode)
 	{
-		printWindMatrix();
-	}
-	else
-	{
+	case M_Single:
 		printWindArr();
+		break;
+	case M_Multi:
+		printWindMatrix();
+		break;
+	case M_SingleAndMulti:
+		printWindArr();
+		printWindMatrix();
+		break;
 	}
 }
 
 void Block::printWindArr()
 {
+	cout << "\twindArr:";
 	for (auto&wind : _windArr)
 	{
 		cout << "\t" << wind;
@@ -77,6 +83,7 @@ void Block::printWindArr()
 
 void Block::printWindMatrix()
 {
+	cout << "\twindMatrix:";
 	for (auto&arr : _windMatrix)
 	{
 		for (auto&wind : arr)
