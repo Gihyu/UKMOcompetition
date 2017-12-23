@@ -172,13 +172,13 @@ double Block::getWeightedAvgWind(int hour)
 	return weightedAvgWind;
 }
 
-int Block::getNumOf_littleWind(int hour)
+int Block::getNumOf_littleWind(int hour,double allRratio)
 {
 	int countNumOf_littleWind = 0;
 	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
 	for (int i = 0; i < 10; i++)
 	{
-		if (thisTimeWindArr[i] <Util::initRatio_forAllR)
+		if (thisTimeWindArr[i] <allRratio)
 		{
 			countNumOf_littleWind++;
 		}

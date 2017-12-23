@@ -48,7 +48,7 @@ public:
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }//single input
 	double getAvgWind(int hour);
 	double getWeightedAvgWind(int hour);
-	int getNumOf_littleWind(int hour);
+	int getNumOf_littleWind(int hour,double allRratio);
 
 	vector<int > getSayNoModelId(int hour);
 

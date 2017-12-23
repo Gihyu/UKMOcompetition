@@ -80,7 +80,7 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 	return a->getSolnTime() < b->getSolnTime();
 }
 
-bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind)
+bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind, double allRratio)
 {	
 	//int justAvgUsed;
 	//if (numOf_littleWind >= 6)
@@ -95,7 +95,7 @@ bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_li
 	//numOf_littleWind
 	if (_block->getX() == 142 && _block->getY() == 328)
 	{	
-		if ( target->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind)
+		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind)
 		{
 			return true;
 		}
@@ -104,7 +104,7 @@ bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_li
 	}
 	else
 	{
-		if (_block->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60) >= numOf_littleWind)
+		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind)
 		{
 			return true;
 		}
@@ -112,4 +112,27 @@ bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_li
 			return false;
 	}
 	
+}
+
+//valued by allR , added 12-23
+bool OperBlock::cangotoThisBlock_valued_by_allR(Block * target, int thisTime, double windRatio, int numOf_littleWind)
+{
+	if (_block->getX() == 142 && _block->getY() == 328)
+	{
+		if (target->getWind(thisTime / 60)<windRatio && target->getNumOf_littleWind(thisTime /60,windRatio)>=numOf_littleWind)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	else
+	{
+		if (getWind(thisTime / 60) < windRatio && target->getWind(thisTime / 60)<windRatio && _block->getNumOf_littleWind(thisTime / 60, windRatio) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60, windRatio) >= numOf_littleWind)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
 }

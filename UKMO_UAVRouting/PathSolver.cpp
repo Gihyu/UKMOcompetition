@@ -264,7 +264,7 @@ void PathSolver::solve()
 
 }
 
-void PathSolver::solve_allR()
+void PathSolver::solve_allR_fixWind_changeNum()
 {
 	for (auto & block : _blockList)
 	{
@@ -298,7 +298,7 @@ void PathSolver::solve_allR()
 				block->setViolations(0);
 				block->setMyOperBlock(nullOper);
 			}
-			ratioSoln=bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), NumOf_littleWind);
+			ratioSoln=bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), NumOf_littleWind,Util ::initRatio_forAllR);
 		}
 		_desCityList[i]->setSoln(ratioSoln);
 	}
@@ -309,5 +309,98 @@ void PathSolver::solve_allR()
 
 	}
 
+
+}
+
+void PathSolver::solve_allR_fixNum_changeWind()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);//should be origin and destination!!
+								//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
+								//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
+
+	_multiSoln = bfs->solve_allR_multiTarget();
+
+	//之前的从下往上的约束搜索
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		if (_multiSoln[i - 1].empty())
+		{
+			double windforAllR = Util::initRatio_forAllR - 0.5;
+			vector<OperBlock *> ratioSoln;
+			while (ratioSoln.empty())
+			{
+				windforAllR += 0.5;
+				cout << "!!!!!!!!!Let's start to allow " << windforAllR << endl;
+				cout << "!!!!!!!!!Let's start to allow " << windforAllR << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+				cout << "!!!!!!!!!Let's start to allow " << windforAllR << endl;
+				OperBlock * nullOper = NULL;
+				for (auto & block : _blockList)
+				{
+					block->setSituation(0);
+					block->setViolations(0);
+					block->setMyOperBlock(nullOper);
+				}
+				ratioSoln = bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), Util::NumOf_littleWindForAllR, windforAllR);
+			}
+			_desCityList[i]->setSoln(ratioSoln);
+		}
+		else
+		{
+			_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+		}
+
+	}
+
+
+}
+
+void PathSolver::solve_valued_by_allR()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS * bfs = new BFS(_origin);
+
+	_multiSoln = bfs->solve_multiTarget_valued_by_allR();
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+	if (_multiSoln[i - 1].empty())
+	{
+		//double windratio = 14.5;
+		double windratio = Util::initRatio;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			windratio += 0.5;
+			cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+			cout << "!!!!!!!!!Let's start to allow "<<windratio<<" for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+				ratioSoln=bfs->solve_singleTarget_valued_by_allR(_desCityList[i]->getBlock(), windratio);
+			}
+				_desCityList[i]->setSoln(ratioSoln);
+		}
+		else
+		{
+		_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+		}
+	}
+	
 
 }

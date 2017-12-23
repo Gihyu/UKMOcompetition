@@ -22,9 +22,9 @@ int Util::maxTime = 1260;
 int Util::startTime_BFS = 180;
 
 //BFS
-double Util::initRatio = 0.0;
+double Util::initRatio = 15.0;
 double Util::initRatio_forAllR = 15.0;
-int Util::NumOf_littleWindForAllR = 10;
+int Util::NumOf_littleWindForAllR = 6;
 double Util::WeightOfModels[10] = { 0.956,0.949,0.952,0.947,0.949,0.953,0.960,0.955,0.944,0.950 };
 
 
