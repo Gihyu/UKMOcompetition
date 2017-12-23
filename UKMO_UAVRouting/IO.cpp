@@ -46,10 +46,13 @@ void IO::input(Schedule * sche, int date)
 
 	vector<Block*> blocks = sche->getBlockList();
 	cout << "# Blocks:" << blocks.size() << endl;
-	cout << ">>> test print" << endl;
-	blocks.front()->print();
-	blocks.back()->print();
-	cout << endl;
+	if (!blocks.empty())
+	{
+		cout << ">>> test print" << endl;
+		blocks.front()->print();
+		blocks.back()->print();
+		cout << endl;
+	}
 }
 
 

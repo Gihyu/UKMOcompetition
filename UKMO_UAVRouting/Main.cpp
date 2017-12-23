@@ -26,13 +26,13 @@ int main()
 	//int date = atoi(argv[1]);
 	Util::realization = 1;//model id
 
-	Util::inputMode = M_Multi;//M_Single;M_Multi;M_SingleAndMulti
+	Util::inputMode = M_Single;//M_Single;M_Multi;M_SingleAndMulti
 	cout << "date:" << date << "Util::realization:" << Util::realization << endl;
 	print();
 	io->input(sche, date);
-	exit(0);
-	
+		
 	sche->init();
+	exit(0);
 
 	Block* origin = sche->getCity(0);//the blcok corresponding to origin
 
