@@ -23,7 +23,10 @@ public:
 
 	void solve();//TODO
 
-	void solve_allR();
+	void solve_allR_fixWind_changeNum();
+	void solve_allR_fixNum_changeWind();
+
+	void solve_valued_by_allR();
 
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }

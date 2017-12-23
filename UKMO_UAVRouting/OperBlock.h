@@ -41,7 +41,8 @@ public:
 
 	bool cangotoThisBlock(Block * target, int thisTime);
 	bool cangotoThisBlock_allow_ratio(Block * target, int thisTime, double windRatio);
-	bool cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind);
+	bool cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind,double allRratio);
+	bool cangotoThisBlock_valued_by_allR(Block * target, int thisTime, double windRatio, int numOf_littleWind);
 
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);
