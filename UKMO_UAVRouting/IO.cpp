@@ -43,6 +43,13 @@ void IO::input(Schedule * sche, int date)
 	//	readMeasure(sche,inFile);
 	//	Util::printCurTime();
 	//}
+
+	vector<Block*> blocks = sche->getBlockList();
+	cout << "# Blocks:" << blocks.size() << endl;
+	cout << ">>> test print" << endl;
+	blocks.front()->print();
+	blocks.back()->print();
+	cout << endl;
 }
 
 
@@ -122,11 +129,11 @@ void IO::readForecast(Schedule* sche,string inFile)
 		sche->setBlockList(blocks);
 	}
 
-	cout << "# Blocks:" << sche->getBlockList().size() << endl;
-	cout << ">>> test print" << endl;
-	blocks.front()->print();
-	blocks.back()->print();
-	cout << endl;
+	//cout << "# Blocks:" << sche->getBlockList().size() << endl;
+	//cout << ">>> test print" << endl;
+	//blocks.front()->print();
+	//blocks.back()->print();
+	//cout << endl;
 }
 
 void IO::readForecastMatrix(Schedule * sche, string inFile)
@@ -213,11 +220,11 @@ void IO::readForecastMatrix(Schedule * sche, string inFile)
 
 	sche->setBlockList(blocks);
 
-	cout << "# Blocks:" << sche->getBlockList().size() << endl;
-	cout << ">>> test print" << endl;
-	blocks.front()->print();
-	blocks.back()->print();
-	cout << endl;
+	//cout << "# Blocks:" << sche->getBlockList().size() << endl;
+	//cout << ">>> test print" << endl;
+	//blocks.front()->print();
+	//blocks.back()->print();
+	//cout << endl;
 }
 
 void IO::readCity(Schedule* sche)

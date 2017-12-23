@@ -83,7 +83,7 @@ void Block::printWindArr()
 
 void Block::printWindMatrix()
 {
-	cout << "windMatrix:";
+	cout << "windMatrix:\n";
 	for (auto&arr : _windMatrix)
 	{
 		for (auto&wind : arr)

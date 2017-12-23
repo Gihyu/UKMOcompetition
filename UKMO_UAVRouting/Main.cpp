@@ -22,15 +22,16 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 1;//should not 
+	int date = 6;
 	Util::realization = 1;//model id
 
 	//int date = atoi(argv[1]);
 
 	//Util::allRealization = false;
-	Util::inputMode = M_SingleAndMulti;//M_Single;M_Multi
-	io->input(sche, date);
+	Util::inputMode = M_Multi;//M_Single;M_Multi;M_SingleAndMulti
+	cout << "date:" << date << "Util::realization:" << Util::realization << endl;
 	print();
+	io->input(sche, date);
 	exit(0);
 	
 	sche->init();
