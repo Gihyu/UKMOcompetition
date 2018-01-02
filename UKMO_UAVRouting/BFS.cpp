@@ -437,55 +437,56 @@ void BFS::chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime ,in
 {	
 	//先判断时间是否一致
 	//if (thistime == blo->getMyOperBlock()->getFront()->getSolnTime() )
-	if ( (thistime + Util::flyTime) == blo->getMyOperBlock()->getSolnTime())
-	{	
-		int thisNumof_littleWind = oper->getBlock()->getNumOf_littleWind(thistime / 60, windRatio);
-		int nextNumof_littleWind = blo->getMyOperBlock()->getFront()->getBlock()->getNumOf_littleWind(thistime / 60, windRatio);
-		if (thisNumof_littleWind > nextNumof_littleWind)
-		{
-			//cout << "--------------------------change level------------------------" << endl;
-			blo->getMyOperBlock()->setFront(oper);
-			updateViolations_exchange(oper, blo, thistime, allowNum,windRatio);
-			
-		}
-		else if (thisNumof_littleWind == nextNumof_littleWind)
-		{
-			if (getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio) < blo->getViolations())
-			{	
-				//cout << "--------------------------change violations------------------------" << endl;
-				blo->getMyOperBlock()->setFront(oper);
-				blo->setViolations(getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio));
-			}
-			else if (getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio) == blo->getViolations())
-			{
-				double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
-				double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
+	//if ( (thistime + Util::flyTime) == blo->getMyOperBlock()->getSolnTime())
+	//{	
+	//	//如果大于15.0的时候找点仍然找那些15.0之内rank更高的点，那么这里就不必填windRatio
+	//	int thisNumof_littleWind = oper->getBlock()->getNumOf_littleWind(thistime / 60, windRatio);
+	//	int nextNumof_littleWind = blo->getMyOperBlock()->getFront()->getBlock()->getNumOf_littleWind(thistime / 60, windRatio);
+	//	if (thisNumof_littleWind > nextNumof_littleWind)
+	//	{
+	//		//cout << "--------------------------change level------------------------" << endl;
+	//		blo->getMyOperBlock()->setFront(oper);
+	//		updateViolations_exchange(oper, blo, thistime, allowNum,windRatio);
+	//		
+	//	}
+	//	else if (thisNumof_littleWind == nextNumof_littleWind)
+	//	{
+	//		if (getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio) < blo->getViolations())
+	//		{	
+	//			//cout << "--------------------------change violations------------------------" << endl;
+	//			blo->getMyOperBlock()->setFront(oper);
+	//			blo->setViolations(getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio));
+	//		}
+	//		else if (getNum_Violations_allR(oper, blo, thistime, allowNum, windRatio) == blo->getViolations())
+	//		{
+	//			double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
+	//			double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
 
-				//大风与小风的选择
-				if (thisAvgWind > nextAvgWind)
-				//if (thisAvgWind < nextAvgWind)
-				{
-					//cout << "--------------------------change wind------------------------" << endl;
-					blo->getMyOperBlock()->setFront(oper);
-				}
-			}
-		
-		}
-	} 
+	//			//大风与小风的选择
+	//			if (thisAvgWind > nextAvgWind)
+	//			//if (thisAvgWind < nextAvgWind)
+	//			{
+	//				//cout << "--------------------------change wind------------------------" << endl;
+	//				blo->getMyOperBlock()->setFront(oper);
+	//			}
+	//		}
+	//	
+	//	}
+	//} 
 
 
 
 	//only AvgWind
-	//if ((thistime + 2) == blo->getMyOperBlock()->getSolnTime())
-	//{
-	//	double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
-	//	double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
-	//	if (thisAvgWind < nextAvgWind)
-	//	{
-	//		//cout << "--------------------------change wind------------------------" << endl;
-	//		blo->getMyOperBlock()->setFront(oper);
-	//	}
-	//}
+	if ((thistime + 2) == blo->getMyOperBlock()->getSolnTime())
+	{
+		double thisAvgWind = oper->getBlock()->getAvgWind(thistime / 60);
+		double nextAvgWind = blo->getMyOperBlock()->getFront()->getBlock()->getAvgWind(thistime / 60);
+		if (thisAvgWind < nextAvgWind)
+		{
+			//cout << "--------------------------change wind------------------------" << endl;
+			blo->getMyOperBlock()->setFront(oper);
+		}
+	}
 
 
 }

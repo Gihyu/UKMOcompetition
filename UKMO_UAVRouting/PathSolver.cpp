@@ -41,7 +41,7 @@ void PathSolver::solve()
 	_multiSoln = bfs->solve_by_anyCases_multiTarget();
 
 	//之前的从下往上的约束搜索
-/*	
+	
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{	
 		if (_multiSoln[i - 1].empty())
@@ -72,185 +72,185 @@ void PathSolver::solve()
 		}
 		
 	}
-*/
+
 
 	//现在的从15.0两分的形式搜索
 	//用这个的时候得将initialRatio设置成0.0
-	for (int i = 1; i < _desCityList.size(); ++i)
-	{
-		if (_multiSoln[i - 1].empty())
-		{
-			double windratio = 15.2;
-			vector<OperBlock *> ratioSoln;
-			int solnNum;
-			bool findSoln = false;
-			while (!findSoln)
-			{
-				windratio -=0.2;
-				cout << "!!!!!!!!! " << windratio << endl;
-				cout << "!!!!!!!!!Let's start to allow " << windratio << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
-				cout << "!!!!!!!!! " << windratio << endl;
-				OperBlock * nullOper = NULL;
-				for (auto & block : _blockList)
-				{
-					block->setSituation(0);
-					block->setMyOperBlock(nullOper);
-				}
-				if (ratioSoln.empty())
-				{
-					ratioSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
-					if (ratioSoln.empty())
-					{
-						break;
-					}
-					else
-					{
-						solnNum = ratioSoln[ratioSoln.size() - 1]->getSolnTime();
-						cout << "!!!!!!!!!find a route with time " << solnNum << endl;
-					}				
-				}
-				else
-				{
-					vector<OperBlock *> cmpSoln;
-					cmpSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
-					if (cmpSoln.empty())
-					{							
-						cout << "now stop the search for city" << i << endl;
-						cout << endl;
-						cout << endl;
-						findSoln = true;
-						break;
-					}
-					else
-					{
-						int cmpNum = cmpSoln[cmpSoln.size() - 1]->getSolnTime();
-						//只找时间不一样的话
-						//就算时间不一样，还可以找同时间不同路的
-						if (cmpNum - solnNum > 0)
-						{	
-							ratioSoln = cmpSoln;
-							cout << "!!!!!!!!!find a route with time " << ratioSoln[ratioSoln.size() - 1]->getSolnTime() << endl;
-							cout << "now stop the search for city" << i << endl;
-							cout << endl;
-							cout << endl;
-							findSoln = true;
-							break;
-						}
-						else 
-						{
-							cout << "!!!!!!!!!also find a route with time " << cmpNum << endl;
-							OperBlock * RS_final_OperBlock = ratioSoln[ratioSoln.size() - 1];
-							OperBlock * CS_final_OperBlock = cmpSoln[cmpSoln.size() - 1];
-							bool is_same = true;
-							OperBlock * RS_front = RS_final_OperBlock->getFront();
-							OperBlock * CS_front = CS_final_OperBlock->getFront();
-							while(RS_front->getSolnTime() != Util::startTime_BFS)
-							{
-								if (RS_front->getX() != CS_front->getX() || RS_front->getY() != CS_front->getY() || RS_front->getSolnTime() != CS_front->getSolnTime())
-								{
-									is_same = false;
-									break;
-								}
-								RS_front = RS_front->getFront();
-								CS_front = CS_front->getFront();
-							}
-							if (!is_same)
-							{
-								ratioSoln = cmpSoln;
-								cout << "!!!!!!!!!find a route with same time " << ratioSoln[ratioSoln.size() - 1]->getSolnTime() << " but use another route" <<endl;
-								cout << "now stop the search for city" << i << endl;
-								cout << endl;
-								cout << endl;
-								findSoln = true;
-								break;
-							}
-							else
-							{
-								cout << "but also use the same route"  << endl;
-							}
-						}
+	//for (int i = 1; i < _desCityList.size(); ++i)
+	//{
+	//	if (_multiSoln[i - 1].empty())
+	//	{
+	//		double windratio = 15.2;
+	//		vector<OperBlock *> ratioSoln;
+	//		int solnNum;
+	//		bool findSoln = false;
+	//		while (!findSoln)
+	//		{
+	//			windratio -=0.2;
+	//			cout << "!!!!!!!!! " << windratio << endl;
+	//			cout << "!!!!!!!!!Let's start to allow " << windratio << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+	//			cout << "!!!!!!!!! " << windratio << endl;
+	//			OperBlock * nullOper = NULL;
+	//			for (auto & block : _blockList)
+	//			{
+	//				block->setSituation(0);
+	//				block->setMyOperBlock(nullOper);
+	//			}
+	//			if (ratioSoln.empty())
+	//			{
+	//				ratioSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
+	//				if (ratioSoln.empty())
+	//				{
+	//					break;
+	//				}
+	//				else
+	//				{
+	//					solnNum = ratioSoln[ratioSoln.size() - 1]->getSolnTime();
+	//					cout << "!!!!!!!!!find a route with time " << solnNum << endl;
+	//				}				
+	//			}
+	//			else
+	//			{
+	//				vector<OperBlock *> cmpSoln;
+	//				cmpSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
+	//				if (cmpSoln.empty())
+	//				{							
+	//					cout << "now stop the search for city" << i << endl;
+	//					cout << endl;
+	//					cout << endl;
+	//					findSoln = true;
+	//					break;
+	//				}
+	//				else
+	//				{
+	//					int cmpNum = cmpSoln[cmpSoln.size() - 1]->getSolnTime();
+	//					//只找时间不一样的话
+	//					//就算时间不一样，还可以找同时间不同路的
+	//					if (cmpNum - solnNum > 0)
+	//					{	
+	//						ratioSoln = cmpSoln;
+	//						cout << "!!!!!!!!!find a route with time " << ratioSoln[ratioSoln.size() - 1]->getSolnTime() << endl;
+	//						cout << "now stop the search for city" << i << endl;
+	//						cout << endl;
+	//						cout << endl;
+	//						findSoln = true;
+	//						break;
+	//					}
+	//					else 
+	//					{
+	//						cout << "!!!!!!!!!also find a route with time " << cmpNum << endl;
+	//						OperBlock * RS_final_OperBlock = ratioSoln[ratioSoln.size() - 1];
+	//						OperBlock * CS_final_OperBlock = cmpSoln[cmpSoln.size() - 1];
+	//						bool is_same = true;
+	//						OperBlock * RS_front = RS_final_OperBlock->getFront();
+	//						OperBlock * CS_front = CS_final_OperBlock->getFront();
+	//						while(RS_front->getSolnTime() != Util::startTime_BFS)
+	//						{
+	//							if (RS_front->getX() != CS_front->getX() || RS_front->getY() != CS_front->getY() || RS_front->getSolnTime() != CS_front->getSolnTime())
+	//							{
+	//								is_same = false;
+	//								break;
+	//							}
+	//							RS_front = RS_front->getFront();
+	//							CS_front = CS_front->getFront();
+	//						}
+	//						if (!is_same)
+	//						{
+	//							ratioSoln = cmpSoln;
+	//							cout << "!!!!!!!!!find a route with same time " << ratioSoln[ratioSoln.size() - 1]->getSolnTime() << " but use another route" <<endl;
+	//							cout << "now stop the search for city" << i << endl;
+	//							cout << endl;
+	//							cout << endl;
+	//							findSoln = true;
+	//							break;
+	//						}
+	//						else
+	//						{
+	//							cout << "but also use the same route"  << endl;
+	//						}
+	//					}
 
-						//太大了就没必要换路径了
-						/*if (windratio > 14.5 && cmpNum - solnNum > 480)
-						{
-							cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
-							cout << "now stop the search for city" << i << endl;
-							cout << endl;
-							cout << endl;
-							findSoln = true;
-							break;
-						}
-						else if (windratio > 14.5 && cmpNum - solnNum <= 480)
-						{
-							ratioSoln = cmpSoln;
-							solnNum = cmpNum;
-							cout << "!!!!!!!!!find a route with time " << solnNum << endl;
-						}
-						else if (windratio > 13.7 && cmpNum - solnNum > 360)
-						{	
-							cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
-							cout << "now stop the search for city" << i << endl;
-							cout << endl;
-							cout << endl;
-							findSoln = true;
-							break;
-						}
-						else if (windratio > 13.7 && cmpNum - solnNum <= 360)
-						{
-							ratioSoln = cmpSoln;
-							solnNum = cmpNum;
-							cout << "!!!!!!!!!find a route with time " << solnNum << endl;
-						}
-						else if (windratio > 12.3 && cmpNum - solnNum > 240)
-						{	
-							cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
-							cout << "now stop the search for city" << i << endl;
-							cout << endl;
-							cout << endl;
-							findSoln = true;
-							break;
-						}
-						else if (windratio > 12.3 && cmpNum - solnNum <= 240)
-						{
-							ratioSoln = cmpSoln;
-							solnNum = cmpNum;
-							cout << "!!!!!!!!!find a route with time " << solnNum << endl;
-						}
-						else if (windratio > 10.0)
-						{
-							findSoln = true;
-							break;
-						}*/
-					}
-				}
-				if (ratioSoln.empty())
-				{
-					break;
-				}
-			}
+	//					//太大了就没必要换路径了
+	//					/*if (windratio > 14.5 && cmpNum - solnNum > 480)
+	//					{
+	//						cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
+	//						cout << "now stop the search for city" << i << endl;
+	//						cout << endl;
+	//						cout << endl;
+	//						findSoln = true;
+	//						break;
+	//					}
+	//					else if (windratio > 14.5 && cmpNum - solnNum <= 480)
+	//					{
+	//						ratioSoln = cmpSoln;
+	//						solnNum = cmpNum;
+	//						cout << "!!!!!!!!!find a route with time " << solnNum << endl;
+	//					}
+	//					else if (windratio > 13.7 && cmpNum - solnNum > 360)
+	//					{	
+	//						cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
+	//						cout << "now stop the search for city" << i << endl;
+	//						cout << endl;
+	//						cout << endl;
+	//						findSoln = true;
+	//						break;
+	//					}
+	//					else if (windratio > 13.7 && cmpNum - solnNum <= 360)
+	//					{
+	//						ratioSoln = cmpSoln;
+	//						solnNum = cmpNum;
+	//						cout << "!!!!!!!!!find a route with time " << solnNum << endl;
+	//					}
+	//					else if (windratio > 12.3 && cmpNum - solnNum > 240)
+	//					{	
+	//						cout << "!!!!!!!!!that's too much drop with " << cmpNum - solnNum << endl;
+	//						cout << "now stop the search for city" << i << endl;
+	//						cout << endl;
+	//						cout << endl;
+	//						findSoln = true;
+	//						break;
+	//					}
+	//					else if (windratio > 12.3 && cmpNum - solnNum <= 240)
+	//					{
+	//						ratioSoln = cmpSoln;
+	//						solnNum = cmpNum;
+	//						cout << "!!!!!!!!!find a route with time " << solnNum << endl;
+	//					}
+	//					else if (windratio > 10.0)
+	//					{
+	//						findSoln = true;
+	//						break;
+	//					}*/
+	//				}
+	//			}
+	//			if (ratioSoln.empty())
+	//			{
+	//				break;
+	//			}
+	//		}
 
-			while (ratioSoln.empty())
-			{
-				windratio += 0.5;
-				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
-				cout << "!!!!!!!!!Let's start to allow " << windratio << " fo city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
-				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
-				OperBlock * nullOper = NULL;
-				for (auto & block : _blockList)
-				{
-					block->setSituation(0);
-					block->setMyOperBlock(nullOper);
-				}
-				ratioSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
-			}
-			_desCityList[i]->setSoln(ratioSoln);
-		}
-		else
-		{
-			_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
-		}
+	//		while (ratioSoln.empty())
+	//		{
+	//			windratio += 0.5;
+	//			cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+	//			cout << "!!!!!!!!!Let's start to allow " << windratio << " fo city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+	//			cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+	//			OperBlock * nullOper = NULL;
+	//			for (auto & block : _blockList)
+	//			{
+	//				block->setSituation(0);
+	//				block->setMyOperBlock(nullOper);
+	//			}
+	//			ratioSoln = bfs->solve_allow_windRatio_singleTarget(_desCityList[i]->getBlock(), windratio);
+	//		}
+	//		_desCityList[i]->setSoln(ratioSoln);
+	//	}
+	//	else
+	//	{
+	//		_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+	//	}
 
-	}
+	//}
 	
 
 

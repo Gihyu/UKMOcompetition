@@ -82,20 +82,24 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 
 bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind, double allRratio)
 {	
-	//int justAvgUsed;
-	//if (numOf_littleWind >= 6)
-	//{
-	//	justAvgUsed = 6;
-	//}
-	//else
-	//{
-	//	justAvgUsed = 0;
-	//}
+	int justAvgUsed;
+	if (numOf_littleWind >= 6)
+	{
+		justAvgUsed = 6;
+	}
+	else
+	{
+		justAvgUsed = 0;
+	}
+
+	//
+	//
+
 
 	//numOf_littleWind
 	if (_block->getX() == 142 && _block->getY() == 328)
 	{	
-		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind)
+		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->isItAbadChoice(thisTime, allRratio))
 		{
 			return true;
 		}
@@ -104,7 +108,7 @@ bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_li
 	}
 	else
 	{
-		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind)
+		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->isItAbadChoice(thisTime, allRratio) && _block->isItAbadChoice(thisTime, allRratio))
 		{
 			return true;
 		}

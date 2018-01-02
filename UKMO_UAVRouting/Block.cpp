@@ -201,3 +201,41 @@ vector<int > Block::getSayNoModelId(int hour)
 	}
 	return vioIndex;
 }
+
+
+bool Block::isItAbadChoice(int thisTime, double allRratio)
+{
+	int numOfLittle = getNumOf_littleWind(thisTime / 60, allRratio);
+
+	double avoidBadCase = 30.0;
+	if (numOfLittle == 10)
+	{
+		avoidBadCase = Util::vote10ratio;
+	}
+	else if (numOfLittle == 9)
+	{
+		avoidBadCase = Util::vote9ratio;
+	}
+	else if (numOfLittle == 8)
+	{
+		avoidBadCase = Util::vote8ratio;
+	}
+	else if (numOfLittle == 7)
+	{
+		avoidBadCase = Util::vote7ratio;
+	}
+	else if (numOfLittle == 6)
+	{
+		avoidBadCase = Util::vote6ratio;
+	}
+
+	if (getAvgWind(thisTime / 60) < avoidBadCase)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}

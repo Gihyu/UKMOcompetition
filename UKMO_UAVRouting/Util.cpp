@@ -1,15 +1,15 @@
 #include "Util.h"
 
-string Util::OutputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/output/";
-string Util::InputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/input/";
+//string Util::OutputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/output/";
+//string Util::InputPath = "C:/Users/zhoulei/Documents/GitHub/UKMOcompetition/input/";
 
 //sjy hp
 //string Util::OutputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/output/";
 //string Util::InputPath = "D:/campus/LaSCO/TianChiCompetition/UKmetoffice/onGitHub/UKMOcompetition/input/";
 
 //sjy hasee
-//string Util::OutputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/output/";
-//string Util::InputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/input/";
+string Util::OutputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/output/";
+string Util::InputPath = "C:/gihyu/campus/UKMOCompetition/onGithub/UKMOcompetition/input/";
 
 double Util::Epsilon = 0.0001;//0.0001
 //bool Util::allRealization = true;
@@ -24,9 +24,15 @@ int Util::startTime_BFS = 180;
 //BFS
 double Util::initRatio = 15.0;
 double Util::initRatio_forAllR = 15.0;
-int Util::NumOf_littleWindForAllR = 6;
+int Util::NumOf_littleWindForAllR = 10;
 double Util::WeightOfModels[10] = { 0.956,0.949,0.952,0.947,0.949,0.953,0.960,0.955,0.944,0.950 };
 
+//vote ratios  
+ double Util::vote10ratio = 12.8626;
+ double Util::vote9ratio =13.4626;
+ double Util::vote8ratio =14.3126;
+ double Util::vote7ratio = 14.5251;
+ double Util::vote6ratio = 14.3876;
 
 //ACO
 int Util::maxIterationACO = 100;

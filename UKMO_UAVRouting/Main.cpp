@@ -24,13 +24,13 @@ int main()
 
 	int date = 6;//should not 
 	//int date = atoi(argv[1]);
-	Util::realization = 1;//model id
+	Util::realization = 11;//model id
 
 	Util::inputMode = M_Multi;//M_Single;M_Multi;M_SingleAndMulti
 	cout << "date:" << date << "Util::realization:" << Util::realization << endl;
 	print();
 	io->input(sche, date);
-	exit(0);
+	//exit(0);
 	
 	sche->init();
 
@@ -47,7 +47,7 @@ int main()
 
 
 	//solver->solve();//find a path by some method;please call bfs in PathSolver::solve()!!
-	//solver->solve_allR_fixWind_changeNum();
+	solver->solve_allR_fixWind_changeNum();
 	//solver->solve_allR_fixNum_changeWind();
 	//solver->solve_valued_by_allR();
 

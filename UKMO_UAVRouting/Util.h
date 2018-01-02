@@ -57,6 +57,15 @@ public:
 	static int NumOf_littleWindForAllR;
 	static double WeightOfModels[10];
 
+	//Vote Ratio
+	static double vote10ratio;
+	static double vote9ratio;
+	static double vote8ratio;
+	static double vote7ratio;
+	static double vote6ratio;
+
+
+
 	static int maxX;
 	static int maxY;
 	static int maxIndex;
