@@ -404,3 +404,14 @@ void PathSolver::solve_valued_by_allR()
 	
 
 }
+
+Block * PathSolver::getBlockByCoordinate(int x, int y)
+{
+	int index = Schedule::getBlockIndex(x, y);
+	if (index < 0)
+	{
+		cout << "error:PathSolver::getBlockByCoordinate:index < 0 " << endl;
+		return NULL;
+	}
+	return _blockList[index];
+}

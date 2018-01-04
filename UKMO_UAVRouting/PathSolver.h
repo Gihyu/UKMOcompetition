@@ -4,6 +4,7 @@
 #include"OperBlock.h"
 #include"BFS.h"
 #include"City.h"
+#include"Schedule.h"
 class PathSolver
 {
 private:
@@ -30,6 +31,8 @@ public:
 
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }
+
+	Block* getBlockByCoordinate(int x, int y);
 
 };
 
