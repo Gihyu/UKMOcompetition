@@ -22,7 +22,7 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 6;//should not 
+	int date = 8;//should not 
 	//int date = atoi(argv[1]);
 	Util::realization = 11;//model id
 
@@ -47,8 +47,9 @@ int main()
 
 
 	//solver->solve();//find a path by some method;please call bfs in PathSolver::solve()!!
-	solver->solve_allR_fixWind_changeNum();
+	//solver->solve_allR_fixWind_changeNum();
 	//solver->solve_allR_fixNum_changeWind();
+	solver->solve_allR_justAvg();
 	//solver->solve_valued_by_allR();
 
 	//io->outputSoln(cityNo,origin,solver->getSoln());

@@ -176,6 +176,8 @@ int Block::getNumOf_littleWind(int hour,double allRratio)
 {
 	int countNumOf_littleWind = 0;
 	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	
+	
 	for (int i = 0; i < 10; i++)
 	{
 		if (thisTimeWindArr[i] <allRratio)
@@ -183,6 +185,24 @@ int Block::getNumOf_littleWind(int hour,double allRratio)
 			countNumOf_littleWind++;
 		}
 	}
+
+	//如果是特需 优选的model号
+	/*int modelsIndex[4];
+	modelsIndex[0] = 3;
+	modelsIndex[1] = 2;
+	modelsIndex[2] = 9;
+	modelsIndex[3] = 7;
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (thisTimeWindArr[modelsIndex[i]-1] <allRratio)
+		{
+			countNumOf_littleWind++;
+		}
+	}*/
+
+
+
 	return countNumOf_littleWind;
 }
 
@@ -228,6 +248,11 @@ bool Block::isItAbadChoice(int thisTime, double allRratio)
 	{
 		avoidBadCase = Util::vote6ratio;
 	}
+	else if (numOfLittle == 5)
+	{
+		avoidBadCase = Util::vote5ratio;
+	}
+
 
 	if (getAvgWind(thisTime / 60) < avoidBadCase)
 	{

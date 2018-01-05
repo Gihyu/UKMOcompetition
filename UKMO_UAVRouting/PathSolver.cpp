@@ -272,6 +272,8 @@ void PathSolver::solve_allR_fixWind_changeNum()
 		block->setViolations(0);
 	}
 
+	//开挂版 不用_origin
+	//_desCityList[2]->getBlock()
 	BFS* bfs = new BFS(_origin);//should be origin and destination!!
 								//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
 								//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
@@ -286,7 +288,11 @@ void PathSolver::solve_allR_fixWind_changeNum()
 		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
 		vector<OperBlock *> ratioSoln;
 		while (ratioSoln.empty())
-		{
+		{	
+			if (NumOf_littleWind == 0)
+			{
+				break;
+			}
 			NumOf_littleWind -= 1;
 			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
 			cout << "!!!!!!!!!Let's start to allow "<< NumOf_littleWind <<" for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
@@ -299,6 +305,8 @@ void PathSolver::solve_allR_fixWind_changeNum()
 				block->setMyOperBlock(nullOper);
 			}
 			ratioSoln=bfs->solve_allR_singleTarget(_desCityList[i]->getBlock(), NumOf_littleWind,Util ::initRatio_forAllR);
+			
+			//ratioSoln = bfs->solve_allR_singleTarget(getBlockByCoordinate(315,371), NumOf_littleWind, Util::initRatio_forAllR);
 		}
 		_desCityList[i]->setSoln(ratioSoln);
 	}
@@ -404,3 +412,71 @@ void PathSolver::solve_valued_by_allR()
 	
 
 }
+
+
+void PathSolver::solve_allR_justAvg()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);//should be origin and destination!!
+								//_soln = bfs->solve_by_anyCases_singleTarget(_destination);
+								//sort(_soln.begin(), _soln.end(), OperBlock::cmpBySolnTime);
+
+	_multiSoln = bfs->solve_allRjustAvg_multi();
+
+	//之前的从下往上的约束搜索
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		if (_multiSoln[i - 1].empty())
+		{
+			//double windratio = 14.5;
+			double windratio = Util::allRjustAvgRatio;
+			vector<OperBlock *> ratioSoln;
+			while (ratioSoln.empty())
+			{	
+				if (windratio < 15)
+				{
+					windratio += 0.05;
+				}
+				else
+				{
+					windratio += 0.5;
+				}
+				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+				cout << "!!!!!!!!!Let's start to allow " << windratio << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+				cout << "!!!!!!!!!Let's start to allow " << windratio << endl;
+				OperBlock * nullOper = NULL;
+				for (auto & block : _blockList)
+				{
+					block->setSituation(0);
+					block->setViolations(0);
+					block->setMyOperBlock(nullOper);
+				}
+				ratioSoln = bfs->solve_allRjustAvg_single(_desCityList[i]->getBlock(), windratio);
+			}
+			_desCityList[i]->setSoln(ratioSoln);
+		}
+		else
+		{
+			_desCityList[i]->setSoln(_multiSoln[i - 1]);//#city = 11; #soln = 10
+		}
+
+	}
+}
+
+
+Block * PathSolver::getBlockByCoordinate(int x, int y)
+ {
+	int index = Schedule::getBlockIndex(x, y);
+	if (index < 0)
+		 {
+		cout << "error:PathSolver::getBlockByCoordinate:index < 0 " << endl;
+		return NULL;
+		}
+	return _blockList[index];
+	}

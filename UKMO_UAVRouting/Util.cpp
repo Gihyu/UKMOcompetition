@@ -24,15 +24,18 @@ int Util::startTime_BFS = 180;
 //BFS
 double Util::initRatio = 15.0;
 double Util::initRatio_forAllR = 15.0;
-int Util::NumOf_littleWindForAllR = 10;
+int Util::NumOf_littleWindForAllR = 4;
 double Util::WeightOfModels[10] = { 0.956,0.949,0.952,0.947,0.949,0.953,0.960,0.955,0.944,0.950 };
 
+double Util::allRjustAvgRatio = 13.0;
+
 //vote ratios  
- double Util::vote10ratio = 12.8626;
- double Util::vote9ratio =13.4626;
- double Util::vote8ratio =14.3126;
- double Util::vote7ratio = 14.5251;
- double Util::vote6ratio = 14.3876;
+ double Util::vote10ratio =30.0;
+ double Util::vote9ratio = 30.0;
+ double Util::vote8ratio = 30.0;
+ double Util::vote7ratio = 30.0;
+ double Util::vote6ratio = 30.0;
+ double Util::vote5ratio = 30.0;
 
 //ACO
 int Util::maxIterationACO = 100;

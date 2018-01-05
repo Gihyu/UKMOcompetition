@@ -82,24 +82,27 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 
 bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind, double allRratio)
 {	
-	int justAvgUsed;
-	if (numOf_littleWind >= 6)
+	/*int justAvgUsed;
+	if (numOf_littleWind >= 5)
 	{
-		justAvgUsed = 6;
+		justAvgUsed = 5;
 	}
 	else
 	{
 		justAvgUsed = 0;
-	}
+	}*/
 
-	//
-	//
+	//&& target->isItAbadChoice(thisTime, allRratio)
+	//&& target->isItAbadChoice(thisTime, allRratio) && _block->isItAbadChoice(thisTime, allRratio)
+
+	//&& target->getAvgWind(thisTime/60)<15.0
+	// && target->getAvgWind(thisTime / 60)<15.0 &&_block->getAvgWind(thisTime/60)
 
 
 	//numOf_littleWind
 	if (_block->getX() == 142 && _block->getY() == 328)
 	{	
-		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->isItAbadChoice(thisTime, allRratio))
+		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getAvgWind(thisTime/60)<13.55)
 		{
 			return true;
 		}
@@ -108,7 +111,7 @@ bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_li
 	}
 	else
 	{
-		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->getNumOf_littleWind(thisTime / 60, allRratio) >= justAvgUsed && target->isItAbadChoice(thisTime, allRratio) && _block->isItAbadChoice(thisTime, allRratio))
+		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getAvgWind(thisTime / 60)<13.55 &&_block->getAvgWind(thisTime/60)<13.55)
 		{
 			return true;
 		}
@@ -139,4 +142,29 @@ bool OperBlock::cangotoThisBlock_valued_by_allR(Block * target, int thisTime, do
 		else
 			return false;
 	}
+}
+
+
+bool OperBlock::cangotoThisBlock_allRjustAvg(Block * target, int thisTime, double allRratio)
+{
+	// I need to update this rule after my question online is confirmed.
+	if (_block->getX() == 142 && _block->getY() == 328)
+	{
+		if (target->getAvgWind(thisTime / 60)<allRratio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	else
+	{
+		if (_block->getAvgWind(thisTime / 60) < allRratio && target->getAvgWind(thisTime / 60)<allRratio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+
 }

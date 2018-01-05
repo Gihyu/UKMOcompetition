@@ -4,6 +4,7 @@
 #include"OperBlock.h"
 #include"BFS.h"
 #include"City.h"
+#include"Schedule.h"
 class PathSolver
 {
 private:
@@ -25,11 +26,14 @@ public:
 
 	void solve_allR_fixWind_changeNum();
 	void solve_allR_fixNum_changeWind();
+	void solve_allR_justAvg();
 
 	void solve_valued_by_allR();
 
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }
+
+	Block* getBlockByCoordinate(int x, int y);
 
 };
 

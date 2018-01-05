@@ -28,11 +28,16 @@ public:
 	vector<vector<OperBlock *>> solve_multiTarget_valued_by_allR();
 	vector<OperBlock *> solve_singleTarget_valued_by_allR(Block * targetBlock, double windRatio);
 
+	vector<vector<OperBlock *>> solve_allRjustAvg_multi();
+	vector<OperBlock *> solve_allRjustAvg_single(Block * targetBlock, double allRratio);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);
 	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime,double windRatio);
 	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime,int allowNum,double windRatio);
+
+	void chooseLowestForAllRjustAvg(OperBlock * oper, Block * blo, int thistime, double allRratio);
 
 	void updateViolations_exchange(OperBlock * ingOB, Block* cgt, int thisTime, int allowNum,double windRatio);
 
