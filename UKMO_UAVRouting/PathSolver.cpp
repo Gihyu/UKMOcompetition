@@ -469,6 +469,46 @@ void PathSolver::solve_allR_justAvg()
 	}
 }
 
+void PathSolver::solve_allR_backtrack()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);
+								
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			if (NumOf_littleWind == 0)
+			{
+				break;
+			}
+			NumOf_littleWind -= 1;
+			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
+			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln = bfs->solve_backtrack_allR(_desCityList[i]->getBlock(), NumOf_littleWind, Util::initRatio_forAllR);
+
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+
+}
+
+
 
 Block * PathSolver::getBlockByCoordinate(int x, int y)
  {

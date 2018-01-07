@@ -55,10 +55,11 @@ public:
 	static double initRatio;
 	static double initRatio_forAllR;
 	static int NumOf_littleWindForAllR;
-	static double WeightOfModels[10];
 
 	static double allRjustAvgRatio;
 
+
+	static double WeightOfModels[10];
 	//Vote Ratio
 	static double vote10ratio;
 	static double vote9ratio;

@@ -187,13 +187,15 @@ int Block::getNumOf_littleWind(int hour,double allRratio)
 	}
 
 	//如果是特需 优选的model号
-	/*int modelsIndex[4];
+	/*int modelsIndex[6];
 	modelsIndex[0] = 3;
 	modelsIndex[1] = 2;
 	modelsIndex[2] = 9;
 	modelsIndex[3] = 7;
+	modelsIndex[4] = 8;
+	modelsIndex[5] = 10;
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		if (thisTimeWindArr[modelsIndex[i]-1] <allRratio)
 		{

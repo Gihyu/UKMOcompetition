@@ -82,41 +82,62 @@ bool OperBlock::cmpBySolnTime(OperBlock * a, OperBlock * b)
 
 bool OperBlock::cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind, double allRratio)
 {	
-	/*int justAvgUsed;
-	if (numOf_littleWind >= 5)
+	int num = numOf_littleWind;
+	/*if (numOf_littleWind >= 6)
 	{
-		justAvgUsed = 5;
+		num = 6;
 	}
 	else
 	{
-		justAvgUsed = 0;
+		num = 0;
 	}*/
 
+	//这些是allow 6什么的onlyAvg的时候用
 	//&& target->isItAbadChoice(thisTime, allRratio)
 	//&& target->isItAbadChoice(thisTime, allRratio) && _block->isItAbadChoice(thisTime, allRratio)
 
-	//&& target->getAvgWind(thisTime/60)<15.0
-	// && target->getAvgWind(thisTime / 60)<15.0 &&_block->getAvgWind(thisTime/60)
+	//这些是特殊modelIndex的时候用
+	//&& target->getAvgWind(thisTime/60)<avgWindratio
+	// && target->getAvgWind(thisTime / 60)<avgWindratio &&_block->getAvgWind(thisTime/60)<avgWindratio
 
+	double avgWindratio = 15.0;
 
 	//numOf_littleWind
-	if (_block->getX() == 142 && _block->getY() == 328)
-	{	
-		if ( target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getAvgWind(thisTime/60)<13.55)
+
+	//防止1258断点
+	if (Util::flyTime + thisTime == Util::maxTime)
+	{
+		//if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->isItAbadChoice(thisTime, allRratio))
+		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getAvgWind(thisTime / 60)<avgWindratio)
 		{
 			return true;
 		}
 		else
-			return false;
+			return false;	
 	}
 	else
 	{
-		if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getNumOf_littleWind(thisTime / 60, allRratio) >= numOf_littleWind && target->getAvgWind(thisTime / 60)<13.55 &&_block->getAvgWind(thisTime/60)<13.55)
+		if (_block->getX() == 142 && _block->getY() == 328)
 		{
-			return true;
+			//多加二是为了不让它到了下个点之后就坠毁，以及回溯算法中节约计算时间（回溯少一些）
+			//if (target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind((thisTime + Util::flyTime) / 60, allRratio) >= num && target->isItAbadChoice(thisTime, allRratio) )
+			if (target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind((thisTime + Util::flyTime) / 60, allRratio) >= num && target->getAvgWind(thisTime / 60)<avgWindratio)
+			{
+				return true;
+			}
+			else
+				return false;
 		}
 		else
-			return false;
+		{
+			//if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->isItAbadChoice(thisTime, allRratio) && _block->isItAbadChoice(thisTime, allRratio))
+			if (_block->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind(thisTime / 60, allRratio) >= num && target->getNumOf_littleWind((thisTime + Util::flyTime) / 60, allRratio) >= num  && target->getAvgWind(thisTime / 60)<avgWindratio &&_block->getAvgWind(thisTime / 60)<avgWindratio)
+			{
+				return true;
+			}
+			else
+				return false;
+		}
 	}
 	
 }

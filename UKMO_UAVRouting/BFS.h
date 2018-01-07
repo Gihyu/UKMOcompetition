@@ -31,6 +31,8 @@ public:
 	vector<vector<OperBlock *>> solve_allRjustAvg_multi();
 	vector<OperBlock *> solve_allRjustAvg_single(Block * targetBlock, double allRratio);
 
+	vector<OperBlock *> solve_backtrack_allR(Block * targetBlock, int allowNumOf_littleWind, double allRratio);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);
