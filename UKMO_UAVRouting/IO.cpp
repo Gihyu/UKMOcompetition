@@ -442,3 +442,122 @@ void IO::outputMultiSoln(vector<City*> cities, Block * origin, vector<vector<Ope
 	}
 }
 
+void IO::readInfo(Schedule* sche,int maxFileId)
+{
+	if (Util::inputMode == M_Single)
+	{
+		cout << "error:IO::readInfo:Util::inputMode == M_Single" << endl;
+		exit(0);
+	}
+	
+	for (int i = 1; i <= 10; ++i)
+	{
+		for (int j = 1; j <= maxFileId; ++j)
+		{
+			string inFile = "city" + to_string(i) + "_" + to_string(j);
+			readInfo(sche, inFile);
+		}
+	}
+}
+
+void IO::readInfo(Schedule * sche, string inFile)
+{
+	vector<Block*> blocks = sche->getBlockList();
+	if (blocks.empty())
+	{
+		cout << "error:IO::readInfo:sche has no block!" << endl;
+		exit(0);
+	}
+
+	string fileName = Util::InputPath + inFile + ".txt";
+	cout << "* Read inform data for from txt file:" << fileName << endl;
+	ifstream in(fileName.c_str());
+	if (!in.is_open())
+	{
+		cout << "worning:file open failure" << endl;
+		return;
+	}
+
+	//output
+	string outFileName = Util::OutputPath + inFile + "_output.txt";
+	cout << "* File output:" << outFileName << endl;
+	ofstream out(outFileName.c_str());
+
+	string buf;
+	char * token;
+	char * tmp;
+
+	//getline(file, buf);//headline
+
+	int x = 0;
+	int y = 0;
+	int time = 0;
+	double avgWind = 0.0;
+	double singleWind = 0.0;
+
+	int testFlag = 0;
+	while (getline(in, buf))
+	{
+		//testFlag++;
+		//if (testFlag % 10000 == 0)
+		//{
+		//	cout << "cout:" << testFlag << endl;
+		//}
+		out << buf << "\t";
+		cout << buf << "\t";
+
+		token = strtok_s((char *)buf.c_str(), "\t", &tmp);
+		x = atoi(token);
+
+		token = strtok_s(NULL, "\t", &tmp);
+		y = atoi(token);
+
+		token = strtok_s(NULL, "\t,", &tmp);
+		time = atoi(token);
+
+		int index = Schedule::getBlockIndex(x, y);
+		if (index >= 0)
+		{
+			out << getBlockAvgWindByCoordinate(sche, x, y - 1, time)<<"\t"
+				<< getBlockAvgWindByCoordinate(sche, x + 1, y, time) << "\t"
+				<< getBlockAvgWindByCoordinate(sche, x, y + 1, time) << "\t"
+				<< getBlockAvgWindByCoordinate(sche, x-1, y, time) << endl;
+
+			cout << getBlockAvgWindByCoordinate(sche, x, y - 1, time) << "\t"
+				<< getBlockAvgWindByCoordinate(sche, x + 1, y, time) << "\t"
+				<< getBlockAvgWindByCoordinate(sche, x, y + 1, time) << "\t"
+				<< getBlockAvgWindByCoordinate(sche, x - 1, y, time) << endl;
+		}
+		else
+		{
+			cout << "error:block not exist" << endl;
+			exit(0);
+		}
+
+	}
+	in.close();
+	out.close();
+
+}
+
+double IO::getBlockAvgWindByCoordinate(Schedule* sche,int x, int y, int mins)
+{
+	vector<Block*> blocks = sche->getBlockList();
+	double avgWind = -1.0;
+
+	int index = Schedule::getBlockIndex(x, y);
+	if (index >= 0)
+	{
+		Block* block = blocks[index];
+		int hour = (mins - 2) / 60;
+		if (hour < 3)
+		{
+			hour = 3;
+		}
+		avgWind = block->getAvgWind(hour);
+	}
+	
+	return avgWind;
+}
+
+

@@ -21,5 +21,9 @@ public:
 	void outputSoln(int destinationCityNo,Block* origin,vector<OperBlock*> soln);
 	void outputMultiSoln(vector<City*> cities, Block* origin, vector<vector<OperBlock*>> multiSoln);
 
+	void readInfo(Schedule* sche, int maxFileNum);
+	void readInfo(Schedule* sche,string inFile);
+	double getBlockAvgWindByCoordinate(Schedule* sche,int x, int y, int mins);
+
 };
 
