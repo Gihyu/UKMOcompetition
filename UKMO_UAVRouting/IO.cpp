@@ -293,7 +293,7 @@ void IO::readRainForecast(Schedule * sche, string inFile)
 
 void IO::readRainForecastMatrix(Schedule * sche, string inFile)
 {
-	vector<Block*> blocks;
+	vector<Block*> blocks = sche->getBlockList();
 	int basicHour = 3;
 
 	string fileName = Util::InputPath + inFile + ".csv";
