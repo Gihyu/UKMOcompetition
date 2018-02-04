@@ -22,11 +22,11 @@ int main()
 	Schedule* sche = new Schedule();
 	IO* io = new IO();
 
-	int date = 9;//should not 
+	int date = 6;//should not 
 	//int date = atoi(argv[1]);
-	Util::realization = 11;//model id
+	Util::realization =37;//model id
 
-	Util::inputMode = M_Multi;//M_Single;M_Multi;M_SingleAndMulti
+	Util::inputMode = M_SingleAndMulti;//M_Single;M_Multi;M_SingleAndMulti
 	cout << "date:" << date << "Util::realization:" << Util::realization << endl;
 	print();
 	io->input(sche, date);
@@ -50,8 +50,12 @@ int main()
 	//solver->solve_allR_fixWind_changeNum();
 	//solver->solve_allR_fixNum_changeWind();
 	//solver->solve_allR_justAvg();
-	solver->solve_allR_backtrack();
+	//solver->solve_allR_backtrack();
 	//solver->solve_valued_by_allR();
+
+	solver->solve_singleModel_evabyallR_backtrack();
+
+	//solver->solve_CBNT_backtrack();
 
 	//io->outputSoln(cityNo,origin,solver->getSoln());
 	io->outputMultiSoln(sche->getCityList(), origin, solver->getMultiSoln());//soln is not required exactly

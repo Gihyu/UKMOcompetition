@@ -477,22 +477,55 @@ void PathSolver::solve_allR_backtrack()
 		block->setViolations(0);
 	}
 
+	//_origin
+	//_desCityList[2]->getBlock()
 	BFS* bfs = new BFS(_origin);
-								
+	
+	/*double wind[11];
+	wind[1] =14.15 ;
+	wind[2] = 13.35;
+	wind[3] = 16.3;
+	wind[4] =17.3 ;
+	wind[5] = 17.3;
+	wind[6] = 17.3;
+	wind[7] = 17.3;
+	wind[8] = 17.3;
+	wind[9] = 13.35;
+	wind[10] = 17.3;*/
+
+
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{
 		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		double allRwind = Util::initRatio_forAllR;
 		vector<OperBlock *> ratioSoln;
 		while (ratioSoln.empty())
-		{
+		{	
+			//allRwind = wind[i];
+
+
 			if (NumOf_littleWind == 0)
 			{
 				break;
 			}
 			NumOf_littleWind -= 1;
-			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
-			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
-			cout << "!!!!!!!!!Let's start to allow " << NumOf_littleWind << endl;
+
+			/*if (allRwind < 15.0)
+			{
+				allRwind += 0.25;
+			}
+			else
+			{	
+				if (allRwind > 16.0)
+				{
+					break;
+				}
+				allRwind += 1.0;
+			}*/
+
+			cout << "!!!!!!!!!Let's start to allow " << allRwind <<" and allow vote "<< NumOf_littleWind<< endl;
+			cout << "!!!!!!!!!Let's start to allow " << allRwind << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow " << allRwind << " and allow vote " << NumOf_littleWind << endl;
 			OperBlock * nullOper = NULL;
 			for (auto & block : _blockList)
 			{
@@ -500,7 +533,112 @@ void PathSolver::solve_allR_backtrack()
 				block->setViolations(0);
 				block->setMyOperBlock(nullOper);
 			}
-			ratioSoln = bfs->solve_backtrack_allR(_desCityList[i]->getBlock(), NumOf_littleWind, Util::initRatio_forAllR);
+			ratioSoln = bfs->solve_backtrack_allR(_desCityList[i]->getBlock(), NumOf_littleWind, allRwind);
+
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+
+}
+
+void PathSolver::solve_CBNT_backtrack()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		double allRwind = Util::initRatio_forAllR;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			/*if (NumOf_littleWind == 0)
+			{
+				break;
+			}
+			NumOf_littleWind -= 1;*/
+
+			if (allRwind < 15.0)
+			{
+			allRwind += 0.05;
+			}
+			else 
+			{
+			if (allRwind > 15.2)
+			{
+				break;
+			}
+			allRwind += 0.1;
+			}
+
+			cout << "!!!!!!!!!Let's start to allow " << allRwind << " and allow vote " << NumOf_littleWind << endl;
+			cout << "!!!!!!!!!Let's start to allow " << allRwind << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow " << allRwind << " and allow vote " << NumOf_littleWind << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln = bfs->solve_backtrack_CBNT(_desCityList[i]->getBlock(), NumOf_littleWind, allRwind);
+
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+}
+
+
+void PathSolver::solve_singleModel_evabyallR_backtrack()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	//_origin
+	//_desCityList[2]->getBlock()
+	BFS* bfs = new BFS(_origin);
+
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		double allRwind = Util::initRatio_forAllR;
+		double singleWind = Util::initRatio;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			if (singleWind < 15.0)
+			{
+				singleWind += 0.05;
+			}
+			else
+			{	
+				if (singleWind > 16.0)
+				{	
+					cout << "break!" << endl;
+					cout << endl;
+					break;
+				}
+				singleWind += 0.5;
+			}
+			cout << "!!!!!!!!!Let's start to allow " << singleWind << " and allow vote " << NumOf_littleWind << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln = bfs->solve_backtrack_singleModel_evabyallR(_desCityList[i]->getBlock(), NumOf_littleWind, allRwind,singleWind);
 
 		}
 		_desCityList[i]->setSoln(ratioSoln);

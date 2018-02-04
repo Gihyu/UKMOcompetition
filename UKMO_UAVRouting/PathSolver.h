@@ -28,6 +28,9 @@ public:
 	void solve_allR_fixNum_changeWind();
 	void solve_allR_justAvg();
 	void solve_allR_backtrack();
+	void solve_singleModel_evabyallR_backtrack();
+
+	void solve_CBNT_backtrack();
 
 	void solve_valued_by_allR();
 

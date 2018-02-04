@@ -33,11 +33,17 @@ public:
 
 	vector<OperBlock *> solve_backtrack_allR(Block * targetBlock, int allowNumOf_littleWind, double allRratio);
 
+	vector<OperBlock *> solve_backtrack_CBNT(Block * targetBlock, int allowNumOf_littleWind, double allRratio);
+
+	vector<OperBlock *> solve_backtrack_singleModel_evabyallR(Block * targetBlock, int allowNumOf_littleWind, double allRratio,double singleRatio);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);
 	void chooseHighestWind(OperBlock * oper, Block * blo, int thistime,double windRatio);
 	void chooseBestWind_forAllR(OperBlock * oper, Block * blo, int thistime,int allowNum,double windRatio);
+	void chooseBestWind_CBNT(OperBlock * oper, Block * blo, int thistime, int allowNum, double windRatio);
+	void chooseBest_backtrack_evabyallR(OperBlock * oper, Block * blo, int thistime, int allowNum, double windRatio,double singleRatio);
 
 	void chooseLowestForAllRjustAvg(OperBlock * oper, Block * blo, int thistime, double allRratio);
 

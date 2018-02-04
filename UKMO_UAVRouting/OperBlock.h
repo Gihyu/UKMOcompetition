@@ -42,9 +42,13 @@ public:
 	bool cangotoThisBlock(Block * target, int thisTime);
 	bool cangotoThisBlock_allow_ratio(Block * target, int thisTime, double windRatio);
 	bool cangotoThisBlock_allR(Block * target, int thisTime, int numOf_littleWind,double allRratio);
+	bool cangotoThisBlock_CBNT(Block * target, int thisTime, int numOf_littleWind, double allRratio);
 	bool cangotoThisBlock_valued_by_allR(Block * target, int thisTime, double windRatio, int numOf_littleWind);
 
 	bool cangotoThisBlock_allRjustAvg(Block * target, int thisTime, double allRratio);
+
+	//backtrack ava by allR
+	bool cangotoThisBlock_backtrack_evabyallR(Block * target, int thisTime, int numOf_littleWind, double allRratio,double singleRatio);
 
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);

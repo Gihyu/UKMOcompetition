@@ -48,12 +48,17 @@ public:
 	double getWind(int hour) { return _windArr[hour - _basicHour]; }//single input
 	double getAvgWind(int hour);
 	double getWeightedAvgWind(int hour);
+
+	double getCBNTavgWind(int hour);
+	int getCBNTvotes(int hour, double allRratio);
 	int getNumOf_littleWind(int hour,double allRratio);
 
 	//为了避免走高风点。
 	bool isItAbadChoice(int thisTime, double allRratio);
 
-	vector<int > getSayNoModelId(int hour);
+	bool isItSatisfyMultiLevel(int thisTime,double allRratio);
+
+	vector<int > getSayNoModelId(int hour,double windRatio);
 
 	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }//multi input
 
