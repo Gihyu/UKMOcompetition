@@ -34,6 +34,11 @@ public:
 
 	void solve_valued_by_allR();
 
+	//season 2 
+	void solve_backtrack_single_rain();
+
+	void solve_backtrack_single_rain_logs();
+
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }
 

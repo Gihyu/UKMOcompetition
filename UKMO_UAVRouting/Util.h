@@ -68,7 +68,9 @@ public:
 	static double vote6ratio;
 	static double vote5ratio;
 
-
+	// season 2
+	static double singleWindratio;
+	static double singleRainratio;
 
 	static int maxX;
 	static int maxY;

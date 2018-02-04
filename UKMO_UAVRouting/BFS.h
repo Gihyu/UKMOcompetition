@@ -37,6 +37,11 @@ public:
 
 	vector<OperBlock *> solve_backtrack_singleModel_evabyallR(Block * targetBlock, int allowNumOf_littleWind, double allRratio,double singleRatio);
 
+	//season 2 
+	vector<OperBlock *> solve_backtrack_single_rain(Block * targetBlock, double singleWindRatio, double singleRainRatio);
+	void chooseBest_backtrack_single_rain(OperBlock * ingOp, Block *cango, int thistime);
+	bool solve_backtrack_single_rain_logs(Block * targetBlock, double singleWindRatio, double singleRainRatio,int cityId);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);

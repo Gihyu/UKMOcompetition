@@ -647,6 +647,142 @@ void PathSolver::solve_singleModel_evabyallR_backtrack()
 }
 
 
+// season 2 
+
+void PathSolver::solve_backtrack_single_rain()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);
+
+	int start[11];
+	start[1] = 210;
+	start[2] = 220;
+	start[3] = 230;
+	start[4] = 240;
+	start[5] = 250;
+	start[6] = 260;
+	start[7] = 270;
+	start[8] = 280;
+	start[9] = 290;
+	start[10] = 300;
+
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		double allRwind = Util::initRatio_forAllR;
+		vector<OperBlock *> ratioSoln;
+		while (ratioSoln.empty())
+		{
+			Util::startTime_BFS = start[i];
+
+			cout << "!!!!!!!!!Let's start to allow wind " << Util::singleWindratio << " and allow rain " << Util::singleRainratio << endl;
+			cout << "!!!!!!!!!Let's start to allow wind " << Util::singleWindratio << " and allow rain " << Util::singleRainratio << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow wind " << Util::singleWindratio << " and allow rain " << Util::singleRainratio << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln = bfs->solve_backtrack_single_rain(_desCityList[i]->getBlock(), Util::singleWindratio, Util::singleRainratio);
+
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+}
+
+void PathSolver::solve_backtrack_single_rain_logs()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);
+
+	int start[11];
+	start[1] = 180;
+	start[2] = 180;
+	start[3] = 180;
+	start[4] = 180;
+	start[5] = 180;
+	start[6] = 180;
+	start[7] = 180;
+	start[8] = 180;
+	start[9] = 180;
+	start[10] = 180;
+
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
+		double allRwind = Util::initRatio_forAllR;
+		vector<OperBlock *> ratioSoln;
+
+		Util::startTime_BFS = start[i]-10;
+		bool stopCondition = false;
+
+		Util::singleWindratio = 14.5;
+		Util::singleRainratio = 14.0;
+
+		bool thisRatioCanFind = false;
+
+		while (!stopCondition)
+		{
+			Util::startTime_BFS = Util::startTime_BFS+10;
+
+			int absPlus = abs(_desCityList[i]->getBlock()->getX() - _desCityList[0]->getBlock()->getX()) + abs(_desCityList[i]->getBlock()->getY() - _desCityList[0]->getBlock()->getY());
+			if (absPlus * 2 + Util::startTime_BFS > Util::maxTime)
+			{				
+				if (!thisRatioCanFind)
+				{	
+					cout << "plus" << endl;
+					Util::startTime_BFS = 180;
+					if (Util::singleWindratio < 15.0)
+					{
+						Util::singleWindratio = Util::singleWindratio + 0.1;
+						Util::singleRainratio = Util::singleRainratio + 0.1;
+					}
+					else
+					{
+						break;
+					}
+					
+				}
+				else
+				{
+					stopCondition = true;
+				}			
+			}
+
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			if (bfs->solve_backtrack_single_rain_logs(_desCityList[i]->getBlock(), Util::singleWindratio, Util::singleRainratio, i))
+			{
+				thisRatioCanFind = true;
+			}
+
+		}
+
+
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+}
+
+
 
 Block * PathSolver::getBlockByCoordinate(int x, int y)
  {

@@ -26,7 +26,7 @@ int main()
 	//int date = atoi(argv[1]);
 	Util::realization =1;//model id
 
-	Util::inputMode = M_SingleAndMulti;//M_Single;M_Multi;M_SingleAndMulti
+	Util::inputMode = M_Single;//M_Single;M_Multi;M_SingleAndMulti
 	cout << "date:" << date << "Util::realization:" << Util::realization << endl;
 	print();
 	io->input(sche, date);
@@ -53,9 +53,16 @@ int main()
 	//solver->solve_allR_backtrack();
 	//solver->solve_valued_by_allR();
 
-	solver->solve_singleModel_evabyallR_backtrack();
+	//solver->solve_singleModel_evabyallR_backtrack();
 
 	//solver->solve_CBNT_backtrack();
+
+	//season 2
+
+	//solver->solve_backtrack_single_rain();
+	solver->solve_backtrack_single_rain_logs();
+
+
 
 	//io->outputSoln(cityNo,origin,solver->getSoln());
 	io->outputMultiSoln(sche->getCityList(), origin, solver->getMultiSoln());//soln is not required exactly

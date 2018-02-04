@@ -50,6 +50,11 @@ public:
 	//backtrack ava by allR
 	bool cangotoThisBlock_backtrack_evabyallR(Block * target, int thisTime, int numOf_littleWind, double allRratio,double singleRatio);
 
+	//season 2 
+
+	bool cangotoThisBlock_backtrack_single_rain(Block * target, int thisTime, double singleWindRatio, double singleRainRatio);
+
+
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);
 	

@@ -21,6 +21,11 @@ int Util::maxTime = 1260;
 //fix day10 is 240 ; others are 180.
 int Util::startTime_BFS = 180;
 
+// season 2 
+double Util::singleWindratio = 14.5;
+double Util::singleRainratio = 14.0;
+
+
 //BFS
 double Util::initRatio = 14.60;
 double Util::initRatio_forAllR = 15.0;

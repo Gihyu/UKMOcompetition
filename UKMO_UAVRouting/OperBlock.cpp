@@ -286,3 +286,30 @@ bool OperBlock::cangotoThisBlock_allRjustAvg(Block * target, int thisTime, doubl
 	}
 
 }
+
+
+
+//season 2
+
+bool OperBlock::cangotoThisBlock_backtrack_single_rain(Block * target, int thisTime, double singleWindRatio, double singleRainRatio)
+{
+	//·ÀÖ¹1258¶Ïµã
+	if (Util::flyTime + thisTime == Util::maxTime)
+	{
+		if (_block->getWind(thisTime / 60) < singleWindRatio && target->getWind(thisTime / 60) <singleWindRatio && _block->getRain(thisTime / 60) < singleRainRatio && target->getRain(thisTime / 60) <singleRainRatio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	else
+	{
+		if (_block->getWind(thisTime / 60) < singleWindRatio && target->getWind(thisTime / 60) <singleWindRatio && _block->getRain(thisTime / 60) < singleRainRatio && target->getRain(thisTime / 60) <singleRainRatio &&target->getRain((thisTime+Util::flyTime) / 60) <singleRainRatio && target->getWind((thisTime + Util::flyTime) / 60) <singleWindRatio)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+}
