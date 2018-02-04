@@ -24,7 +24,7 @@ int main()
 
 	int date = 6;//should not 
 	//int date = atoi(argv[1]);
-	Util::realization =37;//model id
+	Util::realization =1;//model id
 
 	Util::inputMode = M_SingleAndMulti;//M_Single;M_Multi;M_SingleAndMulti
 	cout << "date:" << date << "Util::realization:" << Util::realization << endl;

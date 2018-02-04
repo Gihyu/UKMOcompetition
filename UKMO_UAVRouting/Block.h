@@ -20,6 +20,11 @@ private:
 	array<double, Util::hourCount> _measureWindArr;//3:00-20:00
 	static const int _basicHour = 3;
 
+	//rain
+	array<double, Util::hourCount> _rainArr;//3:00-20:00
+	array<array<double, 10>, Util::hourCount> _rainMatrix;//3:00-20:00£»18h * 10realization
+	array<double, Util::hourCount> _measureRainArr;//3:00-20:00
+
 	// mark the situation of the Block ( BFS ) in order to run faster
 	// 0 means notFound ; 1 means Searching ; 2 means visted
 	// initial is 0
@@ -49,6 +54,9 @@ public:
 	double getAvgWind(int hour);
 	double getWeightedAvgWind(int hour);
 
+	void setRainArr(array<double, Util::hourCount> arr) { _rainArr = arr; }
+	double getRain(int hour) { return _rainArr[hour - _basicHour]; }//single input
+
 	double getCBNTavgWind(int hour);
 	int getCBNTvotes(int hour, double allRratio);
 	int getNumOf_littleWind(int hour,double allRratio);
@@ -64,6 +72,11 @@ public:
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}
+
+	void setMeasureRainArr(array<double, Util::hourCount> rainArr) { _measureRainArr = rainArr; }
+	double getMeasureRain(int hour) { return _measureRainArr[hour - _basicHour]; }
+
+	void setRainMatrix(array<array<double, 10>, Util::hourCount> rainMatrix) { _rainMatrix = rainMatrix; }
 
 	void pushCanGoToBlock(Block* block) { _cangotoBlocks.push_back(block); }
 	vector<Block*> getCangoToBlocks() { return _cangotoBlocks; }
@@ -89,5 +102,8 @@ public:
 	void print();
 	void printWindArr();
 	void printWindMatrix();
+
+	void printRainArr();
+	void printRainMatrix();
 };
 

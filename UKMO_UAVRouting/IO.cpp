@@ -21,16 +21,24 @@ void IO::input(Schedule * sche, int date)
 	case M_Single:
 		inFile = "compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
 		readForecast(sche, inFile);
+		inFile = "rain_compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		readRainForecast(sche, inFile);
 		break;
 	case M_Multi:
 		inFile = "reProcess_day" + to_string(date) + "_R10";
 		readForecastMatrix(sche, inFile);
+		inFile = "rain_reProcess_day" + to_string(date) + "_R10";
+		readRainForecastMatrix(sche, inFile);
 		break;
 	case M_SingleAndMulti:
 		inFile = "reProcess_day" + to_string(date) + "_R10";
 		readForecastMatrix(sche, inFile);
 		inFile = "compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
 		readForecast(sche, inFile);
+		inFile = "rain_reProcess_day" + to_string(date) + "_R10";
+		readRainForecastMatrix(sche, inFile);
+		inFile = "rain_compress_day" + to_string(date) + "R" + to_string(Util::realization);//MergeLinreg_D_//TrainByLinregDate2&4_D_
+		readRainForecast(sche, inFile);
 		break;
 	}
 
@@ -225,6 +233,155 @@ void IO::readForecastMatrix(Schedule * sche, string inFile)
 	//blocks.front()->print();
 	//blocks.back()->print();
 	//cout << endl;
+}
+
+void IO::readRainForecast(Schedule * sche, string inFile)
+{
+	vector<Block*> blocks = sche->getBlockList();
+
+	string fileName = Util::InputPath + inFile + ".csv";
+
+	cout << "* Read rain forecast data for from txt file:" << fileName << endl;
+	ifstream file(fileName.c_str());
+
+	string buf;
+	char * token;
+	char * tmp;
+
+	//getline(file, buf);//headline
+
+	int x = 0;
+	int y = 0;
+	int date = 0;
+	array<double, Util::hourCount> rainArr;
+
+	int testFlag = 0;
+	int index = 0;
+	while (getline(file, buf))
+	{
+		token = strtok_s((char *)buf.c_str(), ",", &tmp);
+		x = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		y = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		date = atoi(token);
+
+		for (int i = 0; i < Util::hourCount; ++i)
+		{
+			token = strtok_s(NULL, ",", &tmp);
+			rainArr[i] = atof(token);
+		}
+
+
+		if (blocks[index]->getX() == x&&blocks[index]->getY() == y)
+		{
+			blocks[index]->setRainArr(rainArr);
+			index++;
+		}
+		else
+		{
+			cout << "match error!!" << endl;
+			exit(0);
+		}
+		
+
+	}
+	file.close();
+}
+
+void IO::readRainForecastMatrix(Schedule * sche, string inFile)
+{
+	vector<Block*> blocks;
+	int basicHour = 3;
+
+	string fileName = Util::InputPath + inFile + ".csv";
+
+	cout << "* Read rain forecast data for from txt file:" << fileName << endl;
+	ifstream file(fileName.c_str());
+
+	string buf;
+	char * token;
+	char * tmp;
+
+	int x = 0;
+	int y = 0;
+	int date = 0;
+	int hour = 0;
+	array<array<double, 10>, Util::hourCount> rainMatrix;
+	int flag = 0;
+
+	int index = 0;
+	while (getline(file, buf))
+	{
+		token = strtok_s((char *)buf.c_str(), ",", &tmp);
+		x = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		y = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		date = atoi(token);
+
+		token = strtok_s(NULL, ",", &tmp);
+		hour = atoi(token);
+
+		if (date < 5)//training
+		{
+			token = strtok_s(NULL, ",", &tmp);//measure
+		}
+
+		for (int i = 0; i < Util::realizationCount; ++i)
+		{
+			token = strtok_s(NULL, ",", &tmp);
+			rainMatrix[hour - basicHour][i] = atof(token);
+		}
+
+		flag = 1;
+		while (flag < Util::hourCount)
+		{
+			getline(file, buf);
+			flag++;
+
+			token = strtok_s((char *)buf.c_str(), ",", &tmp);
+			//x = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			//y = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			//date = atoi(token);
+
+			token = strtok_s(NULL, ",", &tmp);
+			hour = atoi(token);
+
+			if (date < 5)//training
+			{
+				token = strtok_s(NULL, ",", &tmp);//measure
+			}
+
+			for (int i = 0; i < Util::realizationCount; ++i)
+			{
+				token = strtok_s(NULL, ",", &tmp);
+				rainMatrix[hour - basicHour][i] = atof(token);
+			}
+
+		}
+
+		if (blocks[index]->getX() == x&&blocks[index]->getY() == y)
+		{
+			blocks[index]->setRainMatrix(rainMatrix);
+			index++;
+		}
+		else
+		{
+			cout << "match error!!" << endl;
+			exit(0);
+		}
+	}
+	file.close();
+
 }
 
 void IO::readCity(Schedule* sche)

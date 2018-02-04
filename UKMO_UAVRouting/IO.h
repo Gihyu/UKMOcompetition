@@ -14,6 +14,10 @@ public:
 
 	void readForecast(Schedule* sche,string inFile);
 	void readForecastMatrix(Schedule* sche, string inFile);
+
+	void readRainForecast(Schedule* sche, string inFile);
+	void readRainForecastMatrix(Schedule* sche, string inFile);
+
 	void readCity(Schedule* sche);
 	void readMeasure(Schedule* sche,string inFile);
 

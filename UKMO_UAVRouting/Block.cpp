@@ -60,13 +60,19 @@ void Block::print()
 	{
 	case M_Single:
 		printWindArr();
+		printRainArr();
 		break;
 	case M_Multi:
 		printWindMatrix();
+		printRainMatrix();
 		break;
 	case M_SingleAndMulti:
 		printWindArr();
+		printRainArr();
+
 		printWindMatrix();
+		printRainMatrix();
+
 		break;
 	}
 }
@@ -89,6 +95,29 @@ void Block::printWindMatrix()
 		for (auto&wind : arr)
 		{
 			cout << "\t" << wind;
+		}
+		cout << endl;
+	}
+}
+
+void Block::printRainArr()
+{
+	cout << "rainArr:";
+	for (auto&rain : _rainArr)
+	{
+		cout << "\t" << rain;
+	}
+	cout << endl;
+}
+
+void Block::printRainMatrix()
+{
+	cout << "rainMatrix:\n";
+	for (auto&arr : _rainMatrix)
+	{
+		for (auto&rain : arr)
+		{
+			cout << "\t" << rain;
 		}
 		cout << endl;
 	}
