@@ -293,23 +293,21 @@ bool OperBlock::cangotoThisBlock_allRjustAvg(Block * target, int thisTime, doubl
 
 bool OperBlock::cangotoThisBlock_backtrack_single_rain(Block * target, int thisTime, double singleWindRatio, double singleRainRatio)
 {
-	//·ÀÖ¹1258¶Ïµã
-	if (Util::flyTime + thisTime == Util::maxTime)
+	if (_block->getWind(thisTime / 60) < singleWindRatio && target->getWind(thisTime / 60) <singleWindRatio && _block->getRain(thisTime / 60) < singleRainRatio && target->getRain(thisTime / 60) <singleRainRatio)
 	{
-		if (_block->getWind(thisTime / 60) < singleWindRatio && target->getWind(thisTime / 60) <singleWindRatio && _block->getRain(thisTime / 60) < singleRainRatio && target->getRain(thisTime / 60) <singleRainRatio)
-		{
-			return true;
-		}
-		else
-			return false;
+		return true;
 	}
 	else
+		return false;
+}
+
+bool OperBlock::cangotoThisBlock_backtrack_all_rain(Block * target, int thisTime, double allWindRatio, double singleRainRatio,int windvote,int rainvote)
+{
+	if (_block->getWindVote(thisTime / 60,15.0) >=windvote && target->getWindVote(thisTime / 60,15.0) >= windvote && _block->getRainVote(thisTime / 60,4.0) >= rainvote&& target->getRainVote(thisTime / 60,4.0) >= rainvote)
 	{
-		if (_block->getWind(thisTime / 60) < singleWindRatio && target->getWind(thisTime / 60) <singleWindRatio && _block->getRain(thisTime / 60) < singleRainRatio && target->getRain(thisTime / 60) <singleRainRatio &&target->getRain((thisTime+Util::flyTime) / 60) <singleRainRatio && target->getWind((thisTime + Util::flyTime) / 60) <singleWindRatio)
-		{
-			return true;
-		}
-		else
-			return false;
+		return true;
 	}
+	else
+		return false;
+
 }

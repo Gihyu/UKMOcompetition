@@ -2760,7 +2760,6 @@ void BFS::chooseBest_backtrack_single_rain(OperBlock * ingOp, Block *cango, int 
 	}
 }
 
-
 vector<OperBlock *> BFS::solve_backtrack_single_rain(Block * targetBlock, double singleWindRatio, double singleRainRatio)
 {
 	_vistedOperBlocks.clear();
@@ -3166,44 +3165,54 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 	double sum_wind = 0.0;
 	double sum_rain = 0.0;
 
-	int loopTime;
-
 	if (findTheTarget)
 	{
 		// when print don't forget to inverted order
 		OperBlock * targetOB = targetBlock->getMyOperBlock();
 		solnTime = targetOB->getSolnTime();
-		loopTime = solnTime - Util::flyTime;
-		if (targetOB->getBlock()->getWind(loopTime / 60) > (singleWindRatio-0.5))
+		if (targetOB->getBlock()->getWind((targetOB->getSolnTime()-Util::flyTime) / 60) > (singleWindRatio-0.5))
 		{
 			Penalty1++;
 		}
-		if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.25))
+		if (targetOB->getBlock()->getRain((targetOB->getSolnTime() - Util::flyTime) / 60) > (singleRainRatio - 0.25))
 		{
 			Penalty2++;
 		}
 		OperBlock * front = targetOB->getFront();
 		while (front != NULL)
-		{
-			front = front->getFront();
-			if (loopTime != Util::startTime_BFS)
+		{		
+			if (front->getSolnTime() != Util::startTime_BFS)
 			{
-				loopTime = loopTime - Util::flyTime;
+				if (front->getBlock()->getWind((front->getSolnTime()-Util::flyTime) / 60) > (singleWindRatio - 0.5))
+				{
+					Penalty1++;
+				}
+				if (front->getBlock()->getRain((front->getSolnTime() - Util::flyTime) / 60) > (singleRainRatio - 0.25))
+				{
+					Penalty2++;
+				}
+				sum_wind += targetOB->getBlock()->getWind((front->getSolnTime() - Util::flyTime) / 60);
+				sum_rain += targetOB->getBlock()->getRain((front->getSolnTime() - Util::flyTime) / 60);
 			}
-			if (targetOB->getBlock()->getWind(loopTime / 60) > (singleWindRatio - 0.5))
+			else
 			{
-				Penalty1++;
+				if (front->getBlock()->getWind(front->getSolnTime()  / 60) > (singleWindRatio - 0.5))
+				{
+					Penalty1++;
+				}
+				if (front->getBlock()->getRain(front->getSolnTime() / 60) > (singleRainRatio - 0.25))
+				{
+					Penalty2++;
+				}
+				sum_wind += targetOB->getBlock()->getWind(front->getSolnTime() / 60);
+				sum_rain += targetOB->getBlock()->getRain(front->getSolnTime() / 60);
 			}
-			if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.25))
-			{
-				Penalty2++;
-			}
-			sum_wind += targetOB->getBlock()->getWind(loopTime / 60);
-			sum_rain += targetOB->getBlock()->getRain(loopTime / 60);
 
+			front = front->getFront();
+			
 		}
-		Penalty4 = sum_wind  / (solnTime - Util::startTime_BFS);
-		Penalty5 = sum_rain  / (solnTime - Util::startTime_BFS);
+		Penalty4 = 2*sum_wind  / (solnTime - Util::startTime_BFS);
+		Penalty5 = 2*sum_rain  / (solnTime - Util::startTime_BFS);
 
 		cout << cityId << "\t" << Util::startTime_BFS << "\t" << solnTime - Util::startTime_BFS << "\t" << Penalty1 << "\t" << Penalty2 << "\t" << Penalty3 << "\t" << Penalty4 << "\t" << Penalty5 << endl;
 		return true;
@@ -3213,5 +3222,514 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 		return false;
 	}
 	
+
+}
+
+
+void BFS::chooseBest_backtrack_all_rain(OperBlock * ingOp, Block *cango, int thistime)
+{
+	//先判断时间是否对的上,纯看avg的模式
+	if ((thistime + 2) == cango->getMyOperBlock()->getSolnTime())
+	{	
+		int thisWindvote = ingOp->getBlock()->getWindVote(thistime / 60,15.0);
+		int nextWindvote = cango->getMyOperBlock()->getFront()->getBlock()->getWindVote(thistime / 60,15.0);
+
+		int thisRainvote = ingOp->getBlock()->getRainVote(thistime / 60,4.0);
+		int nextRainvote = cango->getMyOperBlock()->getFront()->getBlock()->getRainVote(thistime / 60,4.0);
+
+		int thisCmpvote = thisWindvote + thisRainvote ;
+		int nextCmpvote = nextWindvote + nextRainvote ;
+
+		if (thisCmpvote > nextCmpvote)
+		{
+			//cout << "--------------------------change wind byVote------------------------" << endl;
+			cango->getMyOperBlock()->setFront(ingOp);
+		}
+
+		else if (thisCmpvote == nextCmpvote)
+		{
+			double thisWindAvg = ingOp->getBlock()->getWind(thistime / 60);
+			double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWind(thistime / 60);
+
+			double thisRainAvg = ingOp->getBlock()->getRain(thistime / 60);
+			double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRain(thistime / 60);
+
+			double thisCmpRatio = thisWindAvg + thisRainAvg * 15 / 4;
+			double nextCmpRatio = nextWindAvg + nextRainAvg * 15 / 4;
+
+			if (thisCmpRatio < nextCmpRatio)
+			{
+				cout << "--------------------------change wind byRatio------------------------" << endl;
+				cango->getMyOperBlock()->setFront(ingOp);
+			}
+		}
+	
+	}
+}
+
+vector<OperBlock *> BFS::solve_backtrack_all_rain(Block * targetBlock, double allWindRatio, double allRainRatio, int windvote, int rainvote)
+{
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
+	_sourceBlock->setSituation(1);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, Util::startTime_BFS);
+	sourceOperBlock->setFront(NULL);
+	_sourceBlock->setMyOperBlock(sourceOperBlock);
+	_ingOperBlocks.push(sourceOperBlock);
+
+	int targetX = targetBlock->getX();
+	int targetY = targetBlock->getY();
+
+	int targetSolnTime = Util::maxTime;
+	bool findTheTarget = false;
+
+
+	while (!_ingOperBlocks.empty() && _ingOperBlocks.front()->getIngTime()<targetSolnTime && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
+	{
+		OperBlock * ingOperBlock = _ingOperBlocks.front();
+		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+
+		if (!cangoToBlocks.empty())
+		{
+			int thisTime = ingOperBlock->getIngTime();
+			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and SolnTime is " << ingOperBlock->getSolnTime() << endl;
+			bool allCangoToOper = true;
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (ingOperBlock->cangotoThisBlock_backtrack_all_rain(cangoto, thisTime, allWindRatio, allRainRatio, windvote, rainvote))
+				{
+					if (cangoto->getX() == targetX && cangoto->getY() == targetY && cangoto->getSituation() == 0)
+					{
+						cangoto->setSituation(1);
+						OperBlock * targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+						targetOperBlock->setFront(ingOperBlock);
+						cangoto->setMyOperBlock(targetOperBlock);
+						_ingOperBlocks.push(targetOperBlock);
+						targetSolnTime = thisTime + Util::flyTime;
+						findTheTarget = true;
+					}
+					else
+					{
+
+						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+						{
+							chooseBest_backtrack_all_rain(ingOperBlock, cangoto, thisTime);
+						}
+						else if (cangoto->getSituation() == 0)
+						{
+							cangoto->setSituation(1);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+							cangotoOperBlock->setFront(ingOperBlock);
+							cangoto->setMyOperBlock(cangotoOperBlock);
+							_ingOperBlocks.push(cangotoOperBlock);
+						}
+
+					}
+				}
+			}
+
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (cangoto->getSituation() == 0)
+				{
+					allCangoToOper = false;
+					break;
+				}
+			}
+
+			if (allCangoToOper)
+			{
+				_vistedOperBlocks.push_back(ingOperBlock);
+				ingOperBlock->getBlock()->setSituation(2);
+				_ingOperBlocks.pop();
+			}
+			//判断停留的时候是否不坠机
+			else
+			{
+				if (ingOperBlock->cangotoThisBlock_backtrack_all_rain(ingOperBlock->getBlock(), thisTime, allWindRatio, allRainRatio, windvote,  rainvote))
+				{
+					ingOperBlock->setIngTime(thisTime + Util::flyTime);
+					_ingOperBlocks.pop();
+					_ingOperBlocks.push(ingOperBlock);
+				}
+				//backtrack的重点！
+				else
+				{
+					//如果原点延迟太多，就应该坠毁了，无法再回溯
+					if (ingOperBlock->getX() == _sourceBlock->getX() && ingOperBlock->getY() == _sourceBlock->getY())
+					{
+						cout << "!!!!!   souceBlock can't start from the hour at this " << thisTime << " time!!!!!!!" << endl;
+						_ingOperBlocks.pop();
+					}
+					else
+					{
+						//首先拿到前一个operBlock的状态
+						int frontSituation = ingOperBlock->getFront()->getBlock()->getSituation();
+						//分析过了，如果是ing或者0，0的之前回溯过了，ing的待会自然会轮到它的自身判断，因此都不用理
+						if (frontSituation == 2)
+						{
+							OperBlock * frontOpBlock = ingOperBlock->getFront();
+							bool backTrackStop = false;
+							while (!backTrackStop && frontOpBlock->getBlock()->getSituation() == 2)
+							{
+
+								if (frontOpBlock->cangotoThisBlock_backtrack_all_rain(frontOpBlock->getBlock(), thisTime, allWindRatio, allRainRatio, windvote, rainvote))
+								{
+									frontOpBlock->getBlock()->setSituation(1);
+									frontOpBlock->setIngTime(thisTime + Util::flyTime);
+									_ingOperBlocks.push(frontOpBlock);
+									backTrackStop = true;
+								}
+								//如果前者还是因为停留坠机
+								else
+								{
+									//由于原点出发的时候是特赦的 ，所以这个地方容易死锁，若是原点，则直接允许变成ing（有没有必要？认真想想
+									if (frontOpBlock->getX() == _sourceBlock->getX() && frontOpBlock->getY() == _sourceBlock->getY())
+									{
+										frontOpBlock->getBlock()->setSituation(1);
+										frontOpBlock->setIngTime(thisTime + Util::flyTime);
+										_ingOperBlocks.push(frontOpBlock);
+										backTrackStop = true;
+									}
+									else
+									{
+										//cout << "backtrack!!" << endl;
+										frontOpBlock->getBlock()->setSituation(0);
+										OperBlock * nullOper = NULL;
+										frontOpBlock->getBlock()->setMyOperBlock(nullOper);
+										//循环下去,
+										frontOpBlock = frontOpBlock->getFront();
+										if (frontOpBlock == NULL)
+										{
+											cout << " !!!!!! a bug exists in backtrack !!!!!!!" << endl;
+										}
+										//用完之后不能再设为空，否则二对一的时候会报错
+										//frontOper = NULL;
+									}
+
+								}
+							}
+						}
+
+						//回溯完毕之后将自己变成未访问，Oper关系解除，但oper不能delete！这个回溯算法就是一对一，因为中间所有点的solnTime都丢失了
+						//回溯算法的话中间的约束规则要比正常的BFS要紧，不然BFS总是先到，这个就没用了
+						OperBlock * nullOper = NULL;
+						ingOperBlock->getBlock()->setSituation(0);
+						ingOperBlock->getBlock()->setMyOperBlock(nullOper);
+						//ingOperBlock = NULL;
+						_ingOperBlocks.pop();
+					}
+
+				}
+
+			}
+
+		}
+		else
+		{
+			_vistedOperBlocks.push_back(ingOperBlock);
+			ingOperBlock->getBlock()->setSituation(2);
+			_ingOperBlocks.pop();
+		}
+	}
+
+	vector<OperBlock *> OperRoute;
+	if (findTheTarget)
+	{
+		// when print don't forget to inverted order
+		OperBlock * targetOB = targetBlock->getMyOperBlock();
+		OperRoute.push_back(targetOB);
+		OperBlock * front = targetOB->getFront();
+		while (front != NULL)
+		{
+			OperRoute.push_back(front);
+			front = front->getFront();
+		}
+	}
+
+	sort(OperRoute.begin(), OperRoute.end(), OperBlock::cmpBySolnTime);
+
+	//print function
+	if (OperRoute.empty())
+	{
+		cout << " shortest path failed ! Can't find the targetBlock when allow wind " << allWindRatio << " and " << " rain " << allRainRatio << endl;
+	}
+	else
+	{
+		cout << endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!! find the soln route !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
+		cout << endl;
+		cout << "x" << "\t" << "y" << "\t" << "time" << "\t" << "windavg" << "\t" << "windvote" << "\t" << "rainavg" << "\t" << "rainvote" << endl;
+		for (int i = 0; i <OperRoute.size(); i++)
+		{
+			int absPlus = abs(OperRoute[i]->getBlock()->getX() - _sourceBlock->getX()) + abs(OperRoute[i]->getBlock()->getY() - _sourceBlock->getY());
+			if (absPlus * 2 + Util::startTime_BFS > OperRoute[i]->getSolnTime())
+			{
+				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!bug is here !!!!!!!!!!!!!!!!!!!!!!" << endl;
+			}
+
+			if (OperRoute[i]->getSolnTime() != Util::startTime_BFS)
+			{
+				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getWindAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t"<< OperRoute[i]->getBlock()->getWindVote((OperRoute[i]->getSolnTime() - Util::flyTime) / 60,15.0) << "\t" << OperRoute[i]->getBlock()->getRainAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getRainVote((OperRoute[i]->getSolnTime() - Util::flyTime) / 60,4.0)<<endl;
+			}
+			else
+			{
+				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getWindAvg(OperRoute[i]->getSolnTime()  / 60) << "\t" << OperRoute[i]->getBlock()->getWindVote(OperRoute[i]->getSolnTime()  / 60, 15.0) << "\t" << OperRoute[i]->getBlock()->getRainAvg(OperRoute[i]->getSolnTime()  / 60) << "\t" << OperRoute[i]->getBlock()->getRainVote(OperRoute[i]->getSolnTime()  / 60, 4.0) << endl;
+			}
+
+		}
+		cout << endl;
+		cout << endl;
+	}
+
+
+	return OperRoute;
+
+}
+
+bool BFS::solve_backtrack_all_rain_logs(Block * targetBlock, double allWindRatio, double allRainRatio, int cityId, int windvote, int rainvote)
+{
+	_vistedOperBlocks.clear();
+	clearQueue(_ingOperBlocks);
+
+	_sourceBlock->setSituation(1);
+	OperBlock * sourceOperBlock = new OperBlock(_sourceBlock, Util::startTime_BFS);
+	sourceOperBlock->setFront(NULL);
+	_sourceBlock->setMyOperBlock(sourceOperBlock);
+	_ingOperBlocks.push(sourceOperBlock);
+
+	//cout << Util::startTime_BFS << "windvote" << windvote << "rainvote" << endl;
+
+	int targetX = targetBlock->getX();
+	int targetY = targetBlock->getY();
+
+	int targetSolnTime = Util::maxTime;
+	bool findTheTarget = false;
+
+
+	while (!_ingOperBlocks.empty() && _ingOperBlocks.front()->getIngTime()<targetSolnTime && _ingOperBlocks.front()->getIngTime()<Util::maxTime)
+	{
+		OperBlock * ingOperBlock = _ingOperBlocks.front();
+		vector<Block *> cangoToBlocks = ingOperBlock->getBlock()->getCangoToBlocks();
+
+		if (!cangoToBlocks.empty())
+		{
+			int thisTime = ingOperBlock->getIngTime();
+			//cout << "now is (" << ingOperBlock->getX() << "," << ingOperBlock->getY() << ") and Ingtime is " << thisTime << " and SolnTime is " << ingOperBlock->getSolnTime() << endl;
+			bool allCangoToOper = true;
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (ingOperBlock->cangotoThisBlock_backtrack_all_rain(cangoto, thisTime, allWindRatio, allRainRatio, windvote, rainvote))
+				{
+					if (cangoto->getX() == targetX && cangoto->getY() == targetY && cangoto->getSituation() == 0)
+					{
+						cangoto->setSituation(1);
+						OperBlock * targetOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+						targetOperBlock->setFront(ingOperBlock);
+						cangoto->setMyOperBlock(targetOperBlock);
+						_ingOperBlocks.push(targetOperBlock);
+						targetSolnTime = thisTime + Util::flyTime;
+						findTheTarget = true;
+					}
+					else
+					{
+
+						if (cangoto->getSituation() == 1 && cangoto != _sourceBlock)
+						{
+							chooseBest_backtrack_all_rain(ingOperBlock, cangoto, thisTime);
+						}
+						else if (cangoto->getSituation() == 0)
+						{
+							cangoto->setSituation(1);
+							OperBlock * cangotoOperBlock = new OperBlock(cangoto, thisTime + Util::flyTime);
+							cangotoOperBlock->setFront(ingOperBlock);
+							cangoto->setMyOperBlock(cangotoOperBlock);
+							_ingOperBlocks.push(cangotoOperBlock);
+						}
+
+					}
+				}
+			}
+
+			for (auto & cangoto : cangoToBlocks)
+			{
+				if (cangoto->getSituation() == 0)
+				{
+					allCangoToOper = false;
+					break;
+				}
+			}
+
+			if (allCangoToOper)
+			{
+				_vistedOperBlocks.push_back(ingOperBlock);
+				ingOperBlock->getBlock()->setSituation(2);
+				_ingOperBlocks.pop();
+			}
+			//判断停留的时候是否不坠机
+			else
+			{
+				if (ingOperBlock->cangotoThisBlock_backtrack_all_rain(ingOperBlock->getBlock(), thisTime, allWindRatio, allRainRatio, windvote, rainvote))
+				{
+					ingOperBlock->setIngTime(thisTime + Util::flyTime);
+					_ingOperBlocks.pop();
+					_ingOperBlocks.push(ingOperBlock);
+				}
+				//backtrack的重点！
+				else
+				{
+					//如果原点延迟太多，就应该坠毁了，无法再回溯
+					if (ingOperBlock->getX() == _sourceBlock->getX() && ingOperBlock->getY() == _sourceBlock->getY())
+					{
+						//cout << "!!!!!   souceBlock can't start from the hour at this " << thisTime << " time!!!!!!!" << endl;
+						_ingOperBlocks.pop();
+					}
+					else
+					{
+						//首先拿到前一个operBlock的状态
+						int frontSituation = ingOperBlock->getFront()->getBlock()->getSituation();
+						//分析过了，如果是ing或者0，0的之前回溯过了，ing的待会自然会轮到它的自身判断，因此都不用理
+						if (frontSituation == 2)
+						{
+							OperBlock * frontOpBlock = ingOperBlock->getFront();
+							bool backTrackStop = false;
+							while (!backTrackStop && frontOpBlock->getBlock()->getSituation() == 2)
+							{
+
+								if (frontOpBlock->cangotoThisBlock_backtrack_all_rain(frontOpBlock->getBlock(), thisTime, allWindRatio, allRainRatio, windvote, rainvote))
+								{
+									frontOpBlock->getBlock()->setSituation(1);
+									frontOpBlock->setIngTime(thisTime + Util::flyTime);
+									_ingOperBlocks.push(frontOpBlock);
+									backTrackStop = true;
+								}
+								//如果前者还是因为停留坠机
+								else
+								{
+									//由于原点出发的时候是特赦的 ，所以这个地方容易死锁，若是原点，则直接允许变成ing（有没有必要？认真想想
+									if (frontOpBlock->getX() == _sourceBlock->getX() && frontOpBlock->getY() == _sourceBlock->getY())
+									{
+										frontOpBlock->getBlock()->setSituation(1);
+										frontOpBlock->setIngTime(thisTime + Util::flyTime);
+										_ingOperBlocks.push(frontOpBlock);
+										backTrackStop = true;
+									}
+									else
+									{
+										//cout << "backtrack!!" << endl;
+										frontOpBlock->getBlock()->setSituation(0);
+										OperBlock * nullOper = NULL;
+										frontOpBlock->getBlock()->setMyOperBlock(nullOper);
+										//循环下去,
+										frontOpBlock = frontOpBlock->getFront();
+										if (frontOpBlock == NULL)
+										{
+											cout << " !!!!!! a bug exists in backtrack !!!!!!!" << endl;
+										}
+										//用完之后不能再设为空，否则二对一的时候会报错
+										//frontOper = NULL;
+									}
+
+								}
+							}
+						}
+
+						//回溯完毕之后将自己变成未访问，Oper关系解除，但oper不能delete！这个回溯算法就是一对一，因为中间所有点的solnTime都丢失了
+						//回溯算法的话中间的约束规则要比正常的BFS要紧，不然BFS总是先到，这个就没用了
+						OperBlock * nullOper = NULL;
+						ingOperBlock->getBlock()->setSituation(0);
+						ingOperBlock->getBlock()->setMyOperBlock(nullOper);
+						//ingOperBlock = NULL;
+						_ingOperBlocks.pop();
+					}
+
+				}
+
+			}
+
+		}
+		else
+		{
+			_vistedOperBlocks.push_back(ingOperBlock);
+			ingOperBlock->getBlock()->setSituation(2);
+			_ingOperBlocks.pop();
+		}
+	}
+
+	int solnTime;
+
+	//高危风个数
+	int Penalty1 = 0;
+	//高危雨个数
+	int Penalty2 = 0;
+	//投票惩罚
+	int Penalty3 = 10 - windvote + 10 - rainvote;
+	//平均风
+	double Penalty4 = 0.0;
+	//平均雨
+	double Penalty5 = 0.0;
+
+	double sum_wind = 0.0;
+	double sum_rain = 0.0;
+
+
+	if (findTheTarget)
+	{
+		OperBlock * targetOB = targetBlock->getMyOperBlock();
+		solnTime = targetOB->getSolnTime();
+		if (targetOB->getBlock()->getWindVote((targetOB->getSolnTime()-Util::flyTime) / 60,15.0) <10)
+		{
+			Penalty1++;
+		}
+		if (targetOB->getBlock()->getRainVote((targetOB->getSolnTime() - Util::flyTime) / 60,4.0) <10)
+		{
+			Penalty2++;
+		}
+		OperBlock * front = targetOB->getFront();
+		while (front != NULL)
+		{	
+			if (front->getSolnTime() != Util::startTime_BFS)
+			{
+				if (front->getBlock()->getWindVote((front->getSolnTime()-Util::flyTime) / 60, 15.0) <10)
+				{
+					Penalty1++;
+				}
+				if (front->getBlock()->getRainVote((front->getSolnTime() - Util::flyTime) / 60, 4.0) <10)
+				{
+					Penalty2++;
+				}
+				sum_wind += targetOB->getBlock()->getWindAvg((front->getSolnTime() - Util::flyTime) / 60);
+				sum_rain += targetOB->getBlock()->getRainAvg((front->getSolnTime() - Util::flyTime) / 60);
+			}
+			else
+			{
+				if (front->getBlock()->getWindVote(front->getSolnTime() / 60, 15.0) <10)
+				{
+					Penalty1++;
+				}
+				if (front->getBlock()->getRainVote(front->getSolnTime() / 60, 4.0) <10)
+				{
+					Penalty2++;
+				}
+				sum_wind += targetOB->getBlock()->getWindAvg(front->getSolnTime()  / 60);
+				sum_rain += targetOB->getBlock()->getRainAvg(front->getSolnTime() / 60);
+			}
+					
+			front = front->getFront();
+			
+		}
+		Penalty4 = 2 * sum_wind / (solnTime - Util::startTime_BFS);
+		Penalty5 = 2 * sum_rain / (solnTime - Util::startTime_BFS);
+
+		cout << cityId << "\t" << Util::startTime_BFS << "\t" << solnTime - Util::startTime_BFS << "\t" << Penalty1 << "\t" << Penalty2 << "\t" << Penalty3 << "\t" << Penalty4 << "\t" << Penalty5 << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
 
 }

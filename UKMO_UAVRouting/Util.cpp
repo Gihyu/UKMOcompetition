@@ -25,6 +25,12 @@ int Util::startTime_BFS = 180;
 double Util::singleWindratio = 14.5;
 double Util::singleRainratio = 3.75;
 
+double Util::allWindratio = 15.0;
+double Util::allRainratio = 4.0;
+
+int Util::allWindvote = 10;
+int Util::allRainvote = 10;
+
 
 //BFS
 double Util::initRatio = 14.60;

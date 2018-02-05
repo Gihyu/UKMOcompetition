@@ -54,7 +54,7 @@ public:
 
 	bool cangotoThisBlock_backtrack_single_rain(Block * target, int thisTime, double singleWindRatio, double singleRainRatio);
 
-
+	bool cangotoThisBlock_backtrack_all_rain(Block * target, int thisTime, double allWindRatio, double allRainRatio,int windvote,int rainvote);
 	//test case
 	bool OperBlock::test_cangotoThisBlock(Block * target, int thisTime);
 	

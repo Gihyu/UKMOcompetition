@@ -881,3 +881,81 @@ int Block::getCBNTvotes(int hour,double allRratio)
 	}
 	return vote;
 }
+
+
+//season2
+
+int Block::getWindVote(int hour,double allwindratio)
+{
+	int windvote = 0;
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeWindArr[i] <allwindratio)
+		{
+			windvote++;
+		}
+	}
+
+	return windvote;
+}
+int Block::getRainVote(int hour,double allrainratio)
+{
+	int rainvote = 0;
+	array<double, 10> thisTimeRainArr = getRainAllRealization(hour);
+
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (thisTimeRainArr[i] <allrainratio)
+		{
+			rainvote++;
+		}
+	}
+
+	return rainvote;
+}
+double Block::getWindAvg(int hour)
+{
+	array<double, 10> thisTimeWindArr = getWindAllRealization(hour);
+	double sum = 0.0;
+	double max = 0.0;
+	double min = 100.0;
+	for (int i = 0; i < 10; i++)
+	{
+		sum += thisTimeWindArr[i];
+		if (thisTimeWindArr[i] > max)
+		{
+			max = thisTimeWindArr[i];
+		}
+		else if (thisTimeWindArr[i] < min)
+		{
+			min = thisTimeWindArr[i];
+		}
+	}
+	double windAvg = (sum - max - min) / 8;
+	return windAvg;
+}
+double Block::getRainAvg(int hour)
+{
+	array<double, 10> thisTimeRainArr = getRainAllRealization(hour);
+	double sum = 0.0;
+	double max = 0.0;
+	double min = 100.0;
+	for (int i = 0; i < 10; i++)
+	{
+		sum += thisTimeRainArr[i];
+		if (thisTimeRainArr[i] > max)
+		{
+			max = thisTimeRainArr[i];
+		}
+		else if (thisTimeRainArr[i] < min)
+		{
+			min = thisTimeRainArr[i];
+		}
+	}
+	double rainAvg = (sum - max - min) / 8;
+	return rainAvg;
+}

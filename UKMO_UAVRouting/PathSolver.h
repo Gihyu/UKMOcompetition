@@ -39,6 +39,10 @@ public:
 
 	void solve_backtrack_single_rain_logs();
 
+	void solve_backtrack_all_rain();
+
+	void solve_backtrack_all_rain_logs();
+
 	vector<OperBlock*> getSoln() { return _soln; }
 	vector<vector<OperBlock*>> getMultiSoln() { return _multiSoln; }
 

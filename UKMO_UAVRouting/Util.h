@@ -72,6 +72,12 @@ public:
 	static double singleWindratio;
 	static double singleRainratio;
 
+	static double allWindratio;
+	static double allRainratio;
+
+	static int allWindvote;
+	static int allRainvote;
+
 	static int maxX;
 	static int maxY;
 	static int maxIndex;

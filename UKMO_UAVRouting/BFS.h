@@ -42,6 +42,10 @@ public:
 	void chooseBest_backtrack_single_rain(OperBlock * ingOp, Block *cango, int thistime);
 	bool solve_backtrack_single_rain_logs(Block * targetBlock, double singleWindRatio, double singleRainRatio,int cityId);
 
+	vector<OperBlock *> solve_backtrack_all_rain(Block * targetBlock, double allWindRatio, double allRainRatio, int windvote, int rainvote);
+	void chooseBest_backtrack_all_rain(OperBlock * ingOp, Block *cango, int thistime);
+	bool solve_backtrack_all_rain_logs(Block * targetBlock, double allWindRatio, double allRainRatio, int cityId, int windvote, int rainvote);
+
 	void clearQueue(queue<OperBlock *>& q);
 
 	void chooseLowestWind(OperBlock * oper, Block * blo,int thistime,double windRatio);

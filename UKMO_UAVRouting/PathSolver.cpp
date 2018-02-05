@@ -660,22 +660,20 @@ void PathSolver::solve_backtrack_single_rain()
 	BFS* bfs = new BFS(_origin);
 
 	int start[11];
-	start[1] = 180;
-	start[2] = 780;
-	start[3] = 770;
-	start[4] = 420;
-	start[5] = 200;
-	start[6] = 240;
+	start[1] = 200;
+	start[2] = 640;
+	start[3] = 190;
+	start[4] = 180;
+	start[5] = 820;
+	start[6] = 220;
 	start[7] = 510;
-	start[8] = 190;
-	start[9] = 720;
-	start[10] = 940;
+	start[8] = 210;
+	start[9] = 540;
+	start[10] = 720;
 
 
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{
-		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
-		double allRwind = Util::initRatio_forAllR;
 		vector<OperBlock *> ratioSoln;
 
 		double windratio = Util::singleWindratio-0.1;
@@ -731,8 +729,6 @@ void PathSolver::solve_backtrack_single_rain_logs()
 
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{
-		int NumOf_littleWind = Util::NumOf_littleWindForAllR;
-		double allRwind = Util::initRatio_forAllR;
 		vector<OperBlock *> ratioSoln;
 
 		Util::startTime_BFS = start[i]-10;
@@ -749,7 +745,7 @@ void PathSolver::solve_backtrack_single_rain_logs()
 			Util::startTime_BFS = Util::startTime_BFS+10;
 			//cout << Util::startTime_BFS <<"for city "<<i<< endl;
 			int absPlus = abs(_desCityList[i]->getBlock()->getX() - _desCityList[0]->getBlock()->getX()) + abs(_desCityList[i]->getBlock()->getY() - _desCityList[0]->getBlock()->getY());
-			if (absPlus * 2 + Util::startTime_BFS > Util::maxTime)
+			if (absPlus * 2 + Util::startTime_BFS >= Util::maxTime)
 			{				
 				if ( num_of_routes <= 6)
 				{	
@@ -805,7 +801,160 @@ void PathSolver::solve_backtrack_single_rain_logs()
 	}
 }
 
+void PathSolver::solve_backtrack_all_rain()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
 
+	BFS* bfs = new BFS(_origin);
+
+	int start[11];
+	start[1] = 200;
+	start[2] = 640;
+	start[3] = 190;
+	start[4] = 180;
+	start[5] = 820;
+	start[6] = 220;
+	start[7] = 510;
+	start[8] = 210;
+	start[9] = 540;
+	start[10] = 720;
+
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		vector<OperBlock *> ratioSoln;
+
+		int windvote = Util::allWindvote + 1;
+		int rainvote = Util::allRainvote + 1;
+
+		while (ratioSoln.empty())
+		{
+			windvote -= 1;
+			rainvote -= 1;
+
+			Util::startTime_BFS = start[i];
+
+			cout << "!!!!!!!!!Let's start to allow wind " << windvote << " and allow rain " << rainvote << endl;
+			cout << "!!!!!!!!!Let's start to allow wind " << windvote << " and allow rain " << rainvote << " for city" << i << "(" << _desCityList[i]->getBlock()->getX() << "," << _desCityList[i]->getBlock()->getY() << ")!!!!!!!!!" << endl;
+			cout << "!!!!!!!!!Let's start to allow wind " << windvote << " and allow rain " << rainvote << endl;
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			ratioSoln = bfs->solve_backtrack_all_rain(_desCityList[i]->getBlock(), Util::allWindratio, Util::allRainratio, windvote, rainvote);
+
+		}
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+}
+
+void PathSolver::solve_backtrack_all_rain_logs()
+{
+	for (auto & block : _blockList)
+	{
+		block->setSituation(0);
+		block->setViolations(0);
+	}
+
+	BFS* bfs = new BFS(_origin);
+
+	int start[11];
+	start[1] = 180;
+	start[2] = 180;
+	start[3] = 180;
+	start[4] = 180;
+	start[5] = 180;
+	start[6] = 180;
+	start[7] = 180;
+	start[8] = 180;
+	start[9] = 180;
+	start[10] = 180;
+
+	cout << "cityId " << "\t" << "startTime" << "\t" << "flyTime" << "\t" << "riskWind" << "\t" << "riskRain" << "\t" << "vote" << "\t" << "avgWind" << "\t" << "AvgRain" << endl;
+
+	for (int i = 1; i < _desCityList.size(); ++i)
+	{
+		vector<OperBlock *> ratioSoln;
+
+		Util::startTime_BFS = start[i] - 10;
+		bool stopCondition = false;
+
+		Util::allWindvote = 10;
+		Util::allRainvote = 10;
+
+		bool thisRatioCanFind = false;
+		int num_of_routes = 0;
+
+		cout << "now is " << Util::allWindvote << "for city " << i << endl;
+
+		while (!stopCondition)
+		{
+			Util::startTime_BFS = Util::startTime_BFS + 10;
+			//cout << Util::startTime_BFS <<"for city "<<i<< endl;
+			int absPlus = abs(_desCityList[i]->getBlock()->getX() - _desCityList[0]->getBlock()->getX()) + abs(_desCityList[i]->getBlock()->getY() - _desCityList[0]->getBlock()->getY());
+			if (absPlus * 2 + Util::startTime_BFS >= Util::maxTime)
+			{
+				if (num_of_routes <= 6)
+				{
+					//cout << "plus" << endl;
+
+					if (Util::allWindvote >=2)
+					{
+						Util::startTime_BFS = 180;
+						//cout << Util::startTime_BFS << "for city " << i << endl;
+						Util::allWindvote -= 1;
+						Util::allRainvote -= 1;
+						cout << "now is " << Util::allWindvote << "for city " << i << endl;
+					}
+					else
+					{
+						if (num_of_routes == 0)
+						{
+							cout << "can't find any for city " << i << endl;
+						}
+						break;
+					}
+
+				}
+				else
+				{
+					stopCondition = true;
+				}
+			}
+
+			OperBlock * nullOper = NULL;
+			for (auto & block : _blockList)
+			{
+				block->setSituation(0);
+				block->setViolations(0);
+				block->setMyOperBlock(nullOper);
+			}
+			if (bfs->solve_backtrack_all_rain_logs(_desCityList[i]->getBlock(), Util::allWindratio, Util::allRainratio, i, Util::allWindvote, Util::allRainvote))
+			{
+				thisRatioCanFind = true;
+				num_of_routes++;
+			}
+			else
+			{
+				if (Util::startTime_BFS % 60 == 0)
+				{
+					Util::startTime_BFS += 50;
+				}
+			}
+
+		}
+
+
+		_desCityList[i]->setSoln(ratioSoln);
+	}
+}
 
 Block * PathSolver::getBlockByCoordinate(int x, int y)
  {

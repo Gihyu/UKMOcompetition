@@ -57,6 +57,14 @@ public:
 	void setRainArr(array<double, Util::hourCount> arr) { _rainArr = arr; }
 	double getRain(int hour) { return _rainArr[hour - _basicHour]; }//single input
 
+	//season2
+
+	int getWindVote(int hour,double allwindratio);
+	int getRainVote(int hour,double allrainratio);
+	double getWindAvg(int hour);
+	double getRainAvg(int hour);
+
+
 	double getCBNTavgWind(int hour);
 	int getCBNTvotes(int hour, double allRratio);
 	int getNumOf_littleWind(int hour,double allRratio);
@@ -69,6 +77,7 @@ public:
 	vector<int > getSayNoModelId(int hour,double windRatio);
 
 	array<double, 10> getWindAllRealization(int hour) { return _windMatrix[hour - _basicHour]; }//multi input
+	array<double, 10> getRainAllRealization(int hour) { return _rainMatrix[hour - _basicHour]; }
 
 	void setMeasureWindArr(array<double, Util::hourCount> windArr) { _measureWindArr = windArr; }
 	double getMeasureWind(int hour){return _measureWindArr[hour - _basicHour];}
