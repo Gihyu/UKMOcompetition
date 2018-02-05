@@ -2749,12 +2749,12 @@ void BFS::chooseBest_backtrack_single_rain(OperBlock * ingOp, Block *cango, int 
 		double thisRain = ingOp->getBlock()->getRain(thistime / 60);
 		double nextRain = cango->getMyOperBlock()->getFront()->getBlock()->getRain(thistime / 60);
 
-		double thisCmpRatio = thisWind / 15.0 + thisRain / 4.0;
-		double nextCmpRatio = nextWind / 15.0 + nextRain / 4.0;
+		double thisCmpRatio = thisWind  + 15*thisRain / 4;
+		double nextCmpRatio = nextWind+ 15*nextRain / 4;
 
 		if (thisCmpRatio < nextCmpRatio)
 		{
-			//cout << "--------------------------change wind byCmpRatio------------------------" << endl;
+			cout << "--------------------------change wind byCmpRatio------------------------" << endl;
 			cango->getMyOperBlock()->setFront(ingOp);
 		}
 	}
@@ -3247,19 +3247,19 @@ void BFS::chooseBest_backtrack_all_rain(OperBlock * ingOp, Block *cango, int thi
 		}
 
 		else if (thisCmpvote == nextCmpvote)
-		{
-			double thisWindAvg = ingOp->getBlock()->getWind(thistime / 60);
-			double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWind(thistime / 60);
+		{	
+			double thisWindAvg = ingOp->getBlock()->getWindAvg(thistime / 60);
+			double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWindAvg(thistime / 60);
 
-			double thisRainAvg = ingOp->getBlock()->getRain(thistime / 60);
-			double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRain(thistime / 60);
+			double thisRainAvg = ingOp->getBlock()->getRainAvg(thistime / 60);
+			double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRainAvg(thistime / 60);
 
 			double thisCmpRatio = thisWindAvg + thisRainAvg * 15 / 4;
 			double nextCmpRatio = nextWindAvg + nextRainAvg * 15 / 4;
 
 			if (thisCmpRatio < nextCmpRatio)
 			{
-				cout << "--------------------------change wind byRatio------------------------" << endl;
+				//cout << "--------------------------change wind byRatio------------------------" << endl;
 				cango->getMyOperBlock()->setFront(ingOp);
 			}
 		}
