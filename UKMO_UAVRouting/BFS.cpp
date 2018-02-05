@@ -3151,8 +3151,20 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 	}
 
 	int solnTime;
-	int Penalty1=0;
-	double Penalty2=singleWindRatio-14.5+singleRainRatio-3.85;
+
+	//高危风个数
+	int Penalty1 = 0;
+	//高危雨个数
+	int Penalty2 = 0;
+	//参数惩罚
+	double Penalty3=singleWindRatio-14.5+singleRainRatio-3.75;
+	//平均风
+	double Penalty4 = 0.0;
+	//平均雨
+	double Penalty5 = 0.0;
+
+	double sum_wind = 0.0;
+	double sum_rain = 0.0;
 
 	int loopTime;
 
@@ -3166,9 +3178,9 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 		{
 			Penalty1++;
 		}
-		if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.15))
+		if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.25))
 		{
-			Penalty1++;
+			Penalty2++;
 		}
 		OperBlock * front = targetOB->getFront();
 		while (front != NULL)
@@ -3182,12 +3194,18 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 			{
 				Penalty1++;
 			}
-			if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.15))
+			if (targetOB->getBlock()->getRain(loopTime / 60) > (singleRainRatio - 0.25))
 			{
-				Penalty1++;
+				Penalty2++;
 			}
+			sum_wind += targetOB->getBlock()->getWind(loopTime / 60);
+			sum_rain += targetOB->getBlock()->getRain(loopTime / 60);
+
 		}
-		cout << cityId << "\t" << Util::startTime_BFS << "\t" << solnTime - Util::startTime_BFS << "\t" << Penalty1 << "\t" << Penalty2 << endl;
+		Penalty4 = sum_wind  / (solnTime - Util::startTime_BFS);
+		Penalty5 = sum_rain  / (solnTime - Util::startTime_BFS);
+
+		cout << cityId << "\t" << Util::startTime_BFS << "\t" << solnTime - Util::startTime_BFS << "\t" << Penalty1 << "\t" << Penalty2 << "\t" << Penalty3 << "\t" << Penalty4 << "\t" << Penalty5 << endl;
 		return true;
 	}
 	else

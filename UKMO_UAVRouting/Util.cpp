@@ -23,7 +23,7 @@ int Util::startTime_BFS = 180;
 
 // season 2 
 double Util::singleWindratio = 14.5;
-double Util::singleRainratio = 14.0;
+double Util::singleRainratio = 3.75;
 
 
 //BFS
