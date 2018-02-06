@@ -2754,7 +2754,7 @@ void BFS::chooseBest_backtrack_single_rain(OperBlock * ingOp, Block *cango, int 
 
 		if (thisCmpRatio < nextCmpRatio)
 		{
-			cout << "--------------------------change wind byCmpRatio------------------------" << endl;
+			//cout << "--------------------------change wind byCmpRatio------------------------" << endl;
 			cango->getMyOperBlock()->setFront(ingOp);
 		}
 	}
@@ -3178,6 +3178,8 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 		{
 			Penalty2++;
 		}
+		sum_wind += targetOB->getBlock()->getWind((targetOB->getSolnTime() - Util::flyTime) / 60);
+		sum_rain += targetOB->getBlock()->getRain((targetOB->getSolnTime() - Util::flyTime) / 60);
 		OperBlock * front = targetOB->getFront();
 		while (front != NULL)
 		{		
@@ -3191,8 +3193,8 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 				{
 					Penalty2++;
 				}
-				sum_wind += targetOB->getBlock()->getWind((front->getSolnTime() - Util::flyTime) / 60);
-				sum_rain += targetOB->getBlock()->getRain((front->getSolnTime() - Util::flyTime) / 60);
+				sum_wind += front->getBlock()->getWind((front->getSolnTime() - Util::flyTime) / 60);
+				sum_rain += front->getBlock()->getRain((front->getSolnTime() - Util::flyTime) / 60);
 			}
 			else
 			{
@@ -3204,8 +3206,8 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 				{
 					Penalty2++;
 				}
-				sum_wind += targetOB->getBlock()->getWind(front->getSolnTime() / 60);
-				sum_rain += targetOB->getBlock()->getRain(front->getSolnTime() / 60);
+				sum_wind += front->getBlock()->getWind(front->getSolnTime() / 60);
+				sum_rain += front->getBlock()->getRain(front->getSolnTime() / 60);
 			}
 
 			front = front->getFront();
@@ -3229,42 +3231,63 @@ bool BFS::solve_backtrack_single_rain_logs(Block * targetBlock, double singleWin
 void BFS::chooseBest_backtrack_all_rain(OperBlock * ingOp, Block *cango, int thistime)
 {
 	//先判断时间是否对的上,纯看avg的模式
+	//if ((thistime + 2) == cango->getMyOperBlock()->getSolnTime())
+	//{	
+	//	int thisWindvote = ingOp->getBlock()->getWindVote(thistime / 60,15.0);
+	//	int nextWindvote = cango->getMyOperBlock()->getFront()->getBlock()->getWindVote(thistime / 60,15.0);
+
+	//	int thisRainvote = ingOp->getBlock()->getRainVote(thistime / 60,4.0);
+	//	int nextRainvote = cango->getMyOperBlock()->getFront()->getBlock()->getRainVote(thistime / 60,4.0);
+
+	//	int thisCmpvote = thisWindvote + thisRainvote ;
+	//	int nextCmpvote = nextWindvote + nextRainvote ;
+
+	//	if (thisCmpvote > nextCmpvote)
+	//	{
+	//		//cout << "--------------------------change wind byVote------------------------" << endl;
+	//		cango->getMyOperBlock()->setFront(ingOp);
+	//	}
+
+	//	else if (thisCmpvote == nextCmpvote)
+	//	{	
+	//		double thisWindAvg = ingOp->getBlock()->getWindAvg(thistime / 60);
+	//		double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWindAvg(thistime / 60);
+
+	//		double thisRainAvg = ingOp->getBlock()->getRainAvg(thistime / 60);
+	//		double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRainAvg(thistime / 60);
+
+	//		double thisCmpRatio = thisWindAvg + thisRainAvg * 15 / 4;
+	//		double nextCmpRatio = nextWindAvg + nextRainAvg * 15 / 4;
+
+	//		if (thisCmpRatio < nextCmpRatio)
+	//		{
+	//			//cout << "--------------------------change wind byRatio------------------------" << endl;
+	//			cango->getMyOperBlock()->setFront(ingOp);
+	//		}
+	//	}
+	//
+	//}
+
+	//只看avg的模式
 	if ((thistime + 2) == cango->getMyOperBlock()->getSolnTime())
-	{	
-		int thisWindvote = ingOp->getBlock()->getWindVote(thistime / 60,15.0);
-		int nextWindvote = cango->getMyOperBlock()->getFront()->getBlock()->getWindVote(thistime / 60,15.0);
+	{
+		double thisWindAvg = ingOp->getBlock()->getWindAvg(thistime / 60);
+		double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWindAvg(thistime / 60);
 
-		int thisRainvote = ingOp->getBlock()->getRainVote(thistime / 60,4.0);
-		int nextRainvote = cango->getMyOperBlock()->getFront()->getBlock()->getRainVote(thistime / 60,4.0);
+		double thisRainAvg = ingOp->getBlock()->getRainAvg(thistime / 60);
+		double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRainAvg(thistime / 60);
 
-		int thisCmpvote = thisWindvote + thisRainvote ;
-		int nextCmpvote = nextWindvote + nextRainvote ;
+		double thisCmpRatio = thisWindAvg + thisRainAvg * 15 / 4;
+		double nextCmpRatio = nextWindAvg + nextRainAvg * 15 / 4;
 
-		if (thisCmpvote > nextCmpvote)
+		if (thisCmpRatio < nextCmpRatio)
 		{
-			//cout << "--------------------------change wind byVote------------------------" << endl;
+			//cout << "--------------------------change wind byRatio------------------------" << endl;
 			cango->getMyOperBlock()->setFront(ingOp);
 		}
-
-		else if (thisCmpvote == nextCmpvote)
-		{	
-			double thisWindAvg = ingOp->getBlock()->getWindAvg(thistime / 60);
-			double nextWindAvg = cango->getMyOperBlock()->getFront()->getBlock()->getWindAvg(thistime / 60);
-
-			double thisRainAvg = ingOp->getBlock()->getRainAvg(thistime / 60);
-			double nextRainAvg = cango->getMyOperBlock()->getFront()->getBlock()->getRainAvg(thistime / 60);
-
-			double thisCmpRatio = thisWindAvg + thisRainAvg * 15 / 4;
-			double nextCmpRatio = nextWindAvg + nextRainAvg * 15 / 4;
-
-			if (thisCmpRatio < nextCmpRatio)
-			{
-				//cout << "--------------------------change wind byRatio------------------------" << endl;
-				cango->getMyOperBlock()->setFront(ingOp);
-			}
-		}
-	
 	}
+
+
 }
 
 vector<OperBlock *> BFS::solve_backtrack_all_rain(Block * targetBlock, double allWindRatio, double allRainRatio, int windvote, int rainvote)
@@ -3687,6 +3710,8 @@ bool BFS::solve_backtrack_all_rain_logs(Block * targetBlock, double allWindRatio
 		{
 			Penalty2++;
 		}
+		sum_wind += targetOB->getBlock()->getWindAvg((targetOB->getSolnTime() - Util::flyTime) / 60);
+		sum_rain += targetOB->getBlock()->getRainAvg((targetOB->getSolnTime() - Util::flyTime) / 60);
 		OperBlock * front = targetOB->getFront();
 		while (front != NULL)
 		{	
@@ -3700,8 +3725,8 @@ bool BFS::solve_backtrack_all_rain_logs(Block * targetBlock, double allWindRatio
 				{
 					Penalty2++;
 				}
-				sum_wind += targetOB->getBlock()->getWindAvg((front->getSolnTime() - Util::flyTime) / 60);
-				sum_rain += targetOB->getBlock()->getRainAvg((front->getSolnTime() - Util::flyTime) / 60);
+				sum_wind += front->getBlock()->getWindAvg((front->getSolnTime() - Util::flyTime) / 60);
+				sum_rain += front->getBlock()->getRainAvg((front->getSolnTime() - Util::flyTime) / 60);
 			}
 			else
 			{
@@ -3713,8 +3738,8 @@ bool BFS::solve_backtrack_all_rain_logs(Block * targetBlock, double allWindRatio
 				{
 					Penalty2++;
 				}
-				sum_wind += targetOB->getBlock()->getWindAvg(front->getSolnTime()  / 60);
-				sum_rain += targetOB->getBlock()->getRainAvg(front->getSolnTime() / 60);
+				sum_wind += front->getBlock()->getWindAvg(front->getSolnTime()  / 60);
+				sum_rain += front->getBlock()->getRainAvg(front->getSolnTime() / 60);
 			}
 					
 			front = front->getFront();

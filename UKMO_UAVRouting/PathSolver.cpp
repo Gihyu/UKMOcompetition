@@ -770,7 +770,7 @@ void PathSolver::solve_backtrack_single_rain_logs()
 				}
 				else
 				{
-					stopCondition = true;
+					break;
 				}			
 			}
 
@@ -812,29 +812,39 @@ void PathSolver::solve_backtrack_all_rain()
 	BFS* bfs = new BFS(_origin);
 
 	int start[11];
-	start[1] = 200;
-	start[2] = 640;
-	start[3] = 190;
-	start[4] = 180;
-	start[5] = 820;
-	start[6] = 220;
-	start[7] = 510;
-	start[8] = 210;
-	start[9] = 540;
-	start[10] = 720;
+	start[1] = 700;
+	start[2] = 200;
+	start[3] = 220;
+	start[4] = 590;
+	start[5] = 340;
+	start[6] = 330;
+	start[7] = 190;
+	start[8] = 320;
+	start[9] = 290;
+	start[10] = 210;
+
+	int vote[11];
+	vote[1] = 0;
+	vote[2] = 10;
+	vote[3] = 10;
+	vote[4] = 10;
+	vote[5] = 10;
+	vote[6] = 10;
+	vote[7] = 9;
+	vote[8] = 10;
+	vote[9] = 10;
+	vote[10] = 10;
 
 
 	for (int i = 1; i < _desCityList.size(); ++i)
 	{
 		vector<OperBlock *> ratioSoln;
 
-		int windvote = Util::allWindvote + 1;
-		int rainvote = Util::allRainvote + 1;
+		int windvote =vote[i];
+		int rainvote = vote[i];
 
 		while (ratioSoln.empty())
 		{
-			windvote -= 1;
-			rainvote -= 1;
 
 			Util::startTime_BFS = start[i];
 
@@ -886,8 +896,8 @@ void PathSolver::solve_backtrack_all_rain_logs()
 		Util::startTime_BFS = start[i] - 10;
 		bool stopCondition = false;
 
-		Util::allWindvote = 10;
-		Util::allRainvote = 10;
+		Util::allWindvote = 7;
+		Util::allRainvote = 7;
 
 		bool thisRatioCanFind = false;
 		int num_of_routes = 0;
@@ -903,8 +913,6 @@ void PathSolver::solve_backtrack_all_rain_logs()
 			{
 				if (num_of_routes <= 6)
 				{
-					//cout << "plus" << endl;
-
 					if (Util::allWindvote >=2)
 					{
 						Util::startTime_BFS = 180;
@@ -925,7 +933,7 @@ void PathSolver::solve_backtrack_all_rain_logs()
 				}
 				else
 				{
-					stopCondition = true;
+					break;
 				}
 			}
 

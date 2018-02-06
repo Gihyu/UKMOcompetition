@@ -570,7 +570,17 @@ void IO::outputMultiSoln(vector<City*> cities, Block * origin, vector<vector<Ope
 		printSoln(destinationCityNo, origin, soln);
 
 
-		time_t curTime = Util::getTime(3, 0);//3:00
+		//time_t curTime = Util::getTime(3, 0);//3:00
+		time_t curTime;
+		if (soln.empty())
+		{
+			 curTime = Util::getTime(3, 0);//3:00
+		}
+		else
+		{
+			 curTime = Util::getTime(soln.front()->getSolnTime());
+		}
+		
 		time_t step = 2 * 60;//2mins
 		Block* last = origin;
 		int lastX = last->getX();
