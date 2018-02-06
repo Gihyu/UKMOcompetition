@@ -812,25 +812,25 @@ void PathSolver::solve_backtrack_all_rain()
 	BFS* bfs = new BFS(_origin);
 
 	int start[11];
-	start[1] = 700;
-	start[2] = 200;
-	start[3] = 220;
-	start[4] = 590;
-	start[5] = 340;
-	start[6] = 330;
-	start[7] = 190;
-	start[8] = 320;
-	start[9] = 290;
-	start[10] = 210;
+	start[1] = 230;
+	start[2] = 590;
+	start[3] = 280;
+	start[4] = 300;
+	start[5] = 600;
+	start[6] = 480;
+	start[7] = 510;
+	start[8] = 210;
+	start[9] = 650;
+	start[10] = 580;
 
 	int vote[11];
-	vote[1] = 0;
+	vote[1] = 10;
 	vote[2] = 10;
-	vote[3] = 10;
-	vote[4] = 10;
+	vote[3] = 7;
+	vote[4] = 7;
 	vote[5] = 10;
-	vote[6] = 10;
-	vote[7] = 9;
+	vote[6] = 7;
+	vote[7] = 10;
 	vote[8] = 10;
 	vote[9] = 10;
 	vote[10] = 10;
@@ -887,6 +887,11 @@ void PathSolver::solve_backtrack_all_rain_logs()
 	start[9] = 180;
 	start[10] = 180;
 
+	int Voteminus[3];
+	Voteminus[0] = 3;
+	Voteminus[1] = 1;
+	Voteminus[2] = 4;
+
 	cout << "cityId " << "\t" << "startTime" << "\t" << "flyTime" << "\t" << "riskWind" << "\t" << "riskRain" << "\t" << "vote" << "\t" << "avgWind" << "\t" << "AvgRain" << endl;
 
 	for (int i = 1; i < _desCityList.size(); ++i)
@@ -896,11 +901,13 @@ void PathSolver::solve_backtrack_all_rain_logs()
 		Util::startTime_BFS = start[i] - 10;
 		bool stopCondition = false;
 
-		Util::allWindvote = 7;
-		Util::allRainvote = 7;
+		Util::allWindvote = 10;
+		Util::allRainvote = 10;
 
 		bool thisRatioCanFind = false;
 		int num_of_routes = 0;
+
+		int minusIndex = 0;
 
 		cout << "now is " << Util::allWindvote << "for city " << i << endl;
 
@@ -913,12 +920,13 @@ void PathSolver::solve_backtrack_all_rain_logs()
 			{
 				if (num_of_routes <= 6)
 				{
-					if (Util::allWindvote >=2)
+					if (Util::allWindvote >2)
 					{
 						Util::startTime_BFS = 180;
 						//cout << Util::startTime_BFS << "for city " << i << endl;
-						Util::allWindvote -= 1;
-						Util::allRainvote -= 1;
+						Util::allWindvote -= Voteminus[minusIndex];
+						Util::allRainvote -= Voteminus[minusIndex];
+						minusIndex++;
 						cout << "now is " << Util::allWindvote << "for city " << i << endl;
 					}
 					else

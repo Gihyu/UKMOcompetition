@@ -3485,6 +3485,10 @@ vector<OperBlock *> BFS::solve_backtrack_all_rain(Block * targetBlock, double al
 		cout << "The shortestPath from (" << _sourceBlock->getX() << "," << _sourceBlock->getY() << ") to (" << targetBlock->getX() << "," << targetBlock->getY() << ") is :" << endl;
 		cout << endl;
 		cout << "x" << "\t" << "y" << "\t" << "time" << "\t" << "windavg" << "\t" << "windvote" << "\t" << "rainavg" << "\t" << "rainvote" << endl;
+
+		double avgWind = 0.0;
+		double avgRain = 0.0;
+
 		for (int i = 0; i <OperRoute.size(); i++)
 		{
 			int absPlus = abs(OperRoute[i]->getBlock()->getX() - _sourceBlock->getX()) + abs(OperRoute[i]->getBlock()->getY() - _sourceBlock->getY());
@@ -3496,13 +3500,20 @@ vector<OperBlock *> BFS::solve_backtrack_all_rain(Block * targetBlock, double al
 			if (OperRoute[i]->getSolnTime() != Util::startTime_BFS)
 			{
 				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getWindAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t"<< OperRoute[i]->getBlock()->getWindVote((OperRoute[i]->getSolnTime() - Util::flyTime) / 60,15.0) << "\t" << OperRoute[i]->getBlock()->getRainAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60) << "\t" << OperRoute[i]->getBlock()->getRainVote((OperRoute[i]->getSolnTime() - Util::flyTime) / 60,4.0)<<endl;
+				avgWind += OperRoute[i]->getBlock()->getWindAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60);
+				avgRain+= OperRoute[i]->getBlock()->getRainAvg((OperRoute[i]->getSolnTime() - Util::flyTime) / 60);
 			}
 			else
 			{
 				cout << OperRoute[i]->getBlock()->getX() << "\t" << OperRoute[i]->getBlock()->getY() << "\t" << OperRoute[i]->getSolnTime() << "\t" << OperRoute[i]->getBlock()->getWindAvg(OperRoute[i]->getSolnTime()  / 60) << "\t" << OperRoute[i]->getBlock()->getWindVote(OperRoute[i]->getSolnTime()  / 60, 15.0) << "\t" << OperRoute[i]->getBlock()->getRainAvg(OperRoute[i]->getSolnTime()  / 60) << "\t" << OperRoute[i]->getBlock()->getRainVote(OperRoute[i]->getSolnTime()  / 60, 4.0) << endl;
+				avgWind += OperRoute[i]->getBlock()->getWindAvg((OperRoute[i]->getSolnTime()) / 60);
+				avgRain += OperRoute[i]->getBlock()->getRainAvg((OperRoute[i]->getSolnTime()) / 60);
 			}
 
 		}
+		cout << endl;
+		cout << "avgwind is " << avgWind * 2 / (targetBlock->getMyOperBlock()->getSolnTime() - Util::startTime_BFS) << endl;
+		cout << "avgrain is " << avgRain * 2 / (targetBlock->getMyOperBlock()->getSolnTime() - Util::startTime_BFS) << endl;
 		cout << endl;
 		cout << endl;
 	}

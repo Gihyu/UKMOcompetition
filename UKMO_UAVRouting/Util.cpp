@@ -28,8 +28,8 @@ double Util::singleRainratio = 3.75;
 double Util::allWindratio = 15.0;
 double Util::allRainratio = 4.0;
 
-int Util::allWindvote = 7;
-int Util::allRainvote = 7;
+int Util::allWindvote = 10;
+int Util::allRainvote = 10;
 
 
 //BFS
